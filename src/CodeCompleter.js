@@ -19,7 +19,7 @@ export default class CodeCompleter {
 
     getRootElements = () => {
         console.log(`Fetch root elements from XSD`)
-        this.elementCollections['rootElements'] = new CodeCollection(this.xsd.getRootElements())
+        this.elementCollections['rootElements'] = this.xsd.getRootElements()
         return this.elementCollections['rootElements']
     }
 
@@ -30,7 +30,7 @@ export default class CodeCompleter {
 
     getSubElements = (parentElement) => {
         console.log(`Fetch sub elements for ${parentElement} from XSD`)
-        this.elementCollections[parentElement] = new CodeCollection(this.xsd.getSubElements(parentElement))
+        this.elementCollections[parentElement] = this.xsd.getSubElements(parentElement)
         return this.elementCollections[parentElement]
     }
 
@@ -41,16 +41,7 @@ export default class CodeCompleter {
 
     getAttributes = (element) => {
         console.log(`Fetch attributes for ${element} from XSD`)
-        this.attributeCollections[element] = new CodeCollection(this.xsd.getAttributesForElement(element))
+        this.attributeCollections[element] = this.xsd.getAttributesForElement(element)
         return this.attributeCollections[element]
     }
-}
-
-class CodeCollection {
-    constructor(nodes) {
-        this.nodes = nodes
-    }
-
-    matchName = (term) =>
-        this.nodes.filter(node => node.attributes.name.includes(term))
 }

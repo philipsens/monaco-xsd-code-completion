@@ -9,7 +9,9 @@ export default class XSDParser {
     }
 
     getRootElements = () =>
-        this.parseElement(this.select(`/xs:schema/xs:element`, this.parsedXsd))
+        this.parseElement(this.select(`//xs:element`, this.parsedXsd))
+        // this.parseElement(this.select(`/xs:schema/xs:element`, this.parsedXsd))
+
 
     getSubElements = (elementName) =>
         this.parseElement(this.select(`//xs:complexType[@name='${elementName}Type']//xs:element`, this.parsedXsd))
@@ -24,15 +26,27 @@ export default class XSDParser {
         this.parseAttribute(this.select(`//xs:complexType[@name='${elementName}Type']/xs:attribute`, this.parsedXsd))
 
     parseElement = (element) =>
-        element.map(node => ({
-            attributes: this.getAttributesForNode(node)
-        }))
+        element.map(node => {
+            const attributes = this.getAttributesForNode(node)
+            return {
+                label: attributes.name,
+                value: attributes.name,
+                kind: attributes.type,
+            }
+        })
 
     parseAttribute = (attribute) =>
-        attribute.map(node => ({
-            attributes: this.getAttributesForNode(node),
-            documentation: this.getDocumentationForAttribute(node)
-        }))
+        attribute.map(node => {
+            const attributes = this.getAttributesForNode(node)
+            const documentation = this.getDocumentationForAttribute(node)
+            console.log(documentation)
+            return {
+                label: attributes.name,
+                value: attributes.name,
+                kind: attributes.type,
+                documentation: documentation[0]
+            }
+        })
 
     getAttributesForNode = (node) =>
         this.select('@*', node)
