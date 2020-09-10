@@ -10,61 +10,42 @@ console.log(ibisdoc.parsedXsd)
 const input = document.getElementById('input');
 const output = document.getElementById('output');
 
-/*
-Collection
-new collection
-collection.getmatches
-collection.getfirstmatch
-
-of
-
-new CC(ibis)
-cc.getAttributesForElement(dfdfd).getMatchingAttributes(ghghg)
- */
-
 let elements
-let lastElement
-let attributes
+let currentElement
 let lines = 0
-let firstMatch
+
+const cc = new CodeCompleter(ibisdoc)
+
 input.oninput = () => {
     let outputString = '';
 
     const inputLine = input.value.split('\n')
     const inputWords = inputLine[inputLine.length - 1].split(' ')
+
     const firstCharacter = inputWords[0].charAt(0)
-    const firstWord = inputWords[0].substring(1, inputWords[0].length)
-    const lastWord = inputWords[inputWords.length - 1]
+
+    const elementInput = inputWords[0].substring(1, inputWords[0].length)
+    const attributeInput = inputWords[inputWords.length - 1]
 
     if (lines !== inputLine.length) {
         console.log(`There are ${inputLine.length} lines, last time it were ${lines}`)
         lines = inputLine.length
         if (inputLine.length > 1) {
-            console.log(`Fetch sub elements for ${lastElement} from XSD`)
-            elements = new CodeCompleter(ibisdoc.getSubElements(lastElement))
+            elements = cc.elements(currentElement)
         } else {
-            console.log(`Fetch root elements from XSD`)
-            elements = new CodeCompleter(ibisdoc.getRootElements())
+            elements = cc.elements()
         }
     }
 
     if (inputWords.length > 1) {
-        if (lastElement !== firstWord) {
-            lastElement = firstWord
-            console.log(`Fetch attributes for ${firstWord} from XSD`)
-            attributes = new CodeCompleter(ibisdoc.getAttributesForElement(firstWord))
+        if (currentElement !== elementInput) {
+            currentElement = elementInput
         }
-        attributes.getMatches(lastWord).map(attribute => {
+        cc.attributes(elementInput).matchName(attributeInput).map(attribute => {
             outputString += JSON.stringify(attribute) + '<br />'
         })
     } else if (firstCharacter === '<') {
-        elements.getMatches(firstWord).map((element, index) => {
-            if (index === 0) {
-                if (firstMatch !== element) {
-                    ibisdoc.getRequiredAttributeForElement(element.attributes.name)
-                    firstMatch = element
-                }
-            }
+        elements.matchName(elementInput).map((element) => {
             outputString += JSON.stringify(element) + '<br />'
         })
     }

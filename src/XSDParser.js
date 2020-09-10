@@ -36,8 +36,7 @@ export default class XSDParser {
 
     getAttributesForNode = (node) =>
         this.select('@*', node)
-            .map(attribute => ({[attribute.name]: attribute.value}))
-            .reduce((acc, curr) => ({...acc, ...curr}), {})
+            .reduce((acc, curr) => ({...acc, [curr.name]: curr.value}), {})
 
     getDocumentationForAttribute = (attribute) =>
         this.select(`xs:annotation/xs:documentation`, attribute)
