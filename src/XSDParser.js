@@ -1,17 +1,17 @@
 import xpath from "xpath";
+import TurndownService from "turndown";
 
 export default class XSDParser {
 
     constructor(xsdString) {
         const Dom = require('xmldom').DOMParser
+        this.turndownService = new TurndownService()
         this.parsedXsd = new Dom().parseFromString(xsdString)
         this.select = xpath.useNamespaces({'xs': 'http://www.w3.org/2001/XMLSchema'})
     }
 
     getRootElements = () =>
-        this.parseElement(this.select(`//xs:element`, this.parsedXsd))
-        // this.parseElement(this.select(`/xs:schema/xs:element`, this.parsedXsd))
-
+        this.parseElement(this.select(`/xs:schema/xs:element`, this.parsedXsd))
 
     getSubElements = (elementName) =>
         this.parseElement(this.select(`//xs:complexType[@name='${elementName}Type']//xs:element`, this.parsedXsd))
@@ -30,8 +30,9 @@ export default class XSDParser {
             const attributes = this.getAttributesForNode(node)
             return {
                 label: attributes.name,
-                value: attributes.name,
-                kind: attributes.type,
+                insertText: attributes.name + '${1}></' + attributes.name,
+                kind: monaco.languages.CompletionItemKind.Method,
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
             }
         })
 
@@ -39,12 +40,18 @@ export default class XSDParser {
         attribute.map(node => {
             const attributes = this.getAttributesForNode(node)
             const documentation = this.getDocumentationForAttribute(node)
-            console.log(documentation)
             return {
                 label: attributes.name,
-                value: attributes.name,
-                kind: attributes.type,
-                documentation: documentation[0]
+                insertText: attributes.name + '="${1}"',
+                detail: attributes.type.replace('xs:', ''),
+                preselect: attributes.use === "required",
+                kind: monaco.languages.CompletionItemKind.Variable,
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: {
+                    value: documentation[0] ? this.turndownService.turndown(documentation[0]) : '',
+                    isTrusted: true,
+                    supportThemeIcons: true,
+                }
             }
         })
 

@@ -1,4 +1,4 @@
-export default class CodeCompleter {
+export default class CodeCacher {
     xsd
     elementCollections = []
     attributeCollections = []
@@ -34,10 +34,12 @@ export default class CodeCompleter {
         return this.elementCollections[parentElement]
     }
 
-    attributes = (element) =>
-        typeof this.attributeCollections[element] === 'undefined'
+    attributes = (element) => {
+        console.log(this.attributeCollections[element])
+        return typeof this.attributeCollections[element] === 'undefined'
             ? this.getAttributes(element)
             : this.attributeCollections[element]
+    }
 
     getAttributes = (element) => {
         console.log(`Fetch attributes for ${element} from XSD`)
