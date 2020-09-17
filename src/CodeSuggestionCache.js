@@ -1,4 +1,4 @@
-export default class CodeCacher {
+export default class CodeSuggestionCache {
     xsd
     elementCollections = []
     attributeCollections = []
@@ -34,12 +34,10 @@ export default class CodeCacher {
         return this.elementCollections[parentElement]
     }
 
-    attributes = (element) => {
-        // console.log(this.attributeCollections[element])
-        return typeof this.attributeCollections[element] === 'undefined'
+    attributes = (element) =>
+        typeof this.attributeCollections[element] === 'undefined'
             ? this.getAttributes(element)
             : this.attributeCollections[element]
-    }
 
     getAttributes = (element) => {
         console.log(`Fetch attributes for ${element} from XSD`)

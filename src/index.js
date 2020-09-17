@@ -1,90 +1,12 @@
-import xsd from './ibisdoc.xsd'
+import ibisdocXSD from './ibisdoc.xsd'
 import XSDParser from './XSDParser.js'
-import CodeCacher from "./CodeCacher";
 import * as monaco from 'monaco-editor';
-import TurndownService from "turndown";
+import XSDCodeCompletion from "./XSDCodeCompletionProvider";
 
+const ibisdoc = new XSDParser(ibisdocXSD);
+const xsdCodeCompletion = new XSDCodeCompletion(ibisdoc)
 
-const turndownService = new TurndownService()
-const ibisdoc = new XSDParser(xsd);
-const cc = new CodeCacher(ibisdoc)
-
-const xsdCompletionProvider = (monaco) => ({
-    triggerCharacters: ['<', ' '],
-
-    provideCompletionItems: (model, position) => {
-        const parentTags = getParentTags(model, position)
-        const lastTag = parentTags[parentTags.length - 1]
-
-        console.log(`Character before position: "${getCharacterBeforePosition(model, position)}". Last tag: "${lastTag}"`)
-
-        const characterBeforePosition = getCharacterBeforePosition(model, position)
-
-        const suggestions = characterBeforePosition === '<'
-            ? cc.elements(lastTag)
-            : characterBeforePosition === ' '
-                ? parseAttributes(cc.attributes(lastTag))
-                : cc.elements(lastTag)
-
-        console.log(suggestions)
-        return {
-            suggestions: suggestions
-        };
-    }
-})
-
-const parseAttributes = (attributes) =>
-    attributes.map(attribute => ({
-        label: attribute.attributes.name,
-        insertText: attribute.attributes.name + '="${1}"',
-        detail: attribute.attributes.type.replace('xs:', ''),
-        preselect: attribute.attributes.use === "required",
-        kind: monaco.languages.CompletionItemKind.Variable,
-        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-        documentation: {
-            value: attribute.documentation[0] ? turndownService.turndown(attribute.documentation[0]) : '',
-            isTrusted: true,
-        }
-    }))
-
-const getParentTags = (model, position) => {
-    const regexForTags = /(?<=<|<\/)[A-Za-z0-9]+/g
-    const matches = getTextUntilPosition(model, position).match(regexForTags)
-
-    const tags = [...matches ? matches : []]
-    console.log(tags)
-    const parentTags = []
-    tags.map(tag => {
-        if (parentTags.includes(tag)) {
-            while (parentTags[parentTags.length - 1] !== tag) {
-                parentTags.pop()
-            }
-            parentTags.pop()
-        } else {
-            parentTags.push(tag)
-        }
-    })
-    console.log(parentTags)
-    return parentTags
-}
-
-const getTextUntilPosition = (model, position) =>
-    model.getValueInRange({
-        startLineNumber: 1,
-        startColumn: 1,
-        endLineNumber: position.lineNumber,
-        endColumn: position.column
-    })
-
-const getCharacterBeforePosition = (model, position) =>
-    model.getValueInRange({
-        startLineNumber: position.lineNumber,
-        startColumn: position.column - 1,
-        endLineNumber: position.lineNumber,
-        endColumn: position.column
-    })
-
-monaco.languages.registerCompletionItemProvider('xml', xsdCompletionProvider(monaco))
+monaco.languages.registerCompletionItemProvider('xml', xsdCodeCompletion.provider())
 
 monaco.editor.create(document.getElementById('container'), {
     value: [

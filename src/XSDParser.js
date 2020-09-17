@@ -4,47 +4,30 @@ export default class XSDParser {
 
     constructor(xsdString) {
         const Dom = require('xmldom').DOMParser
-        this.parsedXsd = new Dom().parseFromString(xsdString)
+        this.xsdDOM = new Dom().parseFromString(xsdString)
         this.select = xpath.useNamespaces({'xs': 'http://www.w3.org/2001/XMLSchema'})
     }
 
     getRootElements = () =>
-        this.parseElement(this.select(`/xs:schema/xs:element`, this.parsedXsd))
+        this.parseElements(this.select(`/xs:schema/xs:element`, this.xsdDOM))
 
     getSubElements = (elementName) =>
-        this.parseElement(this.select(`//xs:complexType[@name='${elementName}Type']//xs:element`, this.parsedXsd))
-
-    getRequiredAttributeForElement = (elementName) =>
-        this.select(`//xs:complexType[contains(name, '${elementName}Type')]/xs:attribute[@use='required']`, this.parsedXsd)
-            .map(node => (
-                console.log(node)
-            ))
+        this.parseElements(this.select(`//xs:complexType[@name='${elementName}Type']//xs:element`, this.xsdDOM))
 
     getAttributesForElement = (elementName) =>
-        this.parseAttribute(this.select(`//xs:complexType[@name='${elementName}Type']/xs:attribute`, this.parsedXsd))
+        this.parseAttributes(this.select(`//xs:complexType[@name='${elementName}Type']/xs:attribute`, this.xsdDOM))
 
-    parseElement = (element) =>
-        element.map(node => {
-            const attributes = this.getAttributesForNode(node)
-            return {
-                label: attributes.name,
-                insertText: attributes.name + '${1}></' + attributes.name,
-                kind: monaco.languages.CompletionItemKind.Method,
-                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-            }
-        })
+    parseElements = (elements) =>
+        elements.map(element => this.getAttributesForNode(element))
 
-    parseAttribute = (attribute) =>
-        attribute.map(node => ({
-            attributes: this.getAttributesForNode(node),
-            documentation: this.getDocumentationForAttribute(node)
-        }))
+    parseAttributes = (attributes) =>
+        attributes.map(attribute => ({...this.getAttributesForNode(attribute), ...this.getDocumentationForNode(attribute)[0]}))
 
     getAttributesForNode = (node) =>
         this.select('@*', node)
             .reduce((acc, curr) => ({...acc, [curr.name]: curr.value}), {})
 
-    getDocumentationForAttribute = (attribute) =>
+    getDocumentationForNode = (attribute) =>
         this.select(`xs:annotation/xs:documentation`, attribute)
-            .map(documentation => documentation.firstChild ? documentation.firstChild.data : null)
+            .map(documentation => documentation.firstChild ? {documentation: documentation.firstChild.data} : null)
 }
