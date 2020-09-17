@@ -35,7 +35,7 @@ export default class CodeCacher {
     }
 
     attributes = (element) => {
-        console.log(this.attributeCollections[element])
+        // console.log(this.attributeCollections[element])
         return typeof this.attributeCollections[element] === 'undefined'
             ? this.getAttributes(element)
             : this.attributeCollections[element]

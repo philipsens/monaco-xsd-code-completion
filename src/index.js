@@ -2,7 +2,10 @@ import xsd from './ibisdoc.xsd'
 import XSDParser from './XSDParser.js'
 import CodeCacher from "./CodeCacher";
 import * as monaco from 'monaco-editor';
+import TurndownService from "turndown";
 
+
+const turndownService = new TurndownService()
 const ibisdoc = new XSDParser(xsd);
 const cc = new CodeCacher(ibisdoc)
 
@@ -15,21 +18,41 @@ const xsdCompletionProvider = (monaco) => ({
 
         console.log(`Character before position: "${getCharacterBeforePosition(model, position)}". Last tag: "${lastTag}"`)
 
-        const suggestions = getCharacterBeforePosition(model, position) === ' '
-            ? cc.attributes(lastTag)
-            : cc.elements(lastTag)
+        const characterBeforePosition = getCharacterBeforePosition(model, position)
+
+        const suggestions = characterBeforePosition === '<'
+            ? cc.elements(lastTag)
+            : characterBeforePosition === ' '
+                ? parseAttributes(cc.attributes(lastTag))
+                : cc.elements(lastTag)
+
+        console.log(suggestions)
         return {
             suggestions: suggestions
         };
     }
 })
 
+const parseAttributes = (attributes) =>
+    attributes.map(attribute => ({
+        label: attribute.attributes.name,
+        insertText: attribute.attributes.name + '="${1}"',
+        detail: attribute.attributes.type.replace('xs:', ''),
+        preselect: attribute.attributes.use === "required",
+        kind: monaco.languages.CompletionItemKind.Variable,
+        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+        documentation: {
+            value: attribute.documentation[0] ? turndownService.turndown(attribute.documentation[0]) : '',
+            isTrusted: true,
+        }
+    }))
+
 const getParentTags = (model, position) => {
     const regexForTags = /(?<=<|<\/)[A-Za-z0-9]+/g
     const matches = getTextUntilPosition(model, position).match(regexForTags)
 
     const tags = [...matches ? matches : []]
-
+    console.log(tags)
     const parentTags = []
     tags.map(tag => {
         if (parentTags.includes(tag)) {
@@ -41,6 +64,7 @@ const getParentTags = (model, position) => {
             parentTags.push(tag)
         }
     })
+    console.log(parentTags)
     return parentTags
 }
 

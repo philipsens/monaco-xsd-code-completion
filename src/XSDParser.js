@@ -1,11 +1,9 @@
 import xpath from "xpath";
-import TurndownService from "turndown";
 
 export default class XSDParser {
 
     constructor(xsdString) {
         const Dom = require('xmldom').DOMParser
-        this.turndownService = new TurndownService()
         this.parsedXsd = new Dom().parseFromString(xsdString)
         this.select = xpath.useNamespaces({'xs': 'http://www.w3.org/2001/XMLSchema'})
     }
@@ -37,23 +35,10 @@ export default class XSDParser {
         })
 
     parseAttribute = (attribute) =>
-        attribute.map(node => {
-            const attributes = this.getAttributesForNode(node)
-            const documentation = this.getDocumentationForAttribute(node)
-            return {
-                label: attributes.name,
-                insertText: attributes.name + '="${1}"',
-                detail: attributes.type.replace('xs:', ''),
-                preselect: attributes.use === "required",
-                kind: monaco.languages.CompletionItemKind.Variable,
-                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                documentation: {
-                    value: documentation[0] ? this.turndownService.turndown(documentation[0]) : '',
-                    isTrusted: true,
-                    supportThemeIcons: true,
-                }
-            }
-        })
+        attribute.map(node => ({
+            attributes: this.getAttributesForNode(node),
+            documentation: this.getDocumentationForAttribute(node)
+        }))
 
     getAttributesForNode = (node) =>
         this.select('@*', node)
