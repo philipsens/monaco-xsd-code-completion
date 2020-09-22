@@ -19,10 +19,8 @@ export default class CodeSuggester {
         }))
 
     parseElementInputText = (name, withoutTag, incomplete) => {
-        if (withoutTag)
-            return '<' + name + '${1}></' + name + '>'
-        if (incomplete)
-            return name
+        if (withoutTag) return '<' + name + '${1}></' + name + '>'
+        if (incomplete) return name
 
         return name + '${1}></' + name
     }
@@ -42,9 +40,7 @@ export default class CodeSuggester {
         }))
 
     parseAttributeDocumentation = (documentation) => ({
-        value: documentation
-            ? this.turndownService.turndown(documentation)
-            : '',
+        value: documentation ? this.turndownService.turndown(documentation) : '',
         isTrusted: true,
     })
 }

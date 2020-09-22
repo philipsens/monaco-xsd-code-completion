@@ -76,7 +76,7 @@ export default class XSDCodeCompletionProvider {
         })
 
     getTagsFromText = (text) => {
-        const regexForTags = /(?<=<|<\/)[A-Za-z0-9]+(?!.+\/>)/g
+        const regexForTags = /(?<=<|<\/)[^\s|/>]+(?!.+\/>)/g
         const matches = text.match(regexForTags)
         if (matches) return [...matches]
     }
