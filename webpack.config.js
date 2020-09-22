@@ -1,5 +1,5 @@
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
-const path = require('path');
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
+const path = require('path')
 
 module.exports = {
     entry: './src/index.js',
@@ -11,11 +11,11 @@ module.exports = {
         rules: [
             {
                 test: /\.css$/,
-                use: ['style-loader', 'css-loader']
+                use: ['style-loader', 'css-loader'],
             },
             {
                 test: /\.ttf$/,
-                use: ['file-loader']
+                use: ['file-loader'],
             },
             {
                 test: /\.xsd$/i,
@@ -27,17 +27,15 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: ['@babel/preset-env']
-                    }
-                }
-            }
-        ]
+                        presets: ['@babel/preset-env'],
+                    },
+                },
+            },
+        ],
     },
-    plugins: [
-        new MonacoWebpackPlugin()
-    ],
+    plugins: [new MonacoWebpackPlugin()],
     devServer: {
         contentBase: './dist',
-        port: 8080
-    }
-};
+        port: 8080,
+    },
+}

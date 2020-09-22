@@ -8,14 +8,9 @@ export default class CodeSuggestionCache {
     }
 
     elements = (parentElement) =>
-        typeof parentElement === 'undefined'
-            ? this.rootElements()
-            : this.subElements(parentElement)
+        typeof parentElement === 'undefined' ? this.rootElements() : this.subElements(parentElement)
 
-    rootElements = () =>
-        typeof this.elementCollections['rootElements'] === 'undefined'
-            ? this.getRootElements()
-            : this.elementCollections['rootElements']
+    rootElements = () => this.elementCollections['rootElements'] || this.getRootElements()
 
     getRootElements = () => {
         console.log(`Fetch root elements from XSD`)
@@ -24,9 +19,7 @@ export default class CodeSuggestionCache {
     }
 
     subElements = (parentElement) =>
-        typeof this.elementCollections[parentElement] === 'undefined'
-            ? this.getSubElements(parentElement)
-            : this.elementCollections[parentElement]
+        this.elementCollections[parentElement] || this.getSubElements(parentElement)
 
     getSubElements = (parentElement) => {
         console.log(`Fetch sub elements for ${parentElement} from XSD`)
@@ -34,10 +27,7 @@ export default class CodeSuggestionCache {
         return this.elementCollections[parentElement]
     }
 
-    attributes = (element) =>
-        typeof this.attributeCollections[element] === 'undefined'
-            ? this.getAttributes(element)
-            : this.attributeCollections[element]
+    attributes = (element) => this.attributeCollections[element] || this.getAttributes(element)
 
     getAttributes = (element) => {
         console.log(`Fetch attributes for ${element} from XSD`)

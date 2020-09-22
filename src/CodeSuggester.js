@@ -1,5 +1,5 @@
-import CodeSuggestionCache from "./CodeSuggestionCache";
-import TurndownService from "turndown";
+import CodeSuggestionCache from './CodeSuggestionCache'
+import TurndownService from 'turndown'
 
 export default class CodeSuggester {
     constructor(xsd) {
@@ -7,33 +7,42 @@ export default class CodeSuggester {
         this.turndownService = new TurndownService()
     }
 
-    elements = (parentElement) =>
-        this.parseElements(this.codeSuggestionCache.elements(parentElement))
+    elements = (parentElement, withoutTag = false, incomplete = false) =>
+        this.parseElements(this.codeSuggestionCache.elements(parentElement), withoutTag, incomplete)
 
-    parseElements = (elements) =>
-        elements.map(element => ({
+    parseElements = (elements, withoutTag, incomplete) =>
+        elements.map((element) => ({
             label: element.name,
-            insertText: element.name + '${1}></' + element.name,
+            insertText: this.parseElementInputText(element.name, withoutTag, incomplete),
             kind: monaco.languages.CompletionItemKind.Method,
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
         }))
+
+    parseElementInputText = (name, withoutTag, incomplete) => {
+        if (withoutTag)
+            return '<' + name + '${1}></' + name + '>'
+        if (incomplete)
+            return name
+
+        return name + '${1}></' + name
+    }
 
     attributes = (parentElement) =>
         this.parseAttributes(this.codeSuggestionCache.attributes(parentElement))
 
     parseAttributes = (attributes) =>
-        attributes.map(attribute => ({
+        attributes.map((attribute) => ({
             label: attribute.name,
             insertText: attribute.name + '="${1}"',
             detail: attribute.type.replace('xs:', ''),
-            preselect: attribute.use === "required",
+            preselect: attribute.use === 'required',
             kind: monaco.languages.CompletionItemKind.Variable,
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
             documentation: {
-                value: attribute.documentation ? this.turndownService.turndown(attribute.documentation) : '',
+                value: attribute.documentation
+                    ? this.turndownService.turndown(attribute.documentation)
+                    : '',
                 isTrusted: true,
-            }
+            },
         }))
-
-
 }
