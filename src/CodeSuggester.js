@@ -38,11 +38,13 @@ export default class CodeSuggester {
             preselect: attribute.use === 'required',
             kind: monaco.languages.CompletionItemKind.Variable,
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-            documentation: {
-                value: attribute.documentation
-                    ? this.turndownService.turndown(attribute.documentation)
-                    : '',
-                isTrusted: true,
-            },
+            documentation: this.parseAttributeDocumentation(attribute.documentation),
         }))
+
+    parseAttributeDocumentation = (documentation) => ({
+        value: documentation
+            ? this.turndownService.turndown(documentation)
+            : '',
+        isTrusted: true,
+    })
 }

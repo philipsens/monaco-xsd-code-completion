@@ -6,6 +6,7 @@ export default class XSDCodeCompletionProvider {
         element: 1,
         attribute: 2,
         incompleteElement: 3,
+        closingElement: 4,
     }
 
     constructor(xsd) {
@@ -13,7 +14,7 @@ export default class XSDCodeCompletionProvider {
     }
 
     provider = () => ({
-        triggerCharacters: ['<', ' '],
+        triggerCharacters: ['<', ' ', '/'],
         provideCompletionItems: (model, position) => ({
             suggestions: this.getSuggestions(model, position),
         }),
@@ -32,13 +33,14 @@ export default class XSDCodeCompletionProvider {
                 return this.codeSuggester.attributes(lastTag)
             case this.CompletionType.incompleteElement:
                 return this.codeSuggester.elements(lastTag, false, true)
+            case this.CompletionType.closingElement:
+                return [{ label: lastTag, insertText: lastTag }]
         }
     }
 
     getLastTag = (model, position) => {
         const parentTags = this.getParentTags(model, position)
-        const wordAtPosition =
-            model.getWordAtPosition(position) !== null ? model.getWordAtPosition(position).word : ''
+        const wordAtPosition = this.getWordAtPosition(model, position)
         return wordAtPosition === parentTags[parentTags.length - 1]
             ? parentTags[parentTags.length - 2]
             : parentTags[parentTags.length - 1]
@@ -62,6 +64,9 @@ export default class XSDCodeCompletionProvider {
         return parentTags
     }
 
+    getWordAtPosition = (model, position) =>
+        model.getWordAtPosition(position) !== null ? model.getWordAtPosition(position).word : ''
+
     getTextUntilPosition = (model, position) =>
         model.getValueInRange({
             startLineNumber: 1,
@@ -71,7 +76,7 @@ export default class XSDCodeCompletionProvider {
         })
 
     getTagsFromText = (text) => {
-        const regexForTags = /(?<=<|<\/)[A-Za-z0-9]+/g
+        const regexForTags = /(?<=<|<\/)[A-Za-z0-9]+(?!.+\/>)/g
         const matches = text.match(regexForTags)
         if (matches) return [...matches]
     }
@@ -81,6 +86,7 @@ export default class XSDCodeCompletionProvider {
 
         if (characterBeforePosition === '<') return this.CompletionType.element
         if (characterBeforePosition === ' ') return this.CompletionType.attribute
+        if (characterBeforePosition === '/') return this.CompletionType.closingElement
 
         const wordsBeforePosition = this.getWordsBeforePosition(model, position)
 
