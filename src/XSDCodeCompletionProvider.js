@@ -51,16 +51,17 @@ export default class XSDCodeCompletionProvider {
         const tags = this.getTagsFromText(textUntilPosition)
 
         const parentTags = []
-        tags.map((tag) => {
-            if (parentTags.includes(tag)) {
-                while (parentTags[parentTags.length - 1] !== tag) {
+        if (tags)
+            tags.map((tag) => {
+                if (parentTags.includes(tag)) {
+                    while (parentTags[parentTags.length - 1] !== tag) {
+                        parentTags.pop()
+                    }
                     parentTags.pop()
+                } else {
+                    parentTags.push(tag)
                 }
-                parentTags.pop()
-            } else {
-                parentTags.push(tag)
-            }
-        })
+            })
         return parentTags
     }
 

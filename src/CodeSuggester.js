@@ -10,6 +10,7 @@ export default class CodeSuggester {
     elements = (parentElement, withoutTag = false, incomplete = false) =>
         this.parseElements(this.codeSuggestionCache.elements(parentElement), withoutTag, incomplete)
 
+    // TODO: Order
     parseElements = (elements, withoutTag, incomplete) =>
         elements.map((element) => ({
             label: element.name,
