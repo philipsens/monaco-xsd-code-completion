@@ -41,9 +41,7 @@
                 this.elementName = elementname
                 tagProperties = {}
                 proparray.forEach(function (prop) {
-                    tagProperties[
-                        prop.getAttributeName()
-                    ] = prop.getAttributeValues()
+                    tagProperties[prop.getAttributeName()] = prop.getAttributeValues()
                 })
                 this.tagProperties = tagProperties
             }
@@ -67,11 +65,7 @@
                             break
                         }
                         default: {
-                            console.log(
-                                'tagType is set to default..',
-                                astring,
-                                ' is unknown type.'
-                            )
+                            console.log('tagType is set to default..', astring, ' is unknown type.')
                             this.tagType = 'STARTTAG'
                         }
                     }
@@ -88,12 +82,7 @@
                         }
                     })
                     returnstring =
-                        '<' +
-                        this.elementName +
-                        itsproperties +
-                        '></' +
-                        this.elementName +
-                        '>'
+                        '<' + this.elementName + itsproperties + '></' + this.elementName + '>'
 
                     return returnstring
                 },

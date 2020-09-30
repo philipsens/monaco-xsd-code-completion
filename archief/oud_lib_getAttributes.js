@@ -30,9 +30,7 @@ input.oninput = () => {
         .filter((node) => node.attributes[0].value.includes(input.value))
         .map(
             (result) =>
-                (outputString += `${
-                    result.attributes[0].value
-                } ${elementAtributes(result)}<br />`)
+                (outputString += `${result.attributes[0].value} ${elementAtributes(result)}<br />`)
         )
     output.innerHTML = outputString
 }

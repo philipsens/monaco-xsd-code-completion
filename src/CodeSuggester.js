@@ -10,17 +10,17 @@ export default class CodeSuggester {
     elements = (parentElement, withoutTag = false, incomplete = false) =>
         this.parseElements(this.codeSuggestionCache.elements(parentElement), withoutTag, incomplete)
 
-    // TODO: Order
     parseElements = (elements, withoutTag, incomplete) =>
-        elements.map((element) => ({
+        elements.map((element, index) => ({
             label: element.name,
             insertText: this.parseElementInputText(element.name, withoutTag, incomplete),
             kind: monaco.languages.CompletionItemKind.Method,
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            sortText: index.toString(),
         }))
 
     parseElementInputText = (name, withoutTag, incomplete) => {
-        if (withoutTag) return '<' + name + '${1}></' + name + '>'
+        if (withoutTag) return '<' + name + '${1}>\n\t${2}\n</' + name + '>'
         if (incomplete) return name
 
         return name + '${1}></' + name

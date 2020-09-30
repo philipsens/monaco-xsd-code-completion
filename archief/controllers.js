@@ -120,9 +120,7 @@
 
             //standard loging
             function login(useremail, password) {
-                UserFactory.login(useremail, password).then(function success(
-                    response
-                ) {
+                UserFactory.login(useremail, password).then(function success(response) {
                     //console.log("returning from service;", JSON.stringify(response));
                     if (response.status !== 200) {
                         alert(response.data.loginDetails.result)
@@ -135,8 +133,7 @@
                         getJson()
                         initScrollbar()
                     }
-                },
-                handleError)
+                }, handleError)
             }
 
             function logout() {
@@ -215,12 +212,7 @@
                         function completeIfAfterLt(cm) {
                             return completeAfter(cm, function () {
                                 var cur = cm.getCursor()
-                                return (
-                                    cm.getRange(
-                                        CodeMirror.Pos(cur.line, cur.ch - 1),
-                                        cur
-                                    ) == '<'
-                                )
+                                return cm.getRange(CodeMirror.Pos(cur.line, cur.ch - 1), cur) == '<'
                             })
                         }
 
@@ -229,16 +221,11 @@
                                 var tok = cm.getTokenAt(cm.getCursor())
                                 if (
                                     tok.type == 'string' &&
-                                    (!/['"]/.test(
-                                        tok.string.charAt(tok.string.length - 1)
-                                    ) ||
+                                    (!/['"]/.test(tok.string.charAt(tok.string.length - 1)) ||
                                         tok.string.length == 1)
                                 )
                                     return false
-                                var inner = CodeMirror.innerMode(
-                                    cm.getMode(),
-                                    tok.state
-                                ).state
+                                var inner = CodeMirror.innerMode(cm.getMode(), tok.state).state
                                 return inner.tagName
                             })
                         }
@@ -285,9 +272,7 @@
                         vm.showSpinnerSmall = false
                         // console.log("spinner:",vm.showSpinnerSmall);
                     }, 1000)
-                    var thekey = StorageFactory.getGetter(
-                        StorageFactory.getCurrentKey().title
-                    )()
+                    var thekey = StorageFactory.getGetter(StorageFactory.getCurrentKey().title)()
                     // console.log("saving : ", cropFilter(StorageFactory.getCurrentKey().title));
                     StorageFactory.getSetter(thekey)(thedocument.getValue())
                 }, 5000)
@@ -320,9 +305,7 @@
                     vm.showSpinnerSmall = false
                 }, 1000)
                 if (StorageFactory.getCurrentKey()) {
-                    var thekey = StorageFactory.getGetter(
-                        StorageFactory.getCurrentKey().title
-                    )()
+                    var thekey = StorageFactory.getGetter(StorageFactory.getCurrentKey().title)()
                     // console.log("saving after focus change : ", cropFilter(StorageFactory.getCurrentKey().title));
                     StorageFactory.getSetter(thekey)(thedocument.getValue())
                 }
@@ -330,10 +313,7 @@
 
             function cropFilter(item) {
                 if (item === undefined) return ''
-                var helper = item.substring(
-                    item.lastIndexOf('/') + 1,
-                    item.length
-                )
+                var helper = item.substring(item.lastIndexOf('/') + 1, item.length)
                 if (helper.length > 0) {
                     return helper
                 } else {
@@ -350,9 +330,7 @@
             function sendZip() {
                 toggleSpinner()
                 //saving the current file before uploading it...
-                var thekey = StorageFactory.getGetter(
-                    StorageFactory.getCurrentKey().title
-                )()
+                var thekey = StorageFactory.getGetter(StorageFactory.getCurrentKey().title)()
                 // console.log("saving : ", cropFilter(StorageFactory.getCurrentKey().title));
                 StorageFactory.getSetter(thekey)(thedocument.getValue())
                 ZipService.sendZip().then(
@@ -617,14 +595,9 @@
                 //get the currunt cursor position of the editor; check between which values that is and look that up
                 // after reformatting the text to replace the cursor.
                 var pos = thedocument.getCursor()
-                var before = thedocument.getRange(
-                    { line: pos.line, ch: 0 },
-                    pos
-                )
+                var before = thedocument.getRange({ line: pos.line, ch: 0 }, pos)
                 //regex to find tag segment left of the cursor : <[\w\/\s=\'\"]+$|<[\w\/\s=\'\"]+>$
-                var beforesegment = before.match(
-                    /<[\w\/\s=\'\"]+$|<[\w\/\s=\'\"]+>[\w\s]*$/
-                )
+                var beforesegment = before.match(/<[\w\/\s=\'\"]+$|<[\w\/\s=\'\"]+>[\w\s]*$/)
                 if (beforesegment !== null) {
                     before = beforesegment[0]
                 }
@@ -633,9 +606,7 @@
                     ch: null,
                 })
                 //regex to find tag segment to the right of cursor : ^[\w\/\s=\'\"]+>|^<[\w\/\s=\'\"]+>
-                var aftersegment = after.match(
-                    /^[\w\/\s=\'\"]+>|^<[\w\/\s=\'\"]+>/
-                )
+                var aftersegment = after.match(/^[\w\/\s=\'\"]+>|^<[\w\/\s=\'\"]+>/)
                 if (aftersegment !== null) {
                     after = aftersegment[0]
                 }
@@ -656,9 +627,7 @@
                 }
                 //now that we know we can find the new cursor position we will format the complete text
                 var settings = StaticDataFactory.getFormattingSettings()
-                thedocument.setValue(
-                    html_beautify(thedocument.getValue(), settings)
-                )
+                thedocument.setValue(html_beautify(thedocument.getValue(), settings))
 
                 //put the cursor back in place
                 cursor = editor.getSearchCursor(before)
@@ -690,10 +659,7 @@
 
             //determines to check a value in the property area because they are obligatory;
             function checkDefaults(property) {
-                if (
-                    property[0] === 'classname' ||
-                    property[0] === 'className'
-                ) {
+                if (property[0] === 'classname' || property[0] === 'className') {
                     vm.selectedProperties[property[0]] = new attributeObject(
                         'className',
                         new Array(property[2])
@@ -708,10 +674,7 @@
 to a string and inserted in the editor;*/
 
             function submitForm() {
-                if (
-                    vm.selectedItem === null ||
-                    editor.getOption('readOnly') === true
-                ) {
+                if (vm.selectedItem === null || editor.getOption('readOnly') === true) {
                     return
                 }
                 if (vm.selectedItem.type === 'snippets') {
@@ -722,16 +685,11 @@ to a string and inserted in the editor;*/
                     var theproperties = []
                     // console.log("props:", vm.selectedProperties);
                     if (Object.keys(vm.selectedProperties).length > 0) {
-                        Object.keys(vm.selectedProperties).forEach(function (
-                            thekey
-                        ) {
+                        Object.keys(vm.selectedProperties).forEach(function (thekey) {
                             theproperties.push(vm.selectedProperties[thekey])
                         })
                     }
-                    var newtag = new xmlTag(
-                        vm.selectedItem.classname,
-                        theproperties
-                    )
+                    var newtag = new xmlTag(vm.selectedItem.classname, theproperties)
                     // console.log("the newtag:", newtag.toCompleteTag());
                     thedocument.replaceSelection(newtag.toCompleteTag())
                     editor.focus()
@@ -739,10 +697,7 @@ to a string and inserted in the editor;*/
             }
 
             function showTagInTooltip() {
-                if (
-                    vm.selectedItem === null ||
-                    editor.getOption('readOnly') === true
-                ) {
+                if (vm.selectedItem === null || editor.getOption('readOnly') === true) {
                     return
                 }
                 if (vm.selectedItem.type === 'snippets') {
@@ -751,26 +706,18 @@ to a string and inserted in the editor;*/
                     var theproperties = []
                     // console.log("props:", vm.selectedProperties);
                     if (Object.keys(vm.selectedProperties).length > 0) {
-                        Object.keys(vm.selectedProperties).forEach(function (
-                            thekey
-                        ) {
+                        Object.keys(vm.selectedProperties).forEach(function (thekey) {
                             theproperties.push(vm.selectedProperties[thekey])
                         })
                     }
-                    var newtag = new xmlTag(
-                        vm.selectedItem.classname,
-                        theproperties
-                    )
+                    var newtag = new xmlTag(vm.selectedItem.classname, theproperties)
                     // console.log("newtag:", newtag.toString());
                     vm.proposedtag = newtag.toCompleteTag()
                 }
             }
         })
 
-        .controller('LoadCredentialsController', function (
-            $uibModalInstance,
-            items
-        ) {
+        .controller('LoadCredentialsController', function ($uibModalInstance, items) {
             console.log('loading credentials...')
             var vm4 = this
             vm4.iaf_url = null

@@ -1,8 +1,9 @@
 import xpath from 'xpath'
+import xmldom from 'xmldom'
 
 export default class XSDParser {
     constructor(xsdString) {
-        const Dom = require('xmldom').DOMParser
+        const Dom = xmldom.DOMParser
         this.xsdDOM = new Dom().parseFromString(xsdString)
         this.select = xpath.useNamespaces({
             xs: 'http://www.w3.org/2001/XMLSchema',
