@@ -17,17 +17,4 @@ const editor = monaco.editor.create(document.getElementById('container'), {
     language: 'xml',
 })
 
-editor.updateOptions({
-    autoIndent: true,
-    formatOnPaste: true,
-    formatOnType: true,
-})
-
 monaco.languages.registerCompletionItemProvider('xml', xsdCodeCompletion.provider())
-
-monaco.languages.setLanguageConfiguration('xml', {
-    indentationRules: {
-        decreaseIndentPattern: /^<\/([_:\w][_:\w-.\d]*)\s*>$/i,
-        increaseIndentPattern: /<(\w[\w\d]*)([^/>]*(?!\/)>)[^<]*$/i,
-    },
-})

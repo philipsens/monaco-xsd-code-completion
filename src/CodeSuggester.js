@@ -12,7 +12,7 @@ export default class CodeSuggester {
 
     parseElements = (elements, withoutTag, incomplete) =>
         elements.map((element, index) => ({
-            label: element.name,
+            label: withoutTag ? element.name + ' Template' : element.name,
             insertText: this.parseElementInputText(element.name, withoutTag, incomplete),
             kind: monaco.languages.CompletionItemKind.Method,
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
