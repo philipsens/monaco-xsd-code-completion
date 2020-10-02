@@ -34,7 +34,7 @@ export default class XSDCodeCompletionProvider {
             case this.CompletionType.incompleteElement:
                 return this.codeSuggester.elements(lastTag, false, true)
             case this.CompletionType.closingElement:
-                return [{ label: lastTag, insertText: lastTag }]
+                return this.completeClosingTag(lastTag)
         }
     }
 
@@ -122,4 +122,12 @@ export default class XSDCodeCompletionProvider {
     }
 
     textContainsTags = (text) => typeof this.getTagsFromText(text) !== 'undefined'
+
+    completeClosingTag = (name) => [
+        {
+            label: name,
+            detail: 'Close tag',
+            insertText: name,
+        },
+    ]
 }

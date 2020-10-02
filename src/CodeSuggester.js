@@ -12,11 +12,12 @@ export default class CodeSuggester {
 
     parseElements = (elements, withoutTag, incomplete) =>
         elements.map((element, index) => ({
-            label: withoutTag ? element.name + ' Template' : element.name,
+            label: element.name,
             insertText: this.parseElementInputText(element.name, withoutTag, incomplete),
             kind: monaco.languages.CompletionItemKind.Method,
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
             sortText: index.toString(),
+            detail: this.getElementDetail(withoutTag),
         }))
 
     parseElementInputText = (name, withoutTag, incomplete) => {
@@ -26,6 +27,8 @@ export default class CodeSuggester {
         return name + '${1}></' + name
     }
 
+    getElementDetail = (withoutTag) => (withoutTag ? `Insert as snippet` : '')
+
     attributes = (parentElement) =>
         this.parseAttributes(this.codeSuggestionCache.attributes(parentElement))
 
@@ -33,7 +36,7 @@ export default class CodeSuggester {
         attributes.map((attribute) => ({
             label: attribute.name,
             insertText: attribute.name + '="${1}"',
-            detail: attribute.type.replace('xs:', ''),
+            detail: attribute.type.split(':')[1],
             preselect: attribute.use === 'required',
             kind: monaco.languages.CompletionItemKind.Variable,
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
