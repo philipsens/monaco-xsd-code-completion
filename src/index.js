@@ -1,2 +1,4 @@
-import XSDParser from './XSDParser.js'
-import XSDCodeCompletion from './XSDCodeCompletionProvider'
+export const XSDParser = require('./XSDParser.js')
+export const XSDCodeCompletion = require('./XSDCodeCompletionProvider.js')
+
+

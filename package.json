@@ -1,14 +1,13 @@
 {
     "name": "monaco-xsd-code-completion",
-    "version": "0.0.4",
-    "description": "",
+    "version": "0.0.14",
+    "description": "This is a basic and low resource way to provide client-side code completion for the Monaco-editor.",
     "repository": {
         "type": "git",
         "url": "https://github.com/philipsens/monaco-xsd-code-completion"
     },
-    "directories": {
-        "dist": "./dist"
-    },
+    "main": "dist/main.js",
+    "module": "src/index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "build": "webpack",
