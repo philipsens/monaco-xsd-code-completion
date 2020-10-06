@@ -14,6 +14,9 @@
         "watch": "webpack --watch --mode development",
         "prettier": "prettier --write ."
     },
+    "directories": {
+        "lib": "src"
+    },
     "keywords": [
         "xml",
         "monaco",
