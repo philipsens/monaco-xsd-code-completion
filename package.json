@@ -1,6 +1,6 @@
 {
     "name": "monaco-xsd-code-completion",
-    "version": "0.0.14",
+    "version": "0.0.15",
     "description": "This is a basic and low resource way to provide client-side code completion for the Monaco-editor.",
     "repository": {
         "type": "git",
