@@ -5,8 +5,8 @@ module.exports = {
     entry: './src/index.ts',
     output: {
         path: path.resolve(__dirname, 'umd'),
-        filename: 'my-typescript-package.js',
-        library: 'MyTsPackage',
+        filename: 'main.js',
+        library: 'Monaco XSD Code Completion',
         libraryTarget: 'umd',
     },
     module: {

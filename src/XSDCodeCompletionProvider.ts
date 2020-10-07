@@ -1,7 +1,7 @@
 import CodeSuggester from './CodeSuggester'
 import { CompletionType } from './models/CompletionType'
 import XSDParser from './XSDParser'
-import { editor, IPosition, languages } from 'monaco-editor-core'
+import { editor, IPosition, languages } from 'monaco-editor'
 import CompletionList = languages.CompletionList
 import CompletionItem = languages.CompletionItem
 import IModel = editor.IModel
@@ -15,12 +15,30 @@ export default class XSDCodeCompletionProvider {
 
     public provider = () => ({
         triggerCharacters: ['<', ' ', '/'],
-        provideCompletionItems: (model: IModel, position: IPosition): CompletionList => ({
+        provideCompletionItems: (
+            model: IModel,
+            position: IPosition,
+        ): {
+            suggestions: {
+                insertText: string
+                kind: languages.CompletionItemKind
+                label: string
+                detail: string
+            }[]
+        } => ({
             suggestions: this.getSuggestions(model, position),
         }),
     })
 
-    private getSuggestions = (model: IModel, position: IPosition): CompletionItem[] => {
+    private getSuggestions = (
+        model: IModel,
+        position: IPosition,
+    ): {
+        insertText: string
+        kind: languages.CompletionItemKind
+        label: string
+        detail: string
+    }[] => {
         const lastTag = this.getLastTag(model, position)
         const completionType = this.getCompletionType(model, position)
 
@@ -130,7 +148,14 @@ export default class XSDCodeCompletionProvider {
     private textContainsTags = (text: string): boolean =>
         typeof this.getTagsFromText(text) !== 'undefined'
 
-    private completeClosingTag = (name: string): CompletionItem[] => [
+    private completeClosingTag = (
+        name: string,
+    ): {
+        insertText: string
+        kind: languages.CompletionItemKind
+        label: string
+        detail: string
+    }[] => [
         {
             label: name,
             kind: languages.CompletionItemKind.Property,
