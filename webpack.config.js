@@ -1,33 +1,37 @@
 const path = require('path')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = {
-    entry: './src/index.js',
+    mode: 'production',
+    entry: './src/index.ts',
     output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: 'main.js',
-        library: 'monaco-xsd-code-completion',
+        path: path.resolve(__dirname, 'umd'),
+        filename: 'my-typescript-package.js',
+        library: 'MyTsPackage',
         libraryTarget: 'umd',
     },
     module: {
         rules: [
             {
-                test: /\.xsd$/i,
-                use: 'raw-loader',
-            },
-            {
-                test: /\.m?js$/,
-                exclude: /(node_modules|bower_components)/,
+                test: /\.tsx?$/,
+                exclude: /node_modules/,
                 use: {
-                    loader: 'babel-loader',
+                    loader: 'ts-loader',
                     options: {
-                        presets: ['@babel/preset-env'],
+                        configFile: 'tsconfig.umd.json',
                     },
                 },
             },
+            {
+                test: /\.css$/i,
+                use: ['style-loader', 'css-loader'],
+            },
+            {
+                test: /\.ttf$/,
+                use: ['file-loader'],
+            },
         ],
     },
-    plugins: [
-        new BundleAnalyzerPlugin(),
-    ],
+    resolve: {
+        extensions: ['.ts', '.tsx', '.js'],
+    },
 }
