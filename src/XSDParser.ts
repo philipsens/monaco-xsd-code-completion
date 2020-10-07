@@ -49,6 +49,8 @@ export default class XSDParser {
 
     getDocumentationForNode = (attribute: Node): any =>
         this.select(`xs:annotation/xs:documentation`, attribute).map((documentation: any): any =>
-            'firstChild' in documentation ? { documentation: documentation.firstChild.data } : null,
+            documentation.firstChild !== null
+                ? { documentation: documentation.firstChild.data }
+                : null,
         )
 }

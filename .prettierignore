@@ -1,3 +1,9 @@
 .editorconfig
 .gitignore
 .prettierignore
+
+esm
+lib
+umd
+
+node_modules
