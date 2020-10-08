@@ -1,7 +1,7 @@
 import CodeSuggester from './CodeSuggester'
 import { CompletionType } from './models/CompletionType'
 import XSDParser from './XSDParser'
-import { editor, IPosition, Position, languages } from 'monaco-editor'
+import { editor, IPosition, languages, Position } from 'monaco-editor'
 import CompletionList = languages.CompletionList
 import CompletionItem = languages.CompletionItem
 import CompletionItemProvider = languages.CompletionItemProvider
@@ -56,11 +56,10 @@ export default class XSDCodeCompletionProvider {
     private getParentTags = (model: ITextModel, position: Position): string[] => {
         const textUntilPosition = this.getTextUntilPosition(model, position)
         const tags = this.getTagsFromText(textUntilPosition)
-        //TODO
         const parentTags: string[] = []
         if (tags)
             tags.map((tag) => {
-                if (tag in parentTags) {
+                if (parentTags.includes(tag)) {
                     while (parentTags[parentTags.length - 1] !== tag) {
                         parentTags.pop()
                     }
@@ -72,10 +71,9 @@ export default class XSDCodeCompletionProvider {
         return parentTags
     }
 
-    private getWordAtPosition = (model: ITextModel, position: Position): string => {
+    private getWordAtPosition = (model: ITextModel, position: Position): string | undefined => {
         const wordAtPosision = model.getWordAtPosition(position)
         if (wordAtPosision !== null) return wordAtPosision.word
-        return ''
     }
 
     private getTextUntilPosition = (model: ITextModel, position: IPosition): string =>
@@ -86,11 +84,10 @@ export default class XSDCodeCompletionProvider {
             endColumn: position.column,
         })
 
-    private getTagsFromText = (text: string): string[] => {
+    private getTagsFromText = (text: string): string[] | undefined => {
         const regexForTags = /(?<=<|<\/)[^\s|/>]+(?!.+\/>)/g
         const matches = text.match(regexForTags)
         if (matches) return [...matches]
-        return ['']
     }
 
     private getCompletionType = (model: ITextModel, position: Position): CompletionType => {
@@ -125,17 +122,15 @@ export default class XSDCodeCompletionProvider {
         })
 
     private textContainsAttributes = (text: string): boolean =>
-        typeof this.getAttributesFromText(text) !== 'undefined'
+        this.getAttributesFromText(text) !== undefined
 
-    private getAttributesFromText = (text: string): string[] => {
+    private getAttributesFromText = (text: string): string[] | undefined => {
         const regexForAttributes = /(?<=\s)[A-Za-z0-9]+/g
         const matches = text.match(regexForAttributes)
         if (matches) return [...matches]
-        return ['']
     }
 
-    private textContainsTags = (text: string): boolean =>
-        typeof this.getTagsFromText(text) !== 'undefined'
+    private textContainsTags = (text: string): boolean => this.getTagsFromText(text) !== undefined
 
     private completeClosingTag = (name: string): CompletionItem[] => [
         {

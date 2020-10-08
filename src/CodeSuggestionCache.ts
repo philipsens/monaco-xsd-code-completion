@@ -12,7 +12,7 @@ export default class CodeSuggestionCache {
     }
 
     public elements = (parentElement: string): DocumentNode[] =>
-        typeof parentElement === 'undefined' ? this.rootElements() : this.subElements(parentElement)
+        parentElement === undefined ? this.rootElements() : this.subElements(parentElement)
 
     private rootElements = (): DocumentNode[] =>
         this.getElementCollection('rootElements') || this.getRootElements()
