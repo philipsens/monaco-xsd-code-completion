@@ -1,10 +1,12 @@
 import CodeSuggester from './CodeSuggester'
 import { CompletionType } from './models/CompletionType'
 import XSDParser from './XSDParser'
-import { editor, IPosition, languages } from 'monaco-editor'
+import { editor, IPosition, Position, languages } from 'monaco-editor'
 import CompletionList = languages.CompletionList
 import CompletionItem = languages.CompletionItem
-import IModel = editor.IModel
+import CompletionItemProvider = languages.CompletionItemProvider
+import ITextModel = editor.ITextModel
+import ProviderResult = languages.ProviderResult
 
 export default class XSDCodeCompletionProvider {
     private codeSuggester: CodeSuggester
@@ -13,32 +15,19 @@ export default class XSDCodeCompletionProvider {
         this.codeSuggester = new CodeSuggester(xsd)
     }
 
-    public provider = () => ({
+    public provider = (): CompletionItemProvider => ({
         triggerCharacters: ['<', ' ', '/'],
         provideCompletionItems: (
-            model: IModel,
-            position: IPosition,
-        ): {
-            suggestions: {
-                insertText: string
-                kind: languages.CompletionItemKind
-                label: string
-                detail: string
-            }[]
-        } => ({
+            model: ITextModel,
+            position: Position,
+        ): ProviderResult<CompletionList> => ({
+            //TODO: Context?
             suggestions: this.getSuggestions(model, position),
         }),
+        // TODO: Resolve?
     })
 
-    private getSuggestions = (
-        model: IModel,
-        position: IPosition,
-    ): {
-        insertText: string
-        kind: languages.CompletionItemKind
-        label: string
-        detail: string
-    }[] => {
+    private getSuggestions = (model: ITextModel, position: Position): CompletionItem[] => {
         const lastTag = this.getLastTag(model, position)
         const completionType = this.getCompletionType(model, position)
 
@@ -56,7 +45,7 @@ export default class XSDCodeCompletionProvider {
         }
     }
 
-    private getLastTag = (model: IModel, position: IPosition): string => {
+    private getLastTag = (model: ITextModel, position: Position): string => {
         const parentTags = this.getParentTags(model, position)
         const wordAtPosition = this.getWordAtPosition(model, position)
         return wordAtPosition === parentTags[parentTags.length - 1]
@@ -64,7 +53,7 @@ export default class XSDCodeCompletionProvider {
             : parentTags[parentTags.length - 1]
     }
 
-    private getParentTags = (model: IModel, position: IPosition): string[] => {
+    private getParentTags = (model: ITextModel, position: Position): string[] => {
         const textUntilPosition = this.getTextUntilPosition(model, position)
         const tags = this.getTagsFromText(textUntilPosition)
         //TODO
@@ -83,13 +72,13 @@ export default class XSDCodeCompletionProvider {
         return parentTags
     }
 
-    private getWordAtPosition = (model: IModel, position: IPosition): string => {
+    private getWordAtPosition = (model: ITextModel, position: Position): string => {
         const wordAtPosision = model.getWordAtPosition(position)
         if (wordAtPosision !== null) return wordAtPosision.word
         return ''
     }
 
-    private getTextUntilPosition = (model: IModel, position: IPosition): string =>
+    private getTextUntilPosition = (model: ITextModel, position: IPosition): string =>
         model.getValueInRange({
             startLineNumber: 1,
             startColumn: 1,
@@ -104,7 +93,7 @@ export default class XSDCodeCompletionProvider {
         return ['']
     }
 
-    private getCompletionType = (model: IModel, position: IPosition): CompletionType => {
+    private getCompletionType = (model: ITextModel, position: Position): CompletionType => {
         const characterBeforePosition = this.getCharacterBeforePosition(model, position)
 
         if (characterBeforePosition === '<') return CompletionType.element
@@ -119,7 +108,7 @@ export default class XSDCodeCompletionProvider {
         return CompletionType.none
     }
 
-    private getCharacterBeforePosition = (model: IModel, position: IPosition): string =>
+    private getCharacterBeforePosition = (model: ITextModel, position: IPosition): string =>
         model.getValueInRange({
             startLineNumber: position.lineNumber,
             startColumn: position.column - 1,
@@ -127,7 +116,7 @@ export default class XSDCodeCompletionProvider {
             endColumn: position.column,
         })
 
-    private getWordsBeforePosition = (model: IModel, position: IPosition): string =>
+    private getWordsBeforePosition = (model: ITextModel, position: IPosition): string =>
         model.getValueInRange({
             startLineNumber: position.lineNumber,
             startColumn: 0,
@@ -148,14 +137,7 @@ export default class XSDCodeCompletionProvider {
     private textContainsTags = (text: string): boolean =>
         typeof this.getTagsFromText(text) !== 'undefined'
 
-    private completeClosingTag = (
-        name: string,
-    ): {
-        insertText: string
-        kind: languages.CompletionItemKind
-        label: string
-        detail: string
-    }[] => [
+    private completeClosingTag = (name: string): CompletionItem[] => [
         {
             label: name,
             kind: languages.CompletionItemKind.Property,

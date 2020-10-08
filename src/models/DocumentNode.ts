@@ -1,13 +1,14 @@
 export default class DocumentNode {
-    public name: string
-    private type?: string
-    private use?: string
+    public name!: string
+    private readonly type?: string
+    private readonly use?: string
     public documentation?: string
 
-    constructor(name: string) {
-        this.name = name
+    get isRequired(): boolean {
+        return this.use === 'required'
     }
 
-    isRequired = (): boolean => this.use === 'required'
-    getType = (): string => (this.type ? this.type.split(':')[1] : '')
+    get getType(): string {
+        return this.type ? this.type.split(':')[1] : ''
+    }
 }

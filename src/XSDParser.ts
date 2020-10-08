@@ -1,6 +1,6 @@
 import * as xpath from 'xpath'
-import { DOMParser } from 'xmldom'
 import { SelectedValue } from 'xpath'
+import { DOMParser } from 'xmldom'
 import DocumentNode from './models/DocumentNode'
 
 export default class XSDParser {
@@ -36,8 +36,8 @@ export default class XSDParser {
     parseAttributes = (attributes: SelectedValue[]): DocumentNode[] =>
         attributes.map(
             (attribute: SelectedValue): DocumentNode => ({
-                ...this.getAttributesForNode(<Node>attribute),
-                ...this.getDocumentationForNode(<Node>attribute)[0],
+                ...this.getAttributesForNode(attribute as Node),
+                ...this.getDocumentationForNode(attribute as Node)[0],
             }),
         )
 
