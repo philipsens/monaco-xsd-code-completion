@@ -5,4 +5,5 @@ export enum CompletionType {
     incompleteElement = 3,
     closingElement = 4,
     snippet = 5,
+    incompleteAttribute = 6,
 }

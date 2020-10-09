@@ -57,16 +57,16 @@ export default class CodeSuggester {
     private getElementDetail = (withoutTag: boolean): string =>
         withoutTag ? `Insert as snippet` : ''
 
-    public attributes = (element: string): CompletionItem[] =>
-        this.parseAttributes(this.codeSuggestionCache.attributes(element))
+    public attributes = (element: string, incomplete = false): CompletionItem[] =>
+        this.parseAttributes(this.codeSuggestionCache.attributes(element), incomplete)
 
-    private parseAttributes = (attributes: DocumentNode[]): CompletionItem[] =>
+    private parseAttributes = (attributes: DocumentNode[], incomplete: boolean): CompletionItem[] =>
         attributes.map(
             (attribute: DocumentNode): CompletionItem => ({
                 label: attribute.name,
                 kind: languages.CompletionItemKind.Variable,
                 detail: attribute.getType,
-                insertText: this.parseAttributeInputText(attribute.name),
+                insertText: this.parseAttributeInputText(attribute.name, incomplete),
                 preselect: attribute.isRequired,
                 insertTextRules: languages.CompletionItemInsertTextRule.InsertAsSnippet,
                 documentation: this.parseAttributeDocumentation(attribute.documentation),
@@ -78,5 +78,6 @@ export default class CodeSuggester {
         isTrusted: true,
     })
 
-    private parseAttributeInputText = (name: string): string => name + '="${1}"'
+    private parseAttributeInputText = (name: string, incomplete: boolean): string =>
+        incomplete ? name : name + '="${1}"'
 }

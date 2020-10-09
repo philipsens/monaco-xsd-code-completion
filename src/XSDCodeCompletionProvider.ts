@@ -48,6 +48,8 @@ export default class XSDCodeCompletionProvider {
                 return this.codeSuggester.attributes(lastTag)
             case CompletionType.incompleteElement:
                 return this.codeSuggester.elements(lastTag, false, true)
+            case CompletionType.incompleteAttribute:
+                return this.codeSuggester.attributes(lastTag, true)
             case CompletionType.closingElement:
                 return this.completeClosingTag(lastTag)
         }
@@ -108,12 +110,10 @@ export default class XSDCodeCompletionProvider {
 
         switch (context.triggerKind) {
             case CompletionTriggerKind.Invoke:
-                // TODO: Additional checks.
-                return CompletionType.snippet
-            case CompletionTriggerKind.TriggerCharacter:
-                return this.getCompletionTypeByTriggerCharacter(context.triggerCharacter)
             case CompletionTriggerKind.TriggerForIncompleteCompletions:
                 return this.getCompletionTypeForIncompleteCompletions(wordsBeforePosition)
+            case CompletionTriggerKind.TriggerCharacter:
+                return this.getCompletionTypeByTriggerCharacter(context.triggerCharacter)
         }
     }
 
@@ -146,9 +146,9 @@ export default class XSDCodeCompletionProvider {
     }
 
     private getCompletionTypeForIncompleteCompletions = (text: string): CompletionType => {
-        if (this.textContainsAttributes(text)) return CompletionType.attribute
+        if (this.textContainsAttributes(text)) return CompletionType.incompleteAttribute
         if (this.textContainsTags(text)) return CompletionType.incompleteElement
-        return CompletionType.none
+        return CompletionType.snippet
     }
 
     // TODO: This could be used for the invoke check.
