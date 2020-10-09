@@ -7,6 +7,8 @@ import CompletionItem = languages.CompletionItem
 import CompletionItemProvider = languages.CompletionItemProvider
 import ITextModel = editor.ITextModel
 import ProviderResult = languages.ProviderResult
+import CompletionContext = languages.CompletionContext
+import CompletionTriggerKind = languages.CompletionTriggerKind
 
 export default class XSDCodeCompletionProvider {
     private codeSuggester: CodeSuggester
@@ -20,19 +22,25 @@ export default class XSDCodeCompletionProvider {
         provideCompletionItems: (
             model: ITextModel,
             position: Position,
+            context: CompletionContext,
         ): ProviderResult<CompletionList> => ({
-            //TODO: Context?
-            suggestions: this.getSuggestions(model, position),
+            suggestions: this.getSuggestions(model, position, context),
         }),
         // TODO: Resolve?
     })
 
-    private getSuggestions = (model: ITextModel, position: Position): CompletionItem[] => {
+    private getSuggestions = (
+        model: ITextModel,
+        position: Position,
+        context: CompletionContext,
+    ): CompletionItem[] => {
         const lastTag = this.getLastTag(model, position)
-        const completionType = this.getCompletionType(model, position)
+        const completionType = this.getCompletionType(model, position, context)
 
         switch (completionType) {
             case CompletionType.none:
+                return []
+            case CompletionType.snippet:
                 return this.codeSuggester.elements(lastTag, true)
             case CompletionType.element:
                 return this.codeSuggester.elements(lastTag)
@@ -90,33 +98,64 @@ export default class XSDCodeCompletionProvider {
         if (matches) return [...matches]
     }
 
-    private getCompletionType = (model: ITextModel, position: Position): CompletionType => {
-        const characterBeforePosition = this.getCharacterBeforePosition(model, position)
-
-        if (characterBeforePosition === '<') return CompletionType.element
-        if (characterBeforePosition === ' ') return CompletionType.attribute
-        if (characterBeforePosition === '/') return CompletionType.closingElement
-
+    private getCompletionType = (
+        model: ITextModel,
+        position: Position,
+        context: CompletionContext,
+    ): CompletionType => {
         const wordsBeforePosition = this.getWordsBeforePosition(model, position)
+        if (this.checkIfInsideAttributeValue(wordsBeforePosition)) return CompletionType.none
 
-        if (this.textContainsAttributes(wordsBeforePosition)) return CompletionType.attribute
-        if (this.textContainsTags(wordsBeforePosition)) return CompletionType.incompleteElement
-
-        return CompletionType.none
+        switch (context.triggerKind) {
+            case CompletionTriggerKind.Invoke:
+                // TODO: Additional checks.
+                return CompletionType.snippet
+            case CompletionTriggerKind.TriggerCharacter:
+                return this.getCompletionTypeByTriggerCharacter(context.triggerCharacter)
+            case CompletionTriggerKind.TriggerForIncompleteCompletions:
+                return this.getCompletionTypeForIncompleteCompletions(wordsBeforePosition)
+        }
     }
-
-    private getCharacterBeforePosition = (model: ITextModel, position: IPosition): string =>
-        model.getValueInRange({
-            startLineNumber: position.lineNumber,
-            startColumn: position.column - 1,
-            endLineNumber: position.lineNumber,
-            endColumn: position.column,
-        })
 
     private getWordsBeforePosition = (model: ITextModel, position: IPosition): string =>
         model.getValueInRange({
             startLineNumber: position.lineNumber,
             startColumn: 0,
+            endLineNumber: position.lineNumber,
+            endColumn: position.column,
+        })
+
+    private checkIfInsideAttributeValue = (text: string): boolean => {
+        const regexForInsideAttributeValue = /="[^"]+$/
+        const matches = text.match(regexForInsideAttributeValue)
+        return !!matches
+    }
+
+    private getCompletionTypeByTriggerCharacter = (
+        triggerCharacter: string | undefined,
+    ): CompletionType => {
+        switch (triggerCharacter) {
+            case '<':
+                return CompletionType.element
+            case ' ':
+                return CompletionType.attribute
+            case '/':
+                return CompletionType.closingElement
+        }
+        return CompletionType.none
+    }
+
+    private getCompletionTypeForIncompleteCompletions = (text: string): CompletionType => {
+        if (this.textContainsAttributes(text)) return CompletionType.attribute
+        if (this.textContainsTags(text)) return CompletionType.incompleteElement
+        return CompletionType.none
+    }
+
+    // TODO: This could be used for the invoke check.
+    private getCharacterBeforePosition = (model: ITextModel, position: IPosition): string =>
+        model.getValueInRange({
+            startLineNumber: position.lineNumber,
+            startColumn: position.column - 1,
             endLineNumber: position.lineNumber,
             endColumn: position.column,
         })
