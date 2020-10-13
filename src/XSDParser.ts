@@ -57,10 +57,12 @@ export default class XSDParser {
         )
 
     getDocumentationForNode = (attribute: Node): any =>
-        this.select(`${this.namespace}:annotation/${this.namespace}:documentation`, attribute).map(
-            (documentation: any): any =>
-                documentation.firstChild !== null
-                    ? { documentation: documentation.firstChild.data }
-                    : null,
+        this.select(
+            `${this.namespace}:annotation/${this.namespace}:documentation`,
+            attribute,
+        ).map((documentation: any): any =>
+            documentation.firstChild !== null
+                ? { documentation: documentation.firstChild.data }
+                : null,
         )
 }
