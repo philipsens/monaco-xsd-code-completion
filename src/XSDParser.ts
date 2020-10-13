@@ -6,31 +6,40 @@ import DocumentNode from './models/DocumentNode'
 export default class XSDParser {
     private readonly xsdDom: Document
     private readonly select: xpath.XPathSelect
+    public readonly namespace: string
 
-    constructor(xsdString: string) {
+    constructor(xsdString: string, namespace = 'xsd') {
         this.xsdDom = new DOMParser().parseFromString(xsdString)
-        // TODO: Multiple namespaces.
+        this.namespace = namespace
         this.select = xpath.useNamespaces({
-            xs: 'http://www.w3.org/2001/XMLSchema',
+            [namespace]: 'http://www.w3.org/2001/XMLSchema',
         })
     }
 
     getRootElements = (): DocumentNode[] =>
-        this.parseElements(this.select(`/xs:schema/xs:element`, this.xsdDom))
+        this.parseElements(
+            this.select(`/${this.namespace}:schema/${this.namespace}:element`, this.xsdDom),
+        )
 
     getSubElements = (elementName: string): DocumentNode[] =>
         this.parseElements(
-            this.select(`//xs:complexType[@name='${elementName}Type']//xs:element`, this.xsdDom),
+            this.select(
+                `//${this.namespace}:complexType[@name='${elementName}Type']//${this.namespace}:element`,
+                this.xsdDom,
+            ),
         )
 
     getAttributesForElement = (elementName: string): DocumentNode[] =>
         this.parseAttributes(
-            this.select(`//xs:complexType[@name='${elementName}Type']/xs:attribute`, this.xsdDom),
+            this.select(
+                `//${this.namespace}:complexType[@name='${elementName}Type']/${this.namespace}:attribute`,
+                this.xsdDom,
+            ),
         )
 
     parseElements = (elements: SelectedValue[]): DocumentNode[] =>
         elements.map(
-            (element: SelectedValue): DocumentNode => this.getAttributesForNode(<Node>element),
+            (element: SelectedValue): DocumentNode => this.getAttributesForNode(element as Node),
         )
 
     parseAttributes = (attributes: SelectedValue[]): DocumentNode[] =>
@@ -48,9 +57,10 @@ export default class XSDParser {
         )
 
     getDocumentationForNode = (attribute: Node): any =>
-        this.select(`xs:annotation/xs:documentation`, attribute).map((documentation: any): any =>
-            documentation.firstChild !== null
-                ? { documentation: documentation.firstChild.data }
-                : null,
+        this.select(`${this.namespace}:annotation/${this.namespace}:documentation`, attribute).map(
+            (documentation: any): any =>
+                documentation.firstChild !== null
+                    ? { documentation: documentation.firstChild.data }
+                    : null,
         )
 }
