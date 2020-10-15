@@ -1,6 +1,8 @@
 import CodeSuggestionCache from './CodeSuggestionCache'
 import DocumentNode from './models/DocumentNode'
-import XSDParser from './XSDParser'
+import XsdParser from './xsdParser'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import TurndownService from 'turndown'
 import { IMarkdownString, languages } from 'monaco-editor'
 import CompletionItem = languages.CompletionItem
@@ -9,7 +11,7 @@ export default class CodeSuggester {
     private codeSuggestionCache: CodeSuggestionCache
     private turndownService: TurndownService
 
-    constructor(xsd: XSDParser) {
+    constructor(xsd: XsdParser) {
         this.codeSuggestionCache = new CodeSuggestionCache(xsd)
         this.turndownService = new TurndownService()
     }
@@ -27,6 +29,8 @@ export default class CodeSuggester {
         incomplete: boolean,
     ): CompletionItem[] =>
         elements.map(
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             (element: DocumentNode, index: number): CompletionItem => ({
                 label: element.name,
                 kind: withoutTag
@@ -36,7 +40,8 @@ export default class CodeSuggester {
                 /**
                  * A human-readable string that represents a doc-comment.
                  */
-                // TODO: documentation:
+                // TODO: documentation
+                // TODO: SimpleType
                 sortText: index.toString(),
                 insertText: this.parseElementInputText(element.name, withoutTag, incomplete),
                 insertTextRules: languages.CompletionItemInsertTextRule.InsertAsSnippet,
@@ -62,6 +67,8 @@ export default class CodeSuggester {
 
     private parseAttributes = (attributes: DocumentNode[], incomplete: boolean): CompletionItem[] =>
         attributes.map(
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             (attribute: DocumentNode): CompletionItem => ({
                 label: attribute.name,
                 kind: languages.CompletionItemKind.Variable,

@@ -1,6 +1,6 @@
 import CodeSuggester from './CodeSuggester'
 import { CompletionType } from './models/CompletionType'
-import XSDParser from './XSDParser'
+import XsdParser from './xsdParser'
 import { editor, IPosition, languages, Position } from 'monaco-editor'
 import CompletionList = languages.CompletionList
 import CompletionItem = languages.CompletionItem
@@ -13,7 +13,7 @@ import CompletionTriggerKind = languages.CompletionTriggerKind
 export default class XSDCodeCompletionProvider {
     private codeSuggester: CodeSuggester
 
-    constructor(xsd: XSDParser) {
+    constructor(xsd: XsdParser) {
         this.codeSuggester = new CodeSuggester(xsd)
     }
 
@@ -36,6 +36,7 @@ export default class XSDCodeCompletionProvider {
     ): CompletionItem[] => {
         const lastTag = this.getLastTag(model, position)
         const completionType = this.getCompletionType(model, position, context)
+        // const nameSpaces = this.getNameSpaces(model, position)
 
         switch (completionType) {
             case CompletionType.none:
@@ -95,7 +96,7 @@ export default class XSDCodeCompletionProvider {
         })
 
     private getTagsFromText = (text: string): string[] | undefined => {
-        const regexForTags = /(?<=<|<\/)[^\s|/>]+(?!.+\/>)/g
+        const regexForTags = /(?<=<|<\/)[^?\s|/>]+(?!.+\/>)/g
         const matches = text.match(regexForTags)
         if (matches) return [...matches]
     }
@@ -171,7 +172,21 @@ export default class XSDCodeCompletionProvider {
 
     private textContainsTags = (text: string): boolean => this.getTagsFromText(text) !== undefined
 
+    // private getNameSpaces = (model: ITextModel, position: IPosition): string[] => {
+    //     const textUntilPosition = this.getTextUntilPosition(model, position)
+    //     const nameSpaces = this.getNameSpacesFromText(textUntilPosition)
+    //     return ['']
+    // }
+    //
+    // private getNameSpacesFromText = (text: string): string[] => {
+    //     const regexFroNameSpaces =
+    //
+    //     return ['']
+    // }
+
     private completeClosingTag = (name: string): CompletionItem[] => [
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         {
             label: name,
             kind: languages.CompletionItemKind.Property,

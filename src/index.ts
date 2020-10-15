@@ -1,4 +1,4 @@
-import XSDParser from './XSDParser'
+import XsdParser from './xsdParser'
 import XSDCodeCompletionProvider from './XSDCodeCompletionProvider'
 
-export { XSDParser, XSDCodeCompletionProvider }
+export { XsdParser, XSDCodeCompletionProvider }

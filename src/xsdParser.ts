@@ -3,7 +3,7 @@ import { SelectedValue } from 'xpath'
 import { DOMParser } from 'xmldom'
 import DocumentNode from './models/DocumentNode'
 
-export default class XSDParser {
+export default class XsdParser {
     private readonly xsdDom: Document
     private readonly select: xpath.XPathSelect
     public readonly namespace: string
@@ -16,33 +16,48 @@ export default class XSDParser {
         })
     }
 
-    getRootElements = (): DocumentNode[] =>
+    public getRootElements = (): DocumentNode[] =>
         this.parseElements(
             this.select(`/${this.namespace}:schema/${this.namespace}:element`, this.xsdDom),
         )
 
-    getSubElements = (elementName: string): DocumentNode[] =>
-        this.parseElements(
-            this.select(
-                `//${this.namespace}:complexType[@name='${elementName}Type']//${this.namespace}:element`,
-                this.xsdDom,
-            ),
-        )
-
-    getAttributesForElement = (elementName: string): DocumentNode[] =>
-        this.parseAttributes(
-            this.select(
-                `//${this.namespace}:complexType[@name='${elementName}Type']/${this.namespace}:attribute`,
-                this.xsdDom,
-            ),
-        )
-
-    parseElements = (elements: SelectedValue[]): DocumentNode[] =>
+    private parseElements = (elements: SelectedValue[]): DocumentNode[] =>
         elements.map(
             (element: SelectedValue): DocumentNode => this.getAttributesForNode(element as Node),
         )
 
-    parseAttributes = (attributes: SelectedValue[]): DocumentNode[] =>
+    private getAttributesForNode = (node: Node): any =>
+        this.select('@*', node).reduce(
+            (acc: any, curr: any): any => ({ ...acc, [curr.name]: curr.value }),
+            {},
+        )
+
+    public getSubElements = (elementName: string): DocumentNode[] =>
+        this.parseElements(
+            this.select(
+                `//${this.namespace}:complexType[@name='${this.getElementType(elementName)}']//${
+                    this.namespace
+                }:element`,
+                this.xsdDom,
+            ),
+        )
+
+    private getElementType = (elementName: string): string =>
+        this.select(`//${this.namespace}:element[@name='${elementName}']/@type`, this.xsdDom).map(
+            (type: any): any => type.value,
+        )[0]
+
+    public getAttributesForElement = (elementName: string): DocumentNode[] =>
+        this.parseAttributes(
+            this.select(
+                `//${this.namespace}:complexType[@name='${this.getElementType(elementName)}']/${
+                    this.namespace
+                }:attribute`,
+                this.xsdDom,
+            ),
+        )
+
+    private parseAttributes = (attributes: SelectedValue[]): DocumentNode[] =>
         attributes.map(
             (attribute: SelectedValue): DocumentNode => ({
                 ...this.getAttributesForNode(attribute as Node),
@@ -50,13 +65,7 @@ export default class XSDParser {
             }),
         )
 
-    getAttributesForNode = (node: Node): any =>
-        this.select('@*', node).reduce(
-            (acc: {}, curr: any): any => ({ ...acc, [curr.name]: curr.value }),
-            {},
-        )
-
-    getDocumentationForNode = (attribute: Node): any =>
+    private getDocumentationForNode = (attribute: Node): any =>
         this.select(
             `${this.namespace}:annotation/${this.namespace}:documentation`,
             attribute,

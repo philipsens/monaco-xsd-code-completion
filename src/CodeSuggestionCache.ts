@@ -1,13 +1,13 @@
-import XSDParser from './XSDParser'
+import XsdParser from './xsdParser'
 import DocumentNode from './models/DocumentNode'
 
 export default class CodeSuggestionCache {
-    private xsd: XSDParser
+    private xsd: XsdParser
     private nodeMap: string[] = []
     private elementCollections: DocumentNode[][] = []
     private attributeCollections: DocumentNode[][] = []
 
-    constructor(xsd: XSDParser) {
+    constructor(xsd: XsdParser) {
         this.xsd = xsd
     }
 
