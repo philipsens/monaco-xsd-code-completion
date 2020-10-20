@@ -2,7 +2,6 @@ import XsdCollection from './XsdCollection'
 import { editor, IPosition, languages, Position } from 'monaco-editor'
 import ICompletion from './ICompletion'
 import { CompletionType } from './models/CompletionType'
-import IStringHash from './IStringHash'
 import CompletionItemProvider = languages.CompletionItemProvider
 import ITextModel = editor.ITextModel
 import CompletionContext = languages.CompletionContext
@@ -10,6 +9,7 @@ import ProviderResult = languages.ProviderResult
 import CompletionList = languages.CompletionList
 import CompletionItem = languages.CompletionItem
 import CompletionTriggerKind = languages.CompletionTriggerKind
+import CompletionItemKind = languages.CompletionItemKind
 
 export default class XsdCompletion {
     private xsdCollection: XsdCollection
@@ -34,17 +34,7 @@ export default class XsdCompletion {
         position: Position,
         context: CompletionContext,
     ): CompletionItem[] => {
-        console.log('suggestions:')
-
-        const completionType = this.getCompletionType(model, position, context)
-        if (completionType == CompletionType.none) return []
-
-        const parentTag = this.getParentTag(model, position)
-        const namespaces = this.getXsdNamespaces(model)
-
-        // TODO: Multiple workers for multiple XSD
-        // const completions = this.worker.doCompletion(completionType, parentTag, namespaces)
-        const completions: ICompletion[] = []
+        const completions: ICompletion[] = this.getCompletions(model, position, context)
 
         const wordUntilPosition = model.getWordUntilPosition(position)
         const wordRange = {
@@ -56,16 +46,39 @@ export default class XsdCompletion {
 
         return completions.map(
             (completion: ICompletion): CompletionItem => ({
-                label: completion.name,
-                kind: completion.kind,
-                detail: completion.type,
-                insertText: completion.text,
-                preselect: completion.required,
-                insertTextRules: completion.insert,
-                documentation: completion.documentation,
-                range: wordRange,
+                ...completion,
+                ...{ range: wordRange },
             }),
         )
+    }
+
+    private getCompletions = (
+        model: ITextModel,
+        position: Position,
+        context: CompletionContext,
+    ): ICompletion[] | [] => {
+        const completionType = this.getCompletionType(model, position, context)
+        if (completionType == CompletionType.none) return []
+
+        const parentTag = this.getParentTag(model, position)
+        if (completionType == CompletionType.closingElement)
+            return this.getClosingElementCompletion(parentTag)
+
+        const namespaces = this.getXsdNamespaces(model)
+
+        const parentNamespace = this.getNamespaceFromTag(parentTag)
+        if (parentNamespace) {
+            console.log(parentNamespace)
+            console.log(namespaces.get(parentNamespace))
+        } else {
+            // TODO: If current tag starts with namespace, only load that worker.
+            console.log(namespaces)
+        }
+
+        // TODO: Multiple workers for multiple XSD
+        // const completions = this.worker.doCompletion(completionType, parentTag, namespaces)
+
+        return []
     }
 
     private getCompletionType = (
@@ -73,7 +86,7 @@ export default class XsdCompletion {
         position: Position,
         context: CompletionContext,
     ): CompletionType => {
-        const wordsBeforePosition = this.getWordsUntilPosition(model, position)
+        const wordsBeforePosition = model.getLineContent(position.lineNumber)
         if (this.isInsideAttributeValue(wordsBeforePosition)) return CompletionType.none
 
         switch (context.triggerKind) {
@@ -84,14 +97,6 @@ export default class XsdCompletion {
                 return this.getCompletionTypeByTriggerCharacter(context.triggerCharacter)
         }
     }
-
-    private getWordsUntilPosition = (model: ITextModel, position: IPosition): string =>
-        model.getValueInRange({
-            startLineNumber: position.lineNumber,
-            startColumn: 0,
-            endLineNumber: position.lineNumber,
-            endColumn: position.column,
-        })
 
     private isInsideAttributeValue = (text: string): boolean => {
         const regexForInsideAttributeValue = /="[^"]+$/
@@ -120,7 +125,7 @@ export default class XsdCompletion {
     private textContainsTags = (text: string): boolean => this.getTagsFromText(text) !== undefined
 
     private getTagsFromText = (text: string): string[] | undefined =>
-        this.getMatchesForRegex(text, /(?<=<|<\/)[^?\s|/>]+(?!.+\/>)/g)
+        this.getMatchesForRegex(text, /(?<=<|<\/)[^?\s|/>]+(?!.+\/>)(?=>)/g)
 
     private getCompletionTypeByTriggerCharacter = (
         triggerCharacter: string | undefined,
@@ -136,15 +141,26 @@ export default class XsdCompletion {
         return CompletionType.none
     }
 
-    private getParentTag = (model: ITextModel, position: Position): string | undefined => {
+    private getParentTag = (model: ITextModel, position: Position): string => {
         const textUntilPosition = this.getTextUntilPosition(model, position)
         const unclosedTags = this.getUnclosedTags(textUntilPosition)
         const wordAtPosition = model.getWordAtPosition(position)
-        if (wordAtPosition != null)
-            // TODO: Is this necessary?
-            return wordAtPosition.word === unclosedTags[unclosedTags.length - 1]
-                ? unclosedTags[unclosedTags.length - 2]
-                : unclosedTags[unclosedTags.length - 1]
+        if (wordAtPosition && wordAtPosition.word === unclosedTags[unclosedTags.length - 1])
+            return unclosedTags[unclosedTags.length - 2]
+
+        const lineContent = model.getLineContent(position.lineNumber)
+        const tagsInLine = this.getTagsFromText(lineContent)
+        if (tagsInLine && tagsInLine.length > 0) {
+            const lastTagInLine = tagsInLine[tagsInLine.length - 1]
+            const lastTagInlineWithoutNamespace = lastTagInLine.split(':')[1]
+            if (
+                wordAtPosition &&
+                lastTagInlineWithoutNamespace &&
+                lastTagInlineWithoutNamespace === wordAtPosition.word
+            )
+                return unclosedTags[unclosedTags.length - 2]
+        }
+        return unclosedTags[unclosedTags.length - 1]
     }
 
     private getTextUntilPosition = (model: ITextModel, position: IPosition): string =>
@@ -172,65 +188,69 @@ export default class XsdCompletion {
         return parentTags
     }
 
-    private getXsdNamespaces = (model: ITextModel) => {
+    private getClosingElementCompletion = (element: string): ICompletion[] => [
+        {
+            label: element,
+            kind: CompletionItemKind.Property,
+            detail: 'Close tag',
+            insertText: element,
+            documentation: `Closes the unclosed ${element} tag in this file.`,
+        },
+    ]
+
+    private getNamespaceFromTag = (tag: string): string | undefined => {
+        const parts = tag.split(':')
+        if (parts.length > 1) return parts[0]
+    }
+
+    private getXsdNamespaces = (model: ITextModel): Map<string, string> => {
         const text = this.getFullText(model)
         const namespaces = this.getNamespaces(text)
-        const noNamespaces = this.getNoNamespaces(text)
         const namespaceSchemaLocations = this.getNamespacesSchemaLocations(text)
-        const noNamespaceSchemaLocations = this.getNoNamespacesSchemaLocations(text)
-        this.matchNamespacesAndNamespaceSchemaLocations(
-            namespaces,
-            noNamespaces,
-            namespaceSchemaLocations,
-            noNamespaceSchemaLocations,
-        )
+        return this.matchNamespacesAndNamespaceSchemaLocations(namespaces, namespaceSchemaLocations)
     }
 
     private getFullText = (model: ITextModel): string =>
         model.getValueInRange(model.getFullModelRange())
 
-    private getNamespaces = (text: string): string[] =>
-        this.getMatchesForRegex(text, /(?<=xmlns:)(?!xsi|html)[^:\s|/>]+="[^\s|>]+(?=")/g)
-            .map((match) => {
-                const part = match.split('="')
-                return { [part[0]]: part[1] }
-            }).flat(1)
+    private getNamespaces = (text: string): Map<string, string> => {
+        const regexForNamespaces = /(?<=xmlns:)(?!xsi|html)[^:\s|/>]+="[^\s|>]+(?=")/g
+        const regexForNoNamespaces = /(?<=xmlns=")[^\s|>]+(?=")/g
+        const namespaceMap = new Map()
+        this.getMatchesForRegex(text, regexForNamespaces).forEach((match) => {
+            const part = match.split('="')
+            namespaceMap.set(part[1], part[0])
+        })
+        this.getMatchesForRegex(text, regexForNoNamespaces).forEach((match) => {
+            namespaceMap.set(match, match)
+        })
+        return namespaceMap
+    }
 
-    private getNoNamespaces = (text: string): IStringHash[] =>
-        this.getMatchesForRegex(text, /(?<=xmlns=")[^\s|>]+(?=")/g).map((match) => ({
-            ['']: match,
-        }))
-
-    private getNamespacesSchemaLocations = (text: string): IStringHash[] =>
-        this.getMatchesForRegex(text, /(?<=(xsi:schemaLocation=\n?\s*"))[^|>]+(?=")/g)
-            .map((match) => {
-                const matches = match.split(/\s+/)
-                return matches
-                    .filter((location, index) => index % 2)
-                    .map((location, index) => ({
-                        [location]: matches[index * 2],
-                    }))
+    private getNamespacesSchemaLocations = (text: string): Map<string, string> => {
+        const regexForNamespacesSchemaLocations = /(?<=(xsi:schemaLocation=\n?\s*"))[^|>]+(?=")/g
+        const regexForNoNamespacesSchemaLocations = /(?<=(xsi:noNamespaceSchemaLocation=\n?\s*"))[^|>]+(?=")/g
+        const namespaceSchemaLocationsMap = new Map()
+        this.getMatchesForRegex(text, regexForNamespacesSchemaLocations).forEach((match) => {
+            const matches = match.split(/\s+/)
+            matches.forEach((location, index) => {
+                if (index % 2) namespaceSchemaLocationsMap.set(location, matches[index - 1])
             })
-            .flat(1)
-
-    private getNoNamespacesSchemaLocations = (text: string): IStringHash[] =>
-        this.getMatchesForRegex(
-            text,
-            /(?<=(xsi:noNamespaceSchemaLocation=\n?\s*"))[^|>]+(?=")/g,
-        ).map((match) => ({
-            ['']: match,
-        }))
+        })
+        this.getMatchesForRegex(text, regexForNoNamespacesSchemaLocations).forEach((match) =>
+            namespaceSchemaLocationsMap.set(match, match),
+        )
+        return namespaceSchemaLocationsMap
+    }
 
     private matchNamespacesAndNamespaceSchemaLocations = (
-        namespaces: IStringHash[],
-        noNamespaces: IStringHash[],
-        namespaceSchemaLocations: IStringHash[],
-        noNamespaceSchemaLocations: IStringHash[],
-    ) => {
-        console.log([...noNamespaces, ...namespaces])
-        console.log(namespaceSchemaLocations)
-        console.log(noNamespaceSchemaLocations)
-
-
+        namespaces: Map<string, string>,
+        namespaceSchemaLocations: Map<string, string>,
+    ): Map<string, string> => {
+        const matchedNamespacesAndNamespaceSchemaLocations = new Map()
+        for (const [key, value] of namespaceSchemaLocations.entries()) {
+            matchedNamespacesAndNamespaceSchemaLocations.set(namespaces.get(value), key)
+        }
+        return matchedNamespacesAndNamespaceSchemaLocations
     }
 }

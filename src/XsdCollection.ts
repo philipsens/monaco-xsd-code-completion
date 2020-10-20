@@ -1,16 +1,17 @@
 import IXsd from './IXsd'
-import IXsdHash from './IXsdHash'
 
 export default class XsdCollection {
-    private xsdItems: IXsdHash = {}
+    private xsdItems: Map<string, IXsd>
 
-    public add = (xsd: IXsd): IXsd => (this.xsdItems[xsd.path] = xsd)
+    constructor() {
+        this.xsdItems = new Map()
+    }
 
-    public update = (xsd: IXsd): IXsd => (this.xsdItems[xsd.path] = xsd)
+    public set = (xsd: IXsd): Map<string, IXsd> => this.xsdItems.set(xsd.path, xsd)
 
-    public delete = (path: string): boolean => delete this.xsdItems[path]
+    public delete = (path: string): boolean => this.xsdItems.delete(path)
 
-    public index = (): IXsdHash => this.xsdItems
+    public entries = (): IterableIterator<[string, IXsd]> => this.xsdItems.entries()
 
-    public show = (path: string): IXsd => this.xsdItems[path]
+    public get = (path: string): IXsd | undefined => this.xsdItems.get(path)
 }
