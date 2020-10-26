@@ -1,7 +1,7 @@
-import XsdCollection from './XsdCollection'
-import { editor, IPosition, languages, Position } from 'monaco-editor'
+import XsdManager from './XsdManager'
+import { editor, IPosition, languages, Position, Thenable } from 'monaco-editor'
 import ICompletion from './ICompletion'
-import { CompletionType } from './models/CompletionType'
+import { CompletionType } from './typings/CompletionType'
 import CompletionItemProvider = languages.CompletionItemProvider
 import ITextModel = editor.ITextModel
 import CompletionContext = languages.CompletionContext
@@ -12,10 +12,10 @@ import CompletionTriggerKind = languages.CompletionTriggerKind
 import CompletionItemKind = languages.CompletionItemKind
 
 export default class XsdCompletion {
-    private xsdCollection: XsdCollection
+    private xsdManager: XsdManager
 
-    constructor(xsdCollection: XsdCollection) {
-        this.xsdCollection = xsdCollection
+    constructor(xsdCollection: XsdManager) {
+        this.xsdManager = xsdCollection
     }
 
     public provider = (): CompletionItemProvider => ({
@@ -68,6 +68,8 @@ export default class XsdCompletion {
 
         const parentNamespace = this.getNamespaceFromTag(parentTag)
         if (parentNamespace) {
+            const path = namespaces.get(parentNamespace)
+
             console.log(parentNamespace)
             console.log(namespaces.get(parentNamespace))
         } else {
@@ -125,7 +127,7 @@ export default class XsdCompletion {
     private textContainsTags = (text: string): boolean => this.getTagsFromText(text) !== undefined
 
     private getTagsFromText = (text: string): string[] | undefined =>
-        this.getMatchesForRegex(text, /(?<=<|<\/)[^?\s|/>]+(?!.+\/>)(?=>)/g)
+        this.getMatchesForRegex(text, /(?<=<|<\/)[^?\s|/>]+(?!.+\/>)/g)
 
     private getCompletionTypeByTriggerCharacter = (
         triggerCharacter: string | undefined,
@@ -199,8 +201,8 @@ export default class XsdCompletion {
     ]
 
     private getNamespaceFromTag = (tag: string): string | undefined => {
-        const parts = tag.split(':')
-        if (parts.length > 1) return parts[0]
+        const parts = tag?.split(':')
+        if (parts && parts.length > 1) return parts[0]
     }
 
     private getXsdNamespaces = (model: ITextModel): Map<string, string> => {

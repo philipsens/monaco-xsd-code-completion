@@ -1,11 +1,11 @@
-import XsdCollection from './XsdCollection'
+import XsdManager from './XsdManager'
 import XsdCompletion from './XsdCompletion'
 
-export default class XsdFacade {
-    private readonly xsdCollection: XsdCollection
+export default class XsdFeatures {
+    private readonly xsdCollection: XsdManager
     private monaco: any
 
-    constructor(xsdXollection: XsdCollection, monaco: any) {
+    constructor(xsdXollection: XsdManager, monaco: any) {
         this.xsdCollection = xsdXollection
         this.monaco = monaco
     }
