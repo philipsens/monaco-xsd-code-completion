@@ -1,4 +1,4 @@
-import IXsd from './IXsd'
+import IXsd from './interface/IXsd'
 import { worker } from 'monaco-editor'
 import IWorkerContext = worker.IWorkerContext
 

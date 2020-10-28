@@ -6,12 +6,12 @@
     "module": "esm/index.js",
     "types": "lib/index.d.js",
     "scripts": {
-        "build": "yarn clean && yarn build:cjs && yarn build:esm",
-        "clean": "rimraf ./lib && rimraf ./esm && rimraf ./umd",
+        "test": "echo \"Error: no test specified\" && exit 1",
         "build:cjs": "tsc -p tsconfig.cjs.json",
         "build:esm": "tsc -p tsconfig.esm.json",
         "build:umd": "webpack",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "clean": "rimraf ./lib && rimraf ./esm && rimraf ./umd",
+        "build": "npm-run-all clean build:cjs build:esm build:umd"
     },
     "repository": {
         "type": "git",
@@ -48,15 +48,16 @@
         "husky": "^4.3.0",
         "monaco-editor": "^0.21.2",
         "monaco-editor-core": "^0.21.2",
+        "npm-run-all": "^4.1.5",
         "prettier": "^2.1.2",
         "pretty-quick": "^3.0.2",
         "rimraf": "^3.0.2",
         "style-loader": "^2.0.0",
         "ts-loader": "^8.0.7",
-        "worker-loader": "^3.0.5",
         "typescript": "^4.0.3",
         "webpack": "^5.2.0",
-        "webpack-cli": "^4.1.0"
+        "webpack-cli": "^4.1.0",
+        "worker-loader": "^3.0.5"
     },
     "dependencies": {
         "turndown": "^7.0.0",

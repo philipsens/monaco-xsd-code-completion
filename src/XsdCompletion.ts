@@ -1,7 +1,7 @@
 import XsdManager from './XsdManager'
 import { editor, IPosition, languages, Position, Thenable } from 'monaco-editor'
-import ICompletion from './ICompletion'
-import { CompletionType } from './typings/CompletionType'
+import ICompletion from './interface/ICompletion'
+import { CompletionType } from './types/CompletionType'
 import CompletionItemProvider = languages.CompletionItemProvider
 import ITextModel = editor.ITextModel
 import CompletionContext = languages.CompletionContext

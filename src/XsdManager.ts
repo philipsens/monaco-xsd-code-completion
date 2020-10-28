@@ -1,5 +1,7 @@
-import IXsd from './IXsd'
-import XsdWorker from './xsd.worker'
+import IXsd from './interface/IXsd'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import * as XsdWorker from 'worker-loader?inline=fallback!./xsd.worker'
 
 export default class XsdManager {
     // private xsdWorkers: Map<string, WebpackWorker>
@@ -9,11 +11,19 @@ export default class XsdManager {
         // this.xsdWorkers = new Map()
         this.monaco = monaco
 
-        const worker = new XsdWorker()
-        worker.ctx.postMessage({ num: 4 })
-        worker.ctx.onmessage = (e: MessageEvent<any>) => {
-            console.log('xsdManager: ', e.data)
+        let worker: Worker
+
+        try {
+            worker = new XsdWorker()
+        } catch (error) {
+            worker = new Worker('xsd-worker.js')
         }
+
+        worker.postMessage('test')
+        worker.addEventListener('message', (msg: any) => {
+            worker.terminate()
+            console.log(msg.data)
+        })
     }
 
     public set = (xsd: IXsd): void => {
@@ -28,8 +38,8 @@ export default class XsdManager {
     }
 
     // public delete = (path: string): boolean => {
-        // this.xsdWorkers.get(path)?.dispose()
-        // return this.xsdWorkers.delete(path)
+    // this.xsdWorkers.get(path)?.dispose()
+    // return this.xsdWorkers.delete(path)
     // }
 
     // public get = (path: string): Worker | undefined => this.xsdWorkers.get(path)

@@ -1,19 +1,26 @@
 const path = require('path')
 
 module.exports = {
-    mode: 'production',
-    entry: './src/index.ts',
+    mode: 'development',
+    entry: {
+        XsdFeatures: path.resolve(__dirname, 'src/XsdFeatures.ts'),
+        XsdManager: path.resolve(__dirname, 'src/XsdManager.ts'),
+        'xsd-worker': path.resolve(__dirname, 'src/xsd.worker.ts'),
+    },
     output: {
         path: path.resolve(__dirname, 'umd'),
-        filename: 'main.js',
+        filename: '[name].js',
         library: 'Monaco XSD Code Completion',
         libraryTarget: 'umd',
     },
     module: {
         rules: [
             {
-                test: /\.worker\.ts$/,
-                use: { loader: 'worker-loader' },
+                test: /\.worker\.js$/,
+                use: {
+                    loader: 'worker-loader',
+                    options: { inline: true },
+                },
             },
             {
                 test: /\.tsx?$/,

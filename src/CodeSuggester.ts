@@ -1,5 +1,5 @@
 import CodeSuggestionCache from './CodeSuggestionCache'
-import DocumentNode from './typings/DocumentNode'
+import DocumentNode from './types/DocumentNode'
 import XsdParser from './xsdParser'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
