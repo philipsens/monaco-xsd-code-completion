@@ -4,10 +4,8 @@
         // "incremental": true,                   /* Enable incremental compilation */
         "target": "es5",
         /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019' or 'ESNEXT'. */
-        "lib": ["webworker", "es2019"], // "allowJs": true,
-        /* Specify library files to be included in the compilation. */ /* Allow javascript files to be compiled. */
-        // "checkJs": true,                       /* Report errors in .js files. */
-        // "jsx": "preserve",                     /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
+        "lib": ["webworker", "es2019"] /* Allow javascript files to be compiled. */, // "allowJs": true, // "checkJs": true,                       /* Report errors in .js files. */
+        /* Specify library files to be included in the compilation. */ // "jsx": "preserve",                     /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
         // "declaration": true,
         /* Generates corresponding '.d.ts' file. */
         // "declarationMap": true,                /* Generates a sourcemap for each corresponding '.d.ts' file. */
@@ -20,9 +18,8 @@
         // "removeComments": true,                /* Do not emit comments to output. */
         // "noEmit": true,                        /* Do not emit outputs. */
         // "importHelpers": true,                 /* Import emit helpers from 'tslib'. */
-        "downlevelIteration": true, // "isolatedModules": true,               /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
-        /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */ /* Strict Type-Checking Options */
-        "strict": true,
+        "downlevelIteration": true /* Strict Type-Checking Options */, // "isolatedModules": true,               /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
+        /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */ "strict": true,
         /* Enable all strict type-checking options. */
         // "noImplicitAny": true,
         /* Raise error on expressions and declarations with an implied 'any' type. */
