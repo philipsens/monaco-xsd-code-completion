@@ -1,5 +1,5 @@
 import IXsd from './IXsd'
-import WebpackWorker from './xsd.worker'
+import XsdWorker from './xsd.worker'
 
 export default class XsdManager {
     // private xsdWorkers: Map<string, WebpackWorker>
@@ -8,22 +8,18 @@ export default class XsdManager {
     constructor(monaco: any) {
         // this.xsdWorkers = new Map()
         this.monaco = monaco
+
+        const worker = new XsdWorker()
+        worker.ctx.postMessage({ num: 4 })
+        worker.ctx.onmessage = (e: MessageEvent<any>) => {
+            console.log('xsdManager: ', e.data)
+        }
     }
 
     public set = (xsd: IXsd): void => {
-        const worker = new WebpackWorker()
-        //     moduleId: 'vs/language/xml/XsdWorker',
-        //     label: 'xsd',
-        //     createData: {
-        //         languageSettings: xsd,
-        //     },
-        // })
-
-        worker.addEventListener('message', (event: any) => {
-            console.log(event.data)
-        })
-        worker.postMessage({ a: 1 })
-        // this.xsdWorkers.set(xsd.path, worker)
+        // const worker = new XsdWorker()
+        //
+        // worker.postMessage({ a: 1 })
     }
 
     public update = (xsd: IXsd): void => {

@@ -1,9 +1,29 @@
-const ctx: Worker = self as any
+// const ctx: Worker = self as any
+//
+// ctx.addEventListener('message', (event) => {
+//     console.log('dit is de worker', event.data)
+//     if (event.data.num) {
+//         ctx.postMessage(event.data.num * event.data.num)
+//     }
+// })
 
-// Post data to parent thread
-ctx.postMessage({ foo: 'foo' })
+// export default ctx as any
 
-// Respond to message from parent thread
-ctx.addEventListener('message', (event) => console.log(event))
+export default class XsdWorker {
+    _ctx: Worker
 
-export default null as any
+    constructor() {
+        this._ctx = self as any
+
+        this._ctx.addEventListener('message', (event) => {
+            console.log('dit is de worker', event.data)
+            if (event.data.num) {
+                this._ctx.postMessage(event.data.num * event.data.num)
+            }
+        })
+    }
+
+    get ctx() {
+        return this._ctx
+    }
+}
