@@ -32,5 +32,5 @@ export default class XsdManager {
 
     public get = (path: string): XsdWorker | undefined => this.xsdWorkers.get(path)
 
-    public getAll = (): IterableIterator<XsdWorker> => this.xsdWorkers.values()
+    public has = (path: string): boolean => this.xsdWorkers.has(path)
 }

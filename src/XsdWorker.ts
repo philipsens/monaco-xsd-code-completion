@@ -15,7 +15,6 @@ export class XsdWorker {
         parentTag: string,
         namespace = '',
     ): ICompletion[] => {
-        console.log(namespace)
         switch (completionType) {
             case CompletionType.snippet:
                 return this.codeSuggester.elements(parentTag, true)

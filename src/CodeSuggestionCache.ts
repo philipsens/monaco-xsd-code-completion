@@ -1,15 +1,17 @@
-import XsdParser from './xsdParser'
+import XsdParser from './XsdParser'
 import DocumentNode from './DocumentNode'
 import IXsd from './IXsd'
 
 export default class CodeSuggestionCache {
-    private xsd: XsdParser
+    private xsd: IXsd
+    private xsdParser: XsdParser
     private nodeMap: string[] = []
     private elementCollections: DocumentNode[][] = []
     private attributeCollections: DocumentNode[][] = []
 
     constructor(xsd: IXsd) {
-        this.xsd = new XsdParser(xsd.value)
+        this.xsd = xsd
+        this.xsdParser = new XsdParser(xsd.value)
     }
 
     public elements = (parentElement: string): DocumentNode[] =>
@@ -33,24 +35,27 @@ export default class CodeSuggestionCache {
     private getIndexForNode = (node: string): number => this.nodeMap.indexOf(node)
 
     private getRootElements = (): DocumentNode[] => {
-        console.log(`Fetch root elements from XSD`)
-        return this.setElementCollection('rootElements', this.xsd.getRootElements())
+        console.log(`Fetch root elements from ${this.xsd.path}`)
+        return this.setElementCollection('rootElements', this.xsdParser.getRootElements())
     }
 
     private subElements = (parentElement: string): DocumentNode[] =>
         this.getElementCollection(parentElement) || this.getSubElements(parentElement)
 
     private getSubElements = (parentElement: string): DocumentNode[] => {
-        console.log(`Fetch sub elements for ${parentElement} from XSD`)
-        return this.setElementCollection(parentElement, this.xsd.getSubElements(parentElement))
+        console.log(`Fetch sub elements for ${parentElement} from ${this.xsd.path}`)
+        return this.setElementCollection(
+            parentElement,
+            this.xsdParser.getSubElements(parentElement),
+        )
     }
 
     private getAttributeCollection = (element: string): DocumentNode[] =>
         this.attributeCollections[this.getIndexForNode(element)]
 
     private getAttributes = (element: string): DocumentNode[] => {
-        console.log(`Fetch attributes for ${element} from XSD`)
-        return this.setAttributeCollection(element, this.xsd.getAttributesForElement(element))
+        console.log(`Fetch attributes for ${element} from ${this.xsd.path}`)
+        return this.setAttributeCollection(element, this.xsdParser.getAttributesForElement(element))
     }
 
     private setAttributeCollection = (

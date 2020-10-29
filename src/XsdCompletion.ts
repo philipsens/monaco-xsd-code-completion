@@ -227,8 +227,8 @@ export default class XsdCompletion {
     }
 
     private getNamespacesSchemaLocations = (text: string): Map<string, string> => {
-        const regexForNamespacesSchemaLocations = /(?<=(xsi:schemaLocation=\n?\s*"))[^|>]+(?=")/g
-        const regexForNoNamespacesSchemaLocations = /(?<=(xsi:noNamespaceSchemaLocation=\n?\s*"))[^|>]+(?=")/g
+        const regexForNamespacesSchemaLocations = /(?<=(xsi:schemaLocation=\n?\s*"))[^"|>]+(?=")/g
+        const regexForNoNamespacesSchemaLocations = /(?<=(xsi:noNamespaceSchemaLocation=\n?\s*"))[^"|>]+(?=")/g
         const namespaceSchemaLocationsMap = new Map()
         this.getMatchesForRegex(text, regexForNamespacesSchemaLocations).forEach((match) => {
             const matches = match.split(/\s+/)
@@ -265,8 +265,15 @@ export default class XsdCompletion {
                 if (xsdWorker) xsdWorkers.push(xsdWorker)
             }
         } else {
-            for (const xsdWorker of this.xsdManager.getAll()) {
-                xsdWorkers.push(xsdWorker)
+            for (const [namespace, namespaceLocation] of namespaces.entries()) {
+                if (
+                    this.xsdManager.has(namespaceLocation) ||
+                    namespace === undefined ||
+                    namespace === ''
+                ) {
+                    const xsdWorker = this.xsdManager.get(namespaceLocation)
+                    if (xsdWorker) xsdWorkers.push(xsdWorker)
+                }
             }
         }
         return xsdWorkers
