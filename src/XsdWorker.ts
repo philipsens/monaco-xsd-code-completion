@@ -1,23 +1,35 @@
 import IXsd from './IXsd'
-import { worker } from 'monaco-editor'
-import IWorkerContext = worker.IWorkerContext
+import { CompletionType } from './CompletionType'
+import CodeSuggester from './CodeSuggester'
+import ICompletion from './ICompletion'
 
 export class XsdWorker {
-    private xsd: IXsd
+    private codeSuggester: CodeSuggester
 
-    constructor(workerContext: IWorkerContext, createData: ICreateData) {
-        this.xsd = createData.xsd
+    constructor(xsd: IXsd) {
+        this.codeSuggester = new CodeSuggester(xsd)
     }
 
-    public doCompletion = (): string => {
-        return 'Ik ben een worker voor ' + this.xsd.path
+    public doCompletion = (
+        completionType: CompletionType,
+        parentTag: string,
+        namespace = '',
+    ): ICompletion[] => {
+        console.log(namespace)
+        switch (completionType) {
+            case CompletionType.snippet:
+                return this.codeSuggester.elements(parentTag, true)
+            case CompletionType.element:
+                return this.codeSuggester.elements(parentTag)
+            case CompletionType.attribute:
+                return this.codeSuggester.attributes(parentTag)
+            case CompletionType.incompleteElement:
+                return this.codeSuggester.elements(parentTag, false, true)
+            case CompletionType.incompleteAttribute:
+                return this.codeSuggester.attributes(parentTag, true)
+        }
+        return []
     }
-}
-
-export interface ICreateData {
-    xsd: IXsd
-}
-
-export const create = (workerContext: IWorkerContext, createData: ICreateData): XsdWorker => {
-    return new XsdWorker(workerContext, createData)
+    // TODO: doValidation
+    // TODO: doGenerateTamplate
 }

@@ -1,12 +1,12 @@
 import * as xpath from 'xpath'
 import { SelectedValue } from 'xpath'
 import { DOMParser } from 'xmldom'
-import DocumentNode from './typings/DocumentNode'
+import DocumentNode from './DocumentNode'
 
 export default class XsdParser {
+    public readonly namespace: string
     private readonly xsdDom: Document
     private readonly select: xpath.XPathSelect
-    public readonly namespace: string
 
     constructor(xsdString: string, namespace = 'xsd') {
         this.xsdDom = new DOMParser().parseFromString(xsdString)
@@ -21,6 +21,26 @@ export default class XsdParser {
             this.select(`/${this.namespace}:schema/${this.namespace}:element`, this.xsdDom),
         )
 
+    public getSubElements = (elementName: string): DocumentNode[] =>
+        this.parseElements(
+            this.select(
+                `//${this.namespace}:complexType[@name='${this.getElementType(elementName)}']//${
+                    this.namespace
+                }:element`,
+                this.xsdDom,
+            ),
+        )
+
+    public getAttributesForElement = (elementName: string): DocumentNode[] =>
+        this.parseAttributes(
+            this.select(
+                `//${this.namespace}:complexType[@name='${this.getElementType(elementName)}']/${
+                    this.namespace
+                }:attribute`,
+                this.xsdDom,
+            ),
+        )
+
     private parseElements = (elements: SelectedValue[]): DocumentNode[] =>
         elements.map(
             (element: SelectedValue): DocumentNode => this.getAttributesForNode(element as Node),
@@ -32,30 +52,10 @@ export default class XsdParser {
             {},
         )
 
-    public getSubElements = (elementName: string): DocumentNode[] =>
-        this.parseElements(
-            this.select(
-                `//${this.namespace}:complexType[@name='${this.getElementType(elementName)}']//${
-                    this.namespace
-                }:element`,
-                this.xsdDom,
-            ),
-        )
-
     private getElementType = (elementName: string): string =>
         this.select(`//${this.namespace}:element[@name='${elementName}']/@type`, this.xsdDom).map(
             (type: any): any => type.value,
         )[0]
-
-    public getAttributesForElement = (elementName: string): DocumentNode[] =>
-        this.parseAttributes(
-            this.select(
-                `//${this.namespace}:complexType[@name='${this.getElementType(elementName)}']/${
-                    this.namespace
-                }:attribute`,
-                this.xsdDom,
-            ),
-        )
 
     private parseAttributes = (attributes: SelectedValue[]): DocumentNode[] =>
         attributes.map(

@@ -10,8 +10,6 @@
 // export default ctx as any
 
 export default class XsdWorker {
-    _ctx: Worker
-
     constructor() {
         this._ctx = self as any
 
@@ -22,6 +20,8 @@ export default class XsdWorker {
             }
         })
     }
+
+    _ctx: Worker
 
     get ctx() {
         return this._ctx

@@ -1,5 +1,6 @@
 import XsdParser from './xsdParser'
-import DocumentNode from './typings/DocumentNode'
+import DocumentNode from './DocumentNode'
+import IXsd from './IXsd'
 
 export default class CodeSuggestionCache {
     private xsd: XsdParser
@@ -7,12 +8,21 @@ export default class CodeSuggestionCache {
     private elementCollections: DocumentNode[][] = []
     private attributeCollections: DocumentNode[][] = []
 
-    constructor(xsd: XsdParser) {
-        this.xsd = xsd
+    constructor(xsd: IXsd) {
+        this.xsd = new XsdParser(xsd.value)
     }
 
     public elements = (parentElement: string): DocumentNode[] =>
         parentElement === undefined ? this.rootElements() : this.subElements(parentElement)
+
+    setElementCollection = (element: string, documentElement: DocumentNode[]): DocumentNode[] => {
+        this.nodeMap.push(element)
+        this.elementCollections[this.getIndexForNode(element)] = documentElement
+        return this.getElementCollection(element)
+    }
+
+    public attributes = (element: string): DocumentNode[] =>
+        this.getAttributeCollection(element) || this.getAttributes(element)
 
     private rootElements = (): DocumentNode[] =>
         this.getElementCollection('rootElements') || this.getRootElements()
@@ -27,12 +37,6 @@ export default class CodeSuggestionCache {
         return this.setElementCollection('rootElements', this.xsd.getRootElements())
     }
 
-    setElementCollection = (element: string, documentElement: DocumentNode[]): DocumentNode[] => {
-        this.nodeMap.push(element)
-        this.elementCollections[this.getIndexForNode(element)] = documentElement
-        return this.getElementCollection(element)
-    }
-
     private subElements = (parentElement: string): DocumentNode[] =>
         this.getElementCollection(parentElement) || this.getSubElements(parentElement)
 
@@ -40,9 +44,6 @@ export default class CodeSuggestionCache {
         console.log(`Fetch sub elements for ${parentElement} from XSD`)
         return this.setElementCollection(parentElement, this.xsd.getSubElements(parentElement))
     }
-
-    public attributes = (element: string): DocumentNode[] =>
-        this.getAttributeCollection(element) || this.getAttributes(element)
 
     private getAttributeCollection = (element: string): DocumentNode[] =>
         this.attributeCollections[this.getIndexForNode(element)]

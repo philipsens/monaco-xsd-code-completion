@@ -1,17 +1,15 @@
 import CodeSuggestionCache from './CodeSuggestionCache'
-import DocumentNode from './typings/DocumentNode'
-import XsdParser from './xsdParser'
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
+import DocumentNode from './DocumentNode'
 import TurndownService from 'turndown'
 import { IMarkdownString, languages } from 'monaco-editor'
-import CompletionItem = languages.CompletionItem
+import IXsd from './IXsd'
+import ICompletion from './ICompletion'
 
 export default class CodeSuggester {
     private codeSuggestionCache: CodeSuggestionCache
     private turndownService: TurndownService
 
-    constructor(xsd: XsdParser) {
+    constructor(xsd: IXsd) {
         this.codeSuggestionCache = new CodeSuggestionCache(xsd)
         this.turndownService = new TurndownService()
     }
@@ -20,18 +18,19 @@ export default class CodeSuggester {
         parentElement: string,
         withoutTag = false,
         incomplete = false,
-    ): CompletionItem[] =>
+    ): ICompletion[] =>
         this.parseElements(this.codeSuggestionCache.elements(parentElement), withoutTag, incomplete)
+
+    public attributes = (element: string, incomplete = false): ICompletion[] =>
+        this.parseAttributes(this.codeSuggestionCache.attributes(element), incomplete)
 
     private parseElements = (
         elements: DocumentNode[],
         withoutTag: boolean,
         incomplete: boolean,
-    ): CompletionItem[] =>
+    ): ICompletion[] =>
         elements.map(
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            (element: DocumentNode, index: number): CompletionItem => ({
+            (element: DocumentNode, index: number): ICompletion => ({
                 label: element.name,
                 kind: withoutTag
                     ? languages.CompletionItemKind.Snippet
@@ -62,14 +61,9 @@ export default class CodeSuggester {
     private getElementDetail = (withoutTag: boolean): string =>
         withoutTag ? `Insert as snippet` : ''
 
-    public attributes = (element: string, incomplete = false): CompletionItem[] =>
-        this.parseAttributes(this.codeSuggestionCache.attributes(element), incomplete)
-
-    private parseAttributes = (attributes: DocumentNode[], incomplete: boolean): CompletionItem[] =>
+    private parseAttributes = (attributes: DocumentNode[], incomplete: boolean): ICompletion[] =>
         attributes.map(
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            (attribute: DocumentNode): CompletionItem => ({
+            (attribute: DocumentNode): ICompletion => ({
                 label: attribute.name,
                 kind: languages.CompletionItemKind.Variable,
                 detail: attribute.getType,

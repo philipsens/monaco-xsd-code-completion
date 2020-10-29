@@ -1,7 +1,8 @@
 import XsdManager from './XsdManager'
-import { editor, IPosition, languages, Position, Thenable } from 'monaco-editor'
+import { editor, IPosition, languages, Position } from 'monaco-editor'
 import ICompletion from './ICompletion'
-import { CompletionType } from './typings/CompletionType'
+import { CompletionType } from './CompletionType'
+import { XsdWorker } from './XsdWorker'
 import CompletionItemProvider = languages.CompletionItemProvider
 import ITextModel = editor.ITextModel
 import CompletionContext = languages.CompletionContext
@@ -65,22 +66,18 @@ export default class XsdCompletion {
             return this.getClosingElementCompletion(parentTag)
 
         const namespaces = this.getXsdNamespaces(model)
-
         const parentNamespace = this.getNamespaceFromTag(parentTag)
-        if (parentNamespace) {
-            const path = namespaces.get(parentNamespace)
+        const xsdWorkers = this.getXsdWorkersForNamespace(namespaces, parentNamespace)
 
-            console.log(parentNamespace)
-            console.log(namespaces.get(parentNamespace))
-        } else {
-            // TODO: If current tag starts with namespace, only load that worker.
-            console.log(namespaces)
-        }
+        let completions: ICompletion[] = []
+        xsdWorkers.map((xsdWorker: XsdWorker) => {
+            completions = [
+                ...completions,
+                ...xsdWorker.doCompletion(completionType, parentTag, parentNamespace),
+            ]
+        })
 
-        // TODO: Multiple workers for multiple XSD
-        // const completions = this.worker.doCompletion(completionType, parentTag, namespaces)
-
-        return []
+        return completions
     }
 
     private getCompletionType = (
@@ -254,5 +251,24 @@ export default class XsdCompletion {
             matchedNamespacesAndNamespaceSchemaLocations.set(namespaces.get(value), key)
         }
         return matchedNamespacesAndNamespaceSchemaLocations
+    }
+
+    private getXsdWorkersForNamespace = (
+        namespaces: Map<string, string>,
+        namespace: string | undefined,
+    ): XsdWorker[] => {
+        const xsdWorkers = []
+        if (namespace) {
+            const path = namespaces.get(namespace)
+            if (path) {
+                const xsdWorker = this.xsdManager.get(path)
+                if (xsdWorker) xsdWorkers.push(xsdWorker)
+            }
+        } else {
+            for (const xsdWorker of this.xsdManager.getAll()) {
+                xsdWorkers.push(xsdWorker)
+            }
+        }
+        return xsdWorkers
     }
 }
