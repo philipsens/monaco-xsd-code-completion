@@ -16,36 +16,52 @@ export default class CodeSuggester {
 
     public elements = (
         parentElement: string,
+        namespace: string | undefined,
         withoutTag = false,
         incomplete = false,
     ): ICompletion[] =>
-        this.parseElements(this.codeSuggestionCache.elements(parentElement), withoutTag, incomplete)
+        this.parseElements(
+            this.codeSuggestionCache.elements(parentElement),
+            namespace,
+            withoutTag,
+            incomplete,
+        )
 
     public attributes = (element: string, incomplete = false): ICompletion[] =>
         this.parseAttributes(this.codeSuggestionCache.attributes(element), incomplete)
 
     private parseElements = (
         elements: DocumentNode[],
+        namespace: string | undefined,
         withoutTag: boolean,
         incomplete: boolean,
     ): ICompletion[] =>
         elements.map(
-            (element: DocumentNode, index: number): ICompletion => ({
-                label: element.name,
-                kind: withoutTag
-                    ? languages.CompletionItemKind.Snippet
-                    : languages.CompletionItemKind.Method,
-                detail: this.getElementDetail(withoutTag),
-                /**
-                 * A human-readable string that represents a doc-comment.
-                 */
-                // TODO: documentation
-                // TODO: SimpleType
-                sortText: index.toString(),
-                insertText: this.parseElementInputText(element.name, withoutTag, incomplete),
-                insertTextRules: languages.CompletionItemInsertTextRule.InsertAsSnippet,
-            }),
+            (element: DocumentNode, index: number): ICompletion => {
+                const elementName = this.parseElementName(element.name, namespace)
+                return {
+                    label: elementName,
+                    kind: withoutTag
+                        ? languages.CompletionItemKind.Snippet
+                        : languages.CompletionItemKind.Method,
+                    detail: this.getElementDetail(withoutTag),
+                    /**
+                     * A human-readable string that represents a doc-comment.
+                     */
+                    // TODO: documentation
+                    // TODO: SimpleType
+                    sortText: index.toString(),
+                    insertText: this.parseElementInputText(elementName, withoutTag, incomplete),
+                    insertTextRules: languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                }
+            },
         )
+
+    private parseElementName = (name: string, namespace: string | undefined) =>
+        namespace ? namespace + ':' + name : name
+
+    private getElementDetail = (withoutTag: boolean): string =>
+        withoutTag ? `Insert as snippet` : ''
 
     private parseElementInputText = (
         name: string,
@@ -57,9 +73,6 @@ export default class CodeSuggester {
 
         return name + '${1}></' + name
     }
-
-    private getElementDetail = (withoutTag: boolean): string =>
-        withoutTag ? `Insert as snippet` : ''
 
     private parseAttributes = (attributes: DocumentNode[], incomplete: boolean): ICompletion[] =>
         attributes.map(

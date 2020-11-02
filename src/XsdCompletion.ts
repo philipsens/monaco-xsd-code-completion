@@ -11,6 +11,12 @@ import CompletionList = languages.CompletionList
 import CompletionItem = languages.CompletionItem
 import CompletionTriggerKind = languages.CompletionTriggerKind
 import CompletionItemKind = languages.CompletionItemKind
+import IWordAtPosition = editor.IWordAtPosition
+
+interface INamespaceInfo {
+    prefix: string
+    path: string
+}
 
 export default class XsdCompletion {
     private xsdManager: XsdManager
@@ -61,20 +67,18 @@ export default class XsdCompletion {
         const completionType = this.getCompletionType(model, position, context)
         if (completionType == CompletionType.none) return []
 
-        const parentTag = this.getParentTag(model, position)
+        let parentTag = this.getParentTag(model, position)
         if (completionType == CompletionType.closingElement)
             return this.getClosingElementCompletion(parentTag)
 
         const namespaces = this.getXsdNamespaces(model)
-        const parentNamespace = this.getNamespaceFromTag(parentTag)
-        const xsdWorkers = this.getXsdWorkersForNamespace(namespaces, parentNamespace)
+        const completionNamespace = this.getCompletionNamespace(model, position)
+        const xsdWorkers = this.getXsdWorkersForNamespace(namespaces, completionNamespace)
+        if (parentTag) parentTag = this.getTagWithoutNamespace(parentTag)
 
         let completions: ICompletion[] = []
         xsdWorkers.map((xsdWorker: XsdWorker) => {
-            completions = [
-                ...completions,
-                ...xsdWorker.doCompletion(completionType, parentTag, parentNamespace),
-            ]
+            completions = [...completions, ...xsdWorker.doCompletion(completionType, parentTag)]
         })
 
         return completions
@@ -109,8 +113,10 @@ export default class XsdCompletion {
         return CompletionType.snippet
     }
 
-    private textContainsAttributes = (text: string): boolean =>
-        this.getAttributesFromText(text) !== undefined
+    private textContainsAttributes = (text: string): boolean => {
+        const attributes = this.getAttributesFromText(text)
+        return attributes !== undefined && attributes.length > 0
+    }
 
     private getAttributesFromText = (text: string): string[] | undefined =>
         this.getMatchesForRegex(text, /(?<=\s)[A-Za-z0-9]+/g)
@@ -121,7 +127,10 @@ export default class XsdCompletion {
         return []
     }
 
-    private textContainsTags = (text: string): boolean => this.getTagsFromText(text) !== undefined
+    private textContainsTags = (text: string): boolean => {
+        const tags = this.getTagsFromText(text)
+        return tags !== undefined && tags.length > 0
+    }
 
     private getTagsFromText = (text: string): string[] | undefined =>
         this.getMatchesForRegex(text, /(?<=<|<\/)[^?\s|/>]+(?!.+\/>)/g)
@@ -144,7 +153,7 @@ export default class XsdCompletion {
         const textUntilPosition = this.getTextUntilPosition(model, position)
         const unclosedTags = this.getUnclosedTags(textUntilPosition)
         const wordAtPosition = model.getWordAtPosition(position)
-        if (wordAtPosition && wordAtPosition.word === unclosedTags[unclosedTags.length - 1])
+        if (this.wordAtPositionIsEqualToLastUnclosedTag(wordAtPosition, unclosedTags))
             return unclosedTags[unclosedTags.length - 2]
 
         const lineContent = model.getLineContent(position.lineNumber)
@@ -161,6 +170,12 @@ export default class XsdCompletion {
         }
         return unclosedTags[unclosedTags.length - 1]
     }
+
+    private wordAtPositionIsEqualToLastUnclosedTag = (
+        wordAtPosition: IWordAtPosition | null,
+        unclosedTags: string[],
+    ): boolean =>
+        wordAtPosition !== null && wordAtPosition.word === unclosedTags[unclosedTags.length - 1]
 
     private getTextUntilPosition = (model: ITextModel, position: IPosition): string =>
         model.getValueInRange({
@@ -197,12 +212,7 @@ export default class XsdCompletion {
         },
     ]
 
-    private getNamespaceFromTag = (tag: string): string | undefined => {
-        const parts = tag?.split(':')
-        if (parts && parts.length > 1) return parts[0]
-    }
-
-    private getXsdNamespaces = (model: ITextModel): Map<string, string> => {
+    private getXsdNamespaces = (model: ITextModel): Map<string, INamespaceInfo> => {
         const text = this.getFullText(model)
         const namespaces = this.getNamespaces(text)
         const namespaceSchemaLocations = this.getNamespacesSchemaLocations(text)
@@ -221,7 +231,7 @@ export default class XsdCompletion {
             namespaceMap.set(part[1], part[0])
         })
         this.getMatchesForRegex(text, regexForNoNamespaces).forEach((match) => {
-            namespaceMap.set(match, match)
+            namespaceMap.set(match, '')
         })
         return namespaceMap
     }
@@ -237,7 +247,7 @@ export default class XsdCompletion {
             })
         })
         this.getMatchesForRegex(text, regexForNoNamespacesSchemaLocations).forEach((match) =>
-            namespaceSchemaLocationsMap.set(match, match),
+            namespaceSchemaLocationsMap.set(match, 'file://' + match),
         )
         return namespaceSchemaLocationsMap
     }
@@ -245,37 +255,56 @@ export default class XsdCompletion {
     private matchNamespacesAndNamespaceSchemaLocations = (
         namespaces: Map<string, string>,
         namespaceSchemaLocations: Map<string, string>,
-    ): Map<string, string> => {
+    ): Map<string, INamespaceInfo> => {
         const matchedNamespacesAndNamespaceSchemaLocations = new Map()
-        for (const [key, value] of namespaceSchemaLocations.entries()) {
-            matchedNamespacesAndNamespaceSchemaLocations.set(namespaces.get(value), key)
+        for (const [path, uri] of namespaceSchemaLocations.entries()) {
+            matchedNamespacesAndNamespaceSchemaLocations.set(uri, {
+                prefix: namespaces.get(uri),
+                path: path,
+            })
         }
         return matchedNamespacesAndNamespaceSchemaLocations
     }
 
+    private getCompletionNamespace = (model: ITextModel, position: Position): string => {
+        const lineContent = model.getLineContent(position.lineNumber)
+        const tagsInLine = this.getTagsFromText(lineContent)
+        if (tagsInLine && tagsInLine.length > 0) {
+            const lastTagInLine = tagsInLine[tagsInLine.length - 1]
+            const tagParts = lastTagInLine.split(':')
+            if (tagParts.length > 1) return tagParts[0]
+        }
+        return ''
+    }
+
     private getXsdWorkersForNamespace = (
-        namespaces: Map<string, string>,
+        namespaces: Map<string, INamespaceInfo>,
         namespace: string | undefined,
     ): XsdWorker[] => {
         const xsdWorkers = []
         if (namespace) {
-            const path = namespaces.get(namespace)
-            if (path) {
-                const xsdWorker = this.xsdManager.get(path)
-                if (xsdWorker) xsdWorkers.push(xsdWorker)
+            const namespaceInfo = namespaces.get(namespace)
+            if (namespaceInfo) {
+                const xsdWorker = this.xsdManager.get(namespaceInfo.path)
+                if (xsdWorker) xsdWorkers.push(xsdWorker.withNamespace(namespace))
             }
         } else {
-            for (const [namespace, namespaceLocation] of namespaces.entries()) {
+            for (const [namespace, namespaceInfo] of namespaces.entries()) {
                 if (
-                    this.xsdManager.has(namespaceLocation) ||
+                    this.xsdManager.has(namespaceInfo.path) ||
                     namespace === undefined ||
                     namespace === ''
                 ) {
-                    const xsdWorker = this.xsdManager.get(namespaceLocation)
-                    if (xsdWorker) xsdWorkers.push(xsdWorker)
+                    const xsdWorker = this.xsdManager.get(namespaceInfo.path)
+                    if (xsdWorker) xsdWorkers.push(xsdWorker.withNamespace(namespaceInfo.prefix))
                 }
             }
         }
         return xsdWorkers
+    }
+
+    private getTagWithoutNamespace = (tag: string): string => {
+        const tagParts = tag.split(':')
+        return tagParts[tagParts.length - 1]
     }
 }
