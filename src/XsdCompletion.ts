@@ -44,8 +44,17 @@ export default class XsdCompletion {
         const completions: ICompletion[] = this.getCompletions(model, position, context)
 
         const wordUntilPosition = model.getWordUntilPosition(position)
+        const tagBeforePosition = this.getLastTagBeforePosition(model, position)
+
+        let startColumn = wordUntilPosition.startColumn
+        if (wordUntilPosition && tagBeforePosition) {
+            const lengthDifferance = Math.abs(
+                tagBeforePosition.length - wordUntilPosition.word.length,
+            )
+            startColumn = wordUntilPosition.startColumn - lengthDifferance
+        }
         const wordRange = {
-            startColumn: wordUntilPosition.startColumn,
+            startColumn: startColumn,
             startLineNumber: position.lineNumber,
             endColumn: wordUntilPosition.endColumn,
             endLineNumber: position.lineNumber,
@@ -72,8 +81,8 @@ export default class XsdCompletion {
             return this.getClosingElementCompletion(parentTag)
 
         const namespaces = this.getXsdNamespaces(model)
-        const completionNamespace = this.getCompletionNamespace(model, position)
-        const xsdWorkers = this.getXsdWorkersForNamespace(namespaces, completionNamespace)
+        const currentTagNamespace = this.getCurrentTagNamespace(model, position)
+        const xsdWorkers = this.getXsdWorkersForNamespace(namespaces, currentTagNamespace)
         if (parentTag) parentTag = this.getTagWithoutNamespace(parentTag)
 
         let completions: ICompletion[] = []
@@ -108,6 +117,7 @@ export default class XsdCompletion {
     }
 
     private getCompletionTypeForIncompleteCompletion = (text: string): CompletionType => {
+        // TODO: Check if after element
         if (this.textContainsAttributes(text)) return CompletionType.incompleteAttribute
         if (this.textContainsTags(text)) return CompletionType.incompleteElement
         return CompletionType.snippet
@@ -156,26 +166,13 @@ export default class XsdCompletion {
         if (this.wordAtPositionIsEqualToLastUnclosedTag(wordAtPosition, unclosedTags))
             return unclosedTags[unclosedTags.length - 2]
 
-        const lineContent = model.getLineContent(position.lineNumber)
-        const tagsInLine = this.getTagsFromText(lineContent)
-        if (tagsInLine && tagsInLine.length > 0) {
-            const lastTagInLine = tagsInLine[tagsInLine.length - 1]
-            const lastTagInlineWithoutNamespace = lastTagInLine.split(':')[1]
-            if (
-                wordAtPosition &&
-                lastTagInlineWithoutNamespace &&
-                lastTagInlineWithoutNamespace === wordAtPosition.word
-            )
-                return unclosedTags[unclosedTags.length - 2]
+        const currentTagName = this.getCurrentTagName(model, position)
+        if (wordAtPosition && currentTagName && currentTagName === wordAtPosition.word) {
+            return unclosedTags[unclosedTags.length - 2]
         }
+
         return unclosedTags[unclosedTags.length - 1]
     }
-
-    private wordAtPositionIsEqualToLastUnclosedTag = (
-        wordAtPosition: IWordAtPosition | null,
-        unclosedTags: string[],
-    ): boolean =>
-        wordAtPosition !== null && wordAtPosition.word === unclosedTags[unclosedTags.length - 1]
 
     private getTextUntilPosition = (model: ITextModel, position: IPosition): string =>
         model.getValueInRange({
@@ -201,6 +198,43 @@ export default class XsdCompletion {
             })
         return parentTags
     }
+
+    private wordAtPositionIsEqualToLastUnclosedTag = (
+        wordAtPosition: IWordAtPosition | null,
+        unclosedTags: string[],
+    ): boolean =>
+        wordAtPosition !== null && wordAtPosition.word === unclosedTags[unclosedTags.length - 1]
+
+    private getCurrentTagName = (model: ITextModel, position: Position): string | undefined => {
+        const currentTagParts = this.getCurrentTagParts(model, position)
+        if (currentTagParts) return currentTagParts[1]
+    }
+
+    private getCurrentTagParts = (model: ITextModel, position: Position): string[] | undefined => {
+        const lastTagBeforePosition = this.getLastTagBeforePosition(model, position)
+        if (lastTagBeforePosition) {
+            const tagParts = lastTagBeforePosition.split(':')
+            if (tagParts.length > 1) return tagParts
+        }
+    }
+
+    private getLastTagBeforePosition = (
+        model: ITextModel,
+        position: Position,
+    ): string | undefined => {
+        const wordsBeforePosition = this.getWordsBeforePosition(model, position)
+        const tagsBeforePosition = this.getTagsFromText(wordsBeforePosition)
+        if (tagsBeforePosition && tagsBeforePosition.length > 0)
+            return tagsBeforePosition[tagsBeforePosition.length - 1]
+    }
+
+    private getWordsBeforePosition = (model: ITextModel, position: Position): string =>
+        model.getValueInRange({
+            startLineNumber: position.lineNumber,
+            startColumn: 0,
+            endLineNumber: position.lineNumber,
+            endColumn: position.column,
+        })
 
     private getClosingElementCompletion = (element: string): ICompletion[] => [
         {
@@ -266,15 +300,12 @@ export default class XsdCompletion {
         return matchedNamespacesAndNamespaceSchemaLocations
     }
 
-    private getCompletionNamespace = (model: ITextModel, position: Position): string => {
-        const lineContent = model.getLineContent(position.lineNumber)
-        const tagsInLine = this.getTagsFromText(lineContent)
-        if (tagsInLine && tagsInLine.length > 0) {
-            const lastTagInLine = tagsInLine[tagsInLine.length - 1]
-            const tagParts = lastTagInLine.split(':')
-            if (tagParts.length > 1) return tagParts[0]
-        }
-        return ''
+    private getCurrentTagNamespace = (
+        model: ITextModel,
+        position: Position,
+    ): string | undefined => {
+        const currentTagParts = this.getCurrentTagParts(model, position)
+        if (currentTagParts) return currentTagParts[0]
     }
 
     private getXsdWorkersForNamespace = (
@@ -282,24 +313,24 @@ export default class XsdCompletion {
         namespace: string | undefined,
     ): XsdWorker[] => {
         const xsdWorkers = []
-        if (namespace) {
-            const namespaceInfo = namespaces.get(namespace)
-            if (namespaceInfo) {
+        // if (namespace) {
+        //     const namespaceInfo = namespaces.get(namespace)
+        //     if (namespaceInfo) {
+        //         const xsdWorker = this.xsdManager.get(namespaceInfo.path)
+        //         if (xsdWorker) xsdWorkers.push(xsdWorker.withNamespace(namespace))
+        //     }
+        // } else {
+        for (const [namespace, namespaceInfo] of namespaces.entries()) {
+            if (
+                this.xsdManager.has(namespaceInfo.path) ||
+                namespace === undefined ||
+                namespace === ''
+            ) {
                 const xsdWorker = this.xsdManager.get(namespaceInfo.path)
-                if (xsdWorker) xsdWorkers.push(xsdWorker.withNamespace(namespace))
-            }
-        } else {
-            for (const [namespace, namespaceInfo] of namespaces.entries()) {
-                if (
-                    this.xsdManager.has(namespaceInfo.path) ||
-                    namespace === undefined ||
-                    namespace === ''
-                ) {
-                    const xsdWorker = this.xsdManager.get(namespaceInfo.path)
-                    if (xsdWorker) xsdWorkers.push(xsdWorker.withNamespace(namespaceInfo.prefix))
-                }
+                if (xsdWorker) xsdWorkers.push(xsdWorker.withNamespace(namespaceInfo.prefix))
             }
         }
+        // }
         return xsdWorkers
     }
 
