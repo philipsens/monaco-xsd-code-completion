@@ -333,11 +333,6 @@ export default class XsdCompletion {
         return matchedNamespacesAndNamespaceSchemaLocations
     }
 
-    private getTagNamespace = (tag: string | undefined): string | undefined => {
-        const currentTagParts = this.getTagParts(tag)
-        if (currentTagParts) return currentTagParts[0]
-    }
-
     private getXsdWorkersForNamespace = (namespaces: Map<string, INamespaceInfo>): XsdWorker[] => {
         const xsdWorkers = []
         for (const [namespace, namespaceInfo] of namespaces.entries()) {
