@@ -47,12 +47,17 @@ export default class XsdCompletion {
         const tagBeforePosition = this.getLastTagBeforePosition(model, position)
 
         let startColumn = wordUntilPosition.startColumn
-        if (wordUntilPosition && tagBeforePosition) {
-            const lengthDifferance = Math.abs(
-                tagBeforePosition.length - wordUntilPosition.word.length,
-            )
-            startColumn = wordUntilPosition.startColumn - lengthDifferance
-        }
+        // console.log(wordUntilPosition, tagBeforePosition)
+        // if (
+        //     wordUntilPosition &&
+        //     tagBeforePosition &&
+        //     wordUntilPosition.word === this.getTagName(tagBeforePosition)
+        // ) {
+        //     const lengthDifferance = Math.abs(
+        //         tagBeforePosition.length - wordUntilPosition.word.length,
+        //     )
+        //     startColumn = wordUntilPosition.startColumn - lengthDifferance
+        // }
         const wordRange = {
             startColumn: startColumn,
             startLineNumber: position.lineNumber,
@@ -61,10 +66,13 @@ export default class XsdCompletion {
         }
 
         return completions.map(
-            (completion: ICompletion): CompletionItem => ({
-                ...completion,
-                ...{ range: wordRange },
-            }),
+            (completion: ICompletion): CompletionItem => {
+                console.log(completion)
+                return {
+                    ...completion,
+                    ...{ range: wordRange },
+                }
+            },
         )
     }
 
@@ -76,18 +84,25 @@ export default class XsdCompletion {
         const completionType = this.getCompletionType(model, position, context)
         if (completionType == CompletionType.none) return []
 
-        let parentTag = this.getParentTag(model, position)
+        const parentTag = this.getParentTag(model, position)
         if (completionType == CompletionType.closingElement)
             return this.getClosingElementCompletion(parentTag)
 
         const namespaces = this.getXsdNamespaces(model)
-        const currentTagNamespace = this.getCurrentTagNamespace(model, position)
+        const lastTagBeforePosition = this.getLastTagBeforePosition(model, position)
+        const currentTagNamespace = this.getTagNamespace(lastTagBeforePosition)
         const xsdWorkers = this.getXsdWorkersForNamespace(namespaces, currentTagNamespace)
-        if (parentTag) parentTag = this.getTagWithoutNamespace(parentTag)
+        const parentTagName = this.getTagName(parentTag)
 
         let completions: ICompletion[] = []
         xsdWorkers.map((xsdWorker: XsdWorker) => {
-            completions = [...completions, ...xsdWorker.doCompletion(completionType, parentTag)]
+            completions = [
+                ...completions,
+                ...xsdWorker.doCompletion(
+                    completionType,
+                    parentTagName ? parentTagName : parentTag,
+                ),
+            ]
         })
 
         return completions
@@ -98,16 +113,26 @@ export default class XsdCompletion {
         position: Position,
         context: CompletionContext,
     ): CompletionType => {
-        const wordsBeforePosition = model.getLineContent(position.lineNumber)
+        const wordsBeforePosition = this.getWordsBeforePosition(model, position)
         if (this.isInsideAttributeValue(wordsBeforePosition)) return CompletionType.none
 
         switch (context.triggerKind) {
             case CompletionTriggerKind.Invoke:
+                return this.getCompletionTypeAfterInvoke(wordsBeforePosition)
             case CompletionTriggerKind.TriggerForIncompleteCompletions:
                 return this.getCompletionTypeForIncompleteCompletion(wordsBeforePosition)
             case CompletionTriggerKind.TriggerCharacter:
                 return this.getCompletionTypeByTriggerCharacter(context.triggerCharacter)
         }
+    }
+
+    private getCompletionTypeAfterInvoke = (text: string): CompletionType => {
+        const lastCharacterBeforePosition = text[text.length - 1]
+        const completionTypeByCharacter = this.getCompletionTypeByCharacterBeforePosition(
+            lastCharacterBeforePosition,
+        )
+        if (completionTypeByCharacter) return completionTypeByCharacter
+        return this.getCompletionTypeForIncompleteCompletion(text)
     }
 
     private isInsideAttributeValue = (text: string): boolean => {
@@ -117,7 +142,6 @@ export default class XsdCompletion {
     }
 
     private getCompletionTypeForIncompleteCompletion = (text: string): CompletionType => {
-        // TODO: Check if after element
         if (this.textContainsAttributes(text)) return CompletionType.incompleteAttribute
         if (this.textContainsTags(text)) return CompletionType.incompleteElement
         return CompletionType.snippet
@@ -143,7 +167,7 @@ export default class XsdCompletion {
     }
 
     private getTagsFromText = (text: string): string[] | undefined =>
-        this.getMatchesForRegex(text, /(?<=<|<\/)[^?\s|/>]+(?!.+\/>)/g)
+        this.getMatchesForRegex(text, /(?<=<|<\/)[^?\s|/>]+(?!.*\/>)/g)
 
     private getCompletionTypeByTriggerCharacter = (
         triggerCharacter: string | undefined,
@@ -159,6 +183,19 @@ export default class XsdCompletion {
         return CompletionType.none
     }
 
+    private getCompletionTypeByCharacterBeforePosition = (
+        triggerCharacter: string | undefined,
+    ): CompletionType | undefined => {
+        switch (triggerCharacter) {
+            case '<':
+                return CompletionType.incompleteElement
+            case ' ':
+                return CompletionType.incompleteAttribute
+            case '/':
+                return CompletionType.closingElement
+        }
+    }
+
     private getParentTag = (model: ITextModel, position: Position): string => {
         const textUntilPosition = this.getTextUntilPosition(model, position)
         const unclosedTags = this.getUnclosedTags(textUntilPosition)
@@ -166,7 +203,8 @@ export default class XsdCompletion {
         if (this.wordAtPositionIsEqualToLastUnclosedTag(wordAtPosition, unclosedTags))
             return unclosedTags[unclosedTags.length - 2]
 
-        const currentTagName = this.getCurrentTagName(model, position)
+        const lastTagBeforePosition = this.getLastTagBeforePosition(model, position)
+        const currentTagName = this.getTagName(lastTagBeforePosition)
         if (wordAtPosition && currentTagName && currentTagName === wordAtPosition.word) {
             return unclosedTags[unclosedTags.length - 2]
         }
@@ -205,15 +243,14 @@ export default class XsdCompletion {
     ): boolean =>
         wordAtPosition !== null && wordAtPosition.word === unclosedTags[unclosedTags.length - 1]
 
-    private getCurrentTagName = (model: ITextModel, position: Position): string | undefined => {
-        const currentTagParts = this.getCurrentTagParts(model, position)
+    private getTagName = (tag: string | undefined): string | undefined => {
+        const currentTagParts = this.getTagParts(tag)
         if (currentTagParts) return currentTagParts[1]
     }
 
-    private getCurrentTagParts = (model: ITextModel, position: Position): string[] | undefined => {
-        const lastTagBeforePosition = this.getLastTagBeforePosition(model, position)
-        if (lastTagBeforePosition) {
-            const tagParts = lastTagBeforePosition.split(':')
+    private getTagParts = (tag: string | undefined): string[] | undefined => {
+        if (tag) {
+            const tagParts = tag.split(':')
             if (tagParts.length > 1) return tagParts
         }
     }
@@ -300,11 +337,8 @@ export default class XsdCompletion {
         return matchedNamespacesAndNamespaceSchemaLocations
     }
 
-    private getCurrentTagNamespace = (
-        model: ITextModel,
-        position: Position,
-    ): string | undefined => {
-        const currentTagParts = this.getCurrentTagParts(model, position)
+    private getTagNamespace = (tag: string | undefined): string | undefined => {
+        const currentTagParts = this.getTagParts(tag)
         if (currentTagParts) return currentTagParts[0]
     }
 
@@ -332,10 +366,5 @@ export default class XsdCompletion {
         }
         // }
         return xsdWorkers
-    }
-
-    private getTagWithoutNamespace = (tag: string): string => {
-        const tagParts = tag.split(':')
-        return tagParts[tagParts.length - 1]
     }
 }
