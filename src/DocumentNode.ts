@@ -1,8 +1,8 @@
 export default class DocumentNode {
     public name!: string
+    public documentation?: string
     private readonly type?: string
     private readonly use?: string
-    public documentation?: string
 
     get isRequired(): boolean {
         return this.use === 'required'

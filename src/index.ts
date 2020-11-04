@@ -1,4 +1,4 @@
-import XSDParser from './XSDParser'
-import XSDCodeCompletionProvider from './XSDCodeCompletionProvider'
+import XsdFeatures from './XsdFeatures'
+import XsdManager from './XsdManager'
 
-export { XSDParser, XSDCodeCompletionProvider }
+export { XsdFeatures, XsdManager }

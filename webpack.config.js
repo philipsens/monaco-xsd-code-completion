@@ -12,6 +12,10 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.worker\.ts$/,
+                use: { loader: 'worker-loader' },
+            },
+            {
                 test: /\.tsx?$/,
                 exclude: /node_modules/,
                 use: {

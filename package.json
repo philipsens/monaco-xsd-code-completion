@@ -1,16 +1,17 @@
 {
     "name": "monaco-xsd-code-completion",
-    "version": "0.2.3",
+    "version": "0.4.0",
     "description": "",
     "main": "lib/index.js",
     "module": "esm/index.js",
     "types": "lib/index.d.js",
     "scripts": {
-        "build": "yarn build:cjs && yarn build:esm && yarn build:umd",
+        "test": "echo \"Error: no test specified\" && exit 1",
         "build:cjs": "tsc -p tsconfig.cjs.json",
         "build:esm": "tsc -p tsconfig.esm.json",
         "build:umd": "webpack",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "clean": "rimraf ./lib && rimraf ./esm && rimraf ./umd",
+        "build": "npm-run-all  build:cjs build:esm"
     },
     "repository": {
         "type": "git",
@@ -35,6 +36,8 @@
     },
     "homepage": "https://github.com/philipsens/monaco-xsd-code-completion#readme",
     "devDependencies": {
+        "@types/turndown": "^5.0.0",
+        "@types/xmldom": "^0.1.30",
         "@typescript-eslint/eslint-plugin": "^4.4.1",
         "@typescript-eslint/parser": "^4.4.1",
         "css-loader": "^4.3.0",
@@ -44,17 +47,19 @@
         "file-loader": "^6.1.0",
         "husky": "^4.3.0",
         "monaco-editor": "^0.21.2",
+        "monaco-editor-core": "^0.21.2",
+        "npm-run-all": "^4.1.5",
         "prettier": "^2.1.2",
         "pretty-quick": "^3.0.2",
+        "rimraf": "^3.0.2",
         "style-loader": "^2.0.0",
-        "ts-loader": "^8.0.5",
+        "ts-loader": "^8.0.7",
         "typescript": "^4.0.3",
-        "webpack": "^5.1.0",
-        "webpack-cli": "^4.0.0"
+        "webpack": "^5.2.0",
+        "webpack-cli": "^4.1.0",
+        "worker-loader": "^3.0.5"
     },
     "dependencies": {
-        "@types/turndown": "^5.0.0",
-        "@types/xmldom": "^0.1.30",
         "turndown": "^7.0.0",
         "xmldom": "^0.3.0",
         "xpath": "0.0.29"
