@@ -47,17 +47,16 @@ export default class XsdCompletion {
         const tagBeforePosition = this.getLastTagBeforePosition(model, position)
 
         let startColumn = wordUntilPosition.startColumn
-        // console.log(wordUntilPosition, tagBeforePosition)
-        // if (
-        //     wordUntilPosition &&
-        //     tagBeforePosition &&
-        //     wordUntilPosition.word === this.getTagName(tagBeforePosition)
-        // ) {
-        //     const lengthDifferance = Math.abs(
-        //         tagBeforePosition.length - wordUntilPosition.word.length,
-        //     )
-        //     startColumn = wordUntilPosition.startColumn - lengthDifferance
-        // }
+        if (
+            wordUntilPosition &&
+            tagBeforePosition &&
+            wordUntilPosition.word === this.getTagName(tagBeforePosition)
+        ) {
+            const lengthDifferance = Math.abs(
+                tagBeforePosition.length - wordUntilPosition.word.length,
+            )
+            startColumn = wordUntilPosition.startColumn - lengthDifferance
+        }
         const wordRange = {
             startColumn: startColumn,
             startLineNumber: position.lineNumber,
@@ -88,9 +87,7 @@ export default class XsdCompletion {
             return this.getClosingElementCompletion(parentTag)
 
         const namespaces = this.getXsdNamespaces(model)
-        const lastTagBeforePosition = this.getLastTagBeforePosition(model, position)
-        const currentTagNamespace = this.getTagNamespace(lastTagBeforePosition)
-        const xsdWorkers = this.getXsdWorkersForNamespace(namespaces, currentTagNamespace)
+        const xsdWorkers = this.getXsdWorkersForNamespace(namespaces)
         const parentTagName = this.getTagName(parentTag)
 
         let completions: ICompletion[] = []
@@ -341,18 +338,8 @@ export default class XsdCompletion {
         if (currentTagParts) return currentTagParts[0]
     }
 
-    private getXsdWorkersForNamespace = (
-        namespaces: Map<string, INamespaceInfo>,
-        namespace: string | undefined,
-    ): XsdWorker[] => {
+    private getXsdWorkersForNamespace = (namespaces: Map<string, INamespaceInfo>): XsdWorker[] => {
         const xsdWorkers = []
-        // if (namespace) {
-        //     const namespaceInfo = namespaces.get(namespace)
-        //     if (namespaceInfo) {
-        //         const xsdWorker = this.xsdManager.get(namespaceInfo.path)
-        //         if (xsdWorker) xsdWorkers.push(xsdWorker.withNamespace(namespace))
-        //     }
-        // } else {
         for (const [namespace, namespaceInfo] of namespaces.entries()) {
             if (
                 this.xsdManager.has(namespaceInfo.path) ||
@@ -363,7 +350,6 @@ export default class XsdCompletion {
                 if (xsdWorker) xsdWorkers.push(xsdWorker.withNamespace(namespaceInfo.prefix))
             }
         }
-        // }
         return xsdWorkers
     }
 }
