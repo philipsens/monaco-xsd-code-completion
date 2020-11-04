@@ -5,53 +5,51 @@ import IXsd from './IXsd'
 export default class CodeSuggestionCache {
     private xsd: IXsd
     private xsdParser: XsdParser
-    private nodeMap: string[] = []
-    private elementCollections: DocumentNode[][] = []
-    private attributeCollections: DocumentNode[][] = []
+    private elementCollections: Map<string, DocumentNode[]>
+    private attributeCollections: Map<string, DocumentNode[]>
 
     constructor(xsd: IXsd) {
         this.xsd = xsd
+        this.elementCollections = new Map()
+        this.attributeCollections = new Map()
         this.xsdParser = new XsdParser(xsd.value)
     }
 
     public elements = (parentElement: string): DocumentNode[] =>
         parentElement === undefined ? this.rootElements() : this.subElements(parentElement)
 
-    setElementCollection = (element: string, documentElement: DocumentNode[]): DocumentNode[] => {
-        this.nodeMap.push(element)
-        this.elementCollections[this.getIndexForNode(element)] = documentElement
-        return this.getElementCollection(element)
+    cacheElementCollection = (element: string, documentElement: DocumentNode[]): DocumentNode[] => {
+        this.elementCollections.set(element, documentElement)
+        return documentElement
     }
 
     public attributes = (element: string): DocumentNode[] =>
-        this.getAttributeCollection(element) || this.getAttributes(element)
+        this.attributeCollections.get(element) || this.getAttributes(element)
 
-    private rootElements = (): DocumentNode[] =>
-        this.getElementCollection('rootElements') || this.getRootElements()
-
-    private getElementCollection = (element: string): DocumentNode[] =>
-        this.elementCollections[this.getIndexForNode(element)]
-
-    private getIndexForNode = (node: string): number => this.nodeMap.indexOf(node)
+    private rootElements = (): DocumentNode[] => {
+        const elements = this.elementCollections.get('rootElements')
+        if (elements) return elements
+        return this.getRootElements()
+    }
 
     private getRootElements = (): DocumentNode[] => {
         console.log(`Fetch root elements from ${this.xsd.path}`)
-        return this.setElementCollection('rootElements', this.xsdParser.getRootElements())
+        return this.cacheElementCollection('rootElements', this.xsdParser.getRootElements())
     }
 
-    private subElements = (parentElement: string): DocumentNode[] =>
-        this.getElementCollection(parentElement) || this.getSubElements(parentElement)
+    private subElements = (parentElement: string): DocumentNode[] => {
+        const subElements = this.elementCollections.get(parentElement)
+        if (subElements) return subElements
+        return this.getSubElements(parentElement)
+    }
 
     private getSubElements = (parentElement: string): DocumentNode[] => {
         console.log(`Fetch sub elements for ${parentElement} from ${this.xsd.path}`)
-        return this.setElementCollection(
+        return this.cacheElementCollection(
             parentElement,
             this.xsdParser.getSubElements(parentElement),
         )
     }
-
-    private getAttributeCollection = (element: string): DocumentNode[] =>
-        this.attributeCollections[this.getIndexForNode(element)]
 
     private getAttributes = (element: string): DocumentNode[] => {
         console.log(`Fetch attributes for ${element} from ${this.xsd.path}`)
@@ -62,8 +60,7 @@ export default class CodeSuggestionCache {
         element: string,
         documentAttribute: DocumentNode[],
     ): DocumentNode[] => {
-        this.nodeMap.push(element)
-        this.attributeCollections[this.getIndexForNode(element)] = documentAttribute
-        return this.getAttributeCollection(element)
+        this.attributeCollections.set(element, documentAttribute)
+        return documentAttribute
     }
 }
