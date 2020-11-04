@@ -1,6 +1,7 @@
 # Manaco XSD Code Completion
 
-This is a basic and low resource way to provide client-side code completion for the Monaco-editor. The XSD is based on the ibisdoc but could work with other XSD's in the future.
+This is a basic and low resource way to provide client-side code completion and other features for the Monaco-editor. 
+The code completion is based on the XSD that is provided to the XsdManager. It is possible to use multiple XSD's, and namespaces.
 
 ToDo:
 
@@ -10,8 +11,11 @@ ToDo:
 -   [x] Autocomplete close tags
 -   [x] Insert element als snippit (or tamplate)
 -   [x] Auto indentation ([RP for Monaco-languages](https://github.com/microsoft/monaco-languages/pull/113))
--   [ ] Implement namespaces
-    -   [ ] Get suggestions from multiple XSD's
-    -   [ ] Append namespace to suggestions
+-   [x] Implement namespaces
+    -   [x] Get suggestions from multiple XSD's
+    -   [x] Append namespace to suggestions
+-   [ ] Performance optimalisation
+    -   [ ] Change parser to SAX
+    -   [ ] Make use of the Monaco workers for parralel parsing
 -   [ ] Template based on XSD
 -   [ ] Show syntax errors

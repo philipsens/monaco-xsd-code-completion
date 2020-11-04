@@ -67,7 +67,6 @@ export default class XsdCompletion {
 
         return completions.map(
             (completion: ICompletion): CompletionItem => {
-                console.log(completion)
                 return {
                     ...completion,
                     ...{ range: wordRange },
