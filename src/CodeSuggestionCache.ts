@@ -23,8 +23,11 @@ export default class CodeSuggestionCache {
         return documentElement
     }
 
-    public attributes = (element: string): DocumentNode[] =>
-        this.attributeCollections.get(element) || this.getAttributes(element)
+    public attributes = (element: string): DocumentNode[] => {
+        const attributes = this.attributeCollections.get(element)
+        if (attributes) return attributes
+        return this.getAttributes(element)
+    }
 
     private rootElements = (): DocumentNode[] => {
         const elements = this.elementCollections.get('rootElements')

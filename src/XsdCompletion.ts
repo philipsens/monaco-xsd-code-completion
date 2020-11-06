@@ -93,7 +93,7 @@ export default class XsdCompletion {
         if (completionType == CompletionType.none) return []
 
         const parentTag = this.getParentTag(model, position)
-        if (completionType == CompletionType.closingElement)
+        if (completionType == CompletionType.closingElement && parentTag)
             return this.getClosingElementCompletion(parentTag)
 
         const namespaces = this.getXsdNamespaces(model)
@@ -125,14 +125,11 @@ export default class XsdCompletion {
 
         switch (context.triggerKind) {
             case CompletionTriggerKind.Invoke:
-                console.log('invoke')
                 const completionType = this.getCompletionTypeByPreviousText(textUntilPosition)
                 if (completionType) return completionType
             case CompletionTriggerKind.TriggerForIncompleteCompletions:
-                console.log('incomplete')
                 return this.getCompletionTypeForIncompleteCompletion(wordsBeforePosition)
             case CompletionTriggerKind.TriggerCharacter:
-                console.log('trigger')
                 return this.getCompletionTypeByTriggerCharacter(context.triggerCharacter)
         }
     }
@@ -193,13 +190,10 @@ export default class XsdCompletion {
         const lastCharacterBeforePosition = text[text.length - 1]
         switch (lastCharacterBeforePosition) {
             case '<':
-                console.log('<')
                 return CompletionType.incompleteElement
             case ' ':
-                console.log('[ ]')
                 return this.getCompletionTypeAfterWhitespace(text)
             case '/':
-                console.log('</')
                 return CompletionType.closingElement
         }
     }
