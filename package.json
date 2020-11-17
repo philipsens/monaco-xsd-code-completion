@@ -11,7 +11,7 @@
         "build:esm": "tsc -p tsconfig.esm.json",
         "build:umd": "webpack",
         "clean": "rimraf ./lib && rimraf ./esm && rimraf ./umd",
-        "build": "npm-run-all  build:cjs build:esm"
+        "build": "npm-run-all clean build:cjs build:esm build:umd"
     },
     "repository": {
         "type": "git",
