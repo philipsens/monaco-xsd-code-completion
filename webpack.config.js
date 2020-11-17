@@ -9,6 +9,9 @@ module.exports = {
         library: 'Monaco XSD Code Completion',
         libraryTarget: 'umd',
     },
+    node: {
+        fs: 'empty',
+    },
     module: {
         rules: [
             {

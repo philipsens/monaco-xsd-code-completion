@@ -1,5 +1,5 @@
-import IXsd from './IXsd'
 import { XsdWorker } from './XsdWorker'
+import { IXsd } from './types'
 
 export default class XsdManager {
     private xsdWorkers: Map<string, XsdWorker>

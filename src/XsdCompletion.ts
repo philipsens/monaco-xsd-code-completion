@@ -1,7 +1,5 @@
 import XsdManager from './XsdManager'
 import { editor, IPosition, languages, Position } from 'monaco-editor'
-import ICompletion from './ICompletion'
-import { CompletionType } from './CompletionType'
 import { XsdWorker } from './XsdWorker'
 import CompletionItemProvider = languages.CompletionItemProvider
 import ITextModel = editor.ITextModel
@@ -12,6 +10,7 @@ import CompletionItem = languages.CompletionItem
 import CompletionTriggerKind = languages.CompletionTriggerKind
 import CompletionItemKind = languages.CompletionItemKind
 import IWordAtPosition = editor.IWordAtPosition
+import { CompletionType, ICompletion } from './types'
 
 interface INamespaceInfo {
     prefix: string

@@ -1,6 +1,5 @@
 import XsdParser from './XsdParser'
-import DocumentNode from './DocumentNode'
-import IXsd from './IXsd'
+import { DocumentNode, IXsd } from './types'
 
 export default class CodeSuggestionCache {
     private xsd: IXsd

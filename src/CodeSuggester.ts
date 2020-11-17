@@ -1,9 +1,7 @@
 import CodeSuggestionCache from './CodeSuggestionCache'
-import DocumentNode from './DocumentNode'
 import TurndownService from 'turndown'
 import { IMarkdownString, languages } from 'monaco-editor'
-import IXsd from './IXsd'
-import ICompletion from './ICompletion'
+import { DocumentNode, ICompletion, IXsd } from './types'
 
 export default class CodeSuggester {
     private codeSuggestionCache: CodeSuggestionCache
@@ -48,7 +46,7 @@ export default class CodeSuggester {
                     /**
                      * A human-readable string that represents a doc-comment.
                      */
-                    // TODO: documentation
+                    // TODO: documentation (with namespace source)
                     // TODO: SimpleType
                     sortText: index.toString(),
                     insertText: this.parseElementInputText(elementName, withoutTag, incomplete),
