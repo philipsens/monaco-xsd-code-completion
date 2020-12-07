@@ -25,16 +25,15 @@ export default class XsdFeatures {
         this.monaco.languages.registerCompletionItemProvider('xml', xsdCompletion.provider())
     }
 
-    public doValidation = () => {
+    public doValidation = (): void => {
         const xsdValidation = new XsdValidation(this.xsdCollection)
         const model = this.editor.getModel()
-        this.oldDecorations = this.editor.deltaDecorations(
-            this.oldDecorations,
-            xsdValidation.decorations(model?.getValueInRange(model?.getFullModelRange())),
-        )
+        const modelValue = model?.getValueInRange(model?.getFullModelRange())
+        const newDecorations = xsdValidation.decorations(modelValue)
+        this.oldDecorations = this.editor.deltaDecorations(this.oldDecorations, newDecorations)
     }
 
-    public addCommands = () => {
+    public addCommands = (): void => {
         //
     }
 }

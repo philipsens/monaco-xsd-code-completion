@@ -362,7 +362,7 @@ export default class XsdCompletion {
     }
 
     private getXsdWorkersForNamespace = (namespaces: Map<string, INamespaceInfo>): XsdWorker[] => {
-        const xsdWorkers = []
+        const xsdWorkers: XsdWorker[] = []
         for (const [namespace, namespaceInfo] of namespaces.entries()) {
             if (
                 this.xsdManager.has(namespaceInfo.path) ||

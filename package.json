@@ -1,6 +1,6 @@
 {
     "name": "monaco-xsd-code-completion",
-    "version": "0.6.1",
+    "version": "0.6.2",
     "description": "",
     "main": "lib/index.js",
     "module": "esm/index.js",
@@ -10,8 +10,11 @@
         "build:cjs": "tsc -p tsconfig.cjs.json",
         "build:esm": "tsc -p tsconfig.esm.json",
         "build:umd": "webpack",
+        "watch:cjs": "tsc -p tsconfig.cjs.json --watch",
+        "watch:esm": "tsc -p tsconfig.esm.json --watch",
+        "watch:umd": "webpack --watch",
         "clean": "rimraf ./lib && rimraf ./esm && rimraf ./umd",
-        "build": "npm-run-all clean build:cjs build:esm"
+        "build": "npm-run-all clean build:cjs build:esm build:umd"
     },
     "repository": {
         "type": "git",

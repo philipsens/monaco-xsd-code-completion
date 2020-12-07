@@ -104,13 +104,24 @@ export interface IXsd {
 }
 
 export enum CompletionType {
-    none = 0,
-    element = 1,
-    attribute = 2,
-    incompleteElement = 3,
-    closingElement = 4,
-    snippet = 5,
-    incompleteAttribute = 6,
+    none,
+    element,
+    attribute,
+    incompleteElement,
+    closingElement,
+    snippet,
+    incompleteAttribute,
+}
+
+export interface XmlDomError {
+    message: string
+    type: ErrorType
+}
+
+export enum ErrorType {
+    warning,
+    error,
+    fetalError,
 }
 
 export class DocumentNode {

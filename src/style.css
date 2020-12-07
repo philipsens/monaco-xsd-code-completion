@@ -1,0 +1,17 @@
+.xml-lint {
+    border-width: 0;
+    border-style: dotted;
+    border-bottom-width: 3px;
+}
+
+.xml-lint--fatal-error {
+    border-color: red;
+}
+
+.xml-lint--error {
+    border-color: orange;
+}
+
+.xml-lint--warning {
+    border-color: blue;
+}

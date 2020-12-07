@@ -9,9 +9,6 @@ module.exports = {
         library: 'Monaco XSD Code Completion',
         libraryTarget: 'umd',
     },
-    node: {
-        fs: 'empty',
-    },
     module: {
         rules: [
             {
@@ -40,5 +37,11 @@ module.exports = {
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js'],
+        fallback: {
+            crypto: require.resolve('crypto-browserify'),
+            path: require.resolve('path-browserify'),
+            stream: require.resolve('stream-browserify'),
+            fs: false,
+        },
     },
 }

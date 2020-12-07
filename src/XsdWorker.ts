@@ -4,8 +4,10 @@ import { CompletionType, ICompletion, IXsd } from './types'
 export class XsdWorker {
     private codeSuggester: CodeSuggester
     private namespace: string | undefined
+    public xsd: IXsd
 
     constructor(xsd: IXsd) {
+        this.xsd = xsd
         this.codeSuggester = new CodeSuggester(xsd)
     }
 
