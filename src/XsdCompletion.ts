@@ -10,12 +10,7 @@ import CompletionItem = languages.CompletionItem
 import CompletionTriggerKind = languages.CompletionTriggerKind
 import CompletionItemKind = languages.CompletionItemKind
 import IWordAtPosition = editor.IWordAtPosition
-import { CompletionType, ICompletion } from './types'
-
-interface INamespaceInfo {
-    prefix: string
-    path: string
-}
+import { CompletionType, ICompletion, INamespaceInfo } from './types'
 
 export default class XsdCompletion {
     private xsdManager: XsdManager

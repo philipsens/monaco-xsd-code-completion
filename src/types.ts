@@ -1,4 +1,4 @@
-import { editor, IMarkdownString, IRange, languages } from 'monaco-editor'
+import { editor, IMarkdownString, IRange, languages, Range } from 'monaco-editor'
 import CompletionItemKind = languages.CompletionItemKind
 import CompletionItemInsertTextRule = languages.CompletionItemInsertTextRule
 import CompletionItemLabel = languages.CompletionItemLabel
@@ -76,9 +76,9 @@ export interface ICompletion {
     range?:
         | IRange
         | {
-              insert: IRange
-              replace: IRange
-          }
+        insert: IRange
+        replace: IRange
+    }
     /**
      * An optional set of characters that when pressed while this completion is active will accept it first and
      * then type that character. *Note* that all commit characters should have `length=1` and that superfluous
@@ -97,6 +97,11 @@ export interface ICompletion {
     command?: Command
 }
 
+export interface INamespaceInfo {
+    prefix: string
+    path: string
+}
+
 export interface IXsd {
     path: string
     value: string
@@ -113,9 +118,51 @@ export enum CompletionType {
     incompleteAttribute,
 }
 
-export interface XmlDomError {
-    message: string
-    type: ErrorType
+export class XmlDomError {
+    public message!: string
+    public type!: ErrorType
+
+    constructor(message: string, type: ErrorType) {
+        this.message = message
+        this.type = type
+    }
+
+    get errorTypeString(): string {
+        switch (this.type) {
+            case ErrorType.warning:
+                return '**Warning**'
+            case ErrorType.error:
+                return '**Error**'
+            case ErrorType.fetalError:
+                return '**Fatal error**'
+        }
+    }
+
+    get classNames(): string {
+        switch (this.type) {
+            case ErrorType.warning:
+                return 'xml-lint xml-lint--warning'
+            case ErrorType.error:
+                return 'xml-lint xml-lint--error'
+            case ErrorType.fetalError:
+                return 'xml-lint xml-lint--fetal'
+        }
+    }
+
+    get errorMessage(): string {
+        return this.message.split(/[\t\n]/g)[1] ?? this.message
+    }
+
+    get range(): Range {
+        const lineMatch = this.message.match(/(?<=line:)[0-9]+/g)
+        const colMatch = this.message.match(/(?<=col:)[0-9]+/g)
+
+        const line = parseInt((lineMatch ?? 0)[0])
+        const col = parseInt((colMatch ?? 0)[0])
+
+        // TODO: GetWordAt.
+        return new Range(line, col, line, col + 10)
+    }
 }
 
 export enum ErrorType {
