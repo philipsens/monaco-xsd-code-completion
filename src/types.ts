@@ -76,9 +76,9 @@ export interface ICompletion {
     range?:
         | IRange
         | {
-        insert: IRange
-        replace: IRange
-    }
+              insert: IRange
+              replace: IRange
+          }
     /**
      * An optional set of characters that when pressed while this completion is active will accept it first and
      * then type that character. *Note* that all commit characters should have `length=1` and that superfluous
