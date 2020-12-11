@@ -19,7 +19,10 @@
         "url": "git+https://github.com/philipsens/monaco-xsd-code-completion.git"
     },
     "files": [
-        "dist"
+        "esm",
+        "lib",
+        "umd",
+        "src"
     ],
     "keywords": [
         "xml",
