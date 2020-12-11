@@ -54,6 +54,7 @@
         "pretty-quick": "^3.0.2",
         "rimraf": "^3.0.2",
         "style-loader": "^2.0.0",
+        "ts-debounce": "^2.1.0",
         "ts-loader": "^8.0.7",
         "typescript": "^4.0.3",
         "webpack": "^5.2.0",

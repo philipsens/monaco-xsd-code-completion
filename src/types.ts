@@ -161,7 +161,7 @@ export class XmlDomError {
         const col = parseInt((colMatch ?? 0)[0])
 
         // TODO: GetWordAt.
-        return new Range(line, col, line, col + 10)
+        return new Range(line, col, line, col + 3)
     }
 }
 

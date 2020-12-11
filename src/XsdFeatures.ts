@@ -2,6 +2,7 @@ import XsdManager from './XsdManager'
 import XsdCompletion from './XsdCompletion'
 import XsdValidation from './XsdValidation'
 import { editor } from 'monaco-editor'
+import { debounce } from 'ts-debounce'
 import IStandaloneCodeEditor = editor.IStandaloneCodeEditor
 
 export default class XsdFeatures {
@@ -9,6 +10,7 @@ export default class XsdFeatures {
     private monaco: any
     private oldDecorations: string[] = []
     private editor: editor.IStandaloneCodeEditor
+    private xsdValidation: XsdValidation | undefined
 
     constructor(xsdXollection: XsdManager, monaco: any, editor: IStandaloneCodeEditor) {
         this.xsdCollection = xsdXollection
@@ -26,14 +28,18 @@ export default class XsdFeatures {
     }
 
     public doValidation = (): void => {
-        const xsdValidation = new XsdValidation(this.xsdCollection)
+        console.log('validate')
+        this.xsdValidation = this.xsdValidation ?? new XsdValidation(this.xsdCollection)
         const model = this.editor.getModel()
         const modelValue = model?.getValueInRange(model?.getFullModelRange())
-        const newDecorations = xsdValidation.decorations(modelValue)
+        const newDecorations = this.xsdValidation.decorations(modelValue)
         this.oldDecorations = this.editor.deltaDecorations(this.oldDecorations, newDecorations)
     }
 
-    public addCommands = (): void => {
-        //
+    public addValidation = (): void => {
+        this.xsdValidation = new XsdValidation(this.xsdCollection)
+        const debouncedDoValidation = debounce(this.doValidation, 1000)
+        this.editor.onKeyDown(debouncedDoValidation)
+        this.doValidation()
     }
 }

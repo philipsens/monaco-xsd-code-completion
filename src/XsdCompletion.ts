@@ -199,6 +199,7 @@ export default class XsdCompletion {
 
     private isInsideTag = (text: string): boolean => this.getTextInsideCurrentTag(text).length > 0
 
+    // TODO: Add ^>
     private getTextInsideCurrentTag = (text: string): string[] =>
         this.getMatchesForRegex(text, /(?<=(<|<\/)[^?\s|/>]+)\s([\sA-Za-z0-9_\-="'])*$/g)
 

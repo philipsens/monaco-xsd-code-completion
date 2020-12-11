@@ -25,6 +25,8 @@ export default class XsdValidation {
     }
 
     decorations = (xml: string | undefined): IModelDeltaDecoration[] => {
+        this.errors = []
+
         if (xml) {
             this.dom.parseFromString(xml)
             // TODO: Implement XMLLint after XML DOM Parser
