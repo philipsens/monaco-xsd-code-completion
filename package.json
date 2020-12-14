@@ -1,6 +1,6 @@
 {
     "name": "monaco-xsd-code-completion",
-    "version": "0.7.2",
+    "version": "0.7.3",
     "description": "",
     "main": "dist/MonacoXsdCodeCompletion.umd.js",
     "scripts": {
