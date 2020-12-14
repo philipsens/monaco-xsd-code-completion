@@ -31,8 +31,7 @@ export default class XsdFeatures {
         console.log('validate')
         this.xsdValidation = this.xsdValidation ?? new XsdValidation(this.xsdCollection)
         const model = this.editor.getModel()
-        const modelValue = model?.getValueInRange(model?.getFullModelRange())
-        const newDecorations = this.xsdValidation.decorations(modelValue)
+        const newDecorations = this.xsdValidation.decorations(model)
         this.oldDecorations = this.editor.deltaDecorations(this.oldDecorations, newDecorations)
     }
 

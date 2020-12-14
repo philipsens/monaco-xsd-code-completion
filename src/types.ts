@@ -1,4 +1,4 @@
-import { editor, IMarkdownString, IRange, languages, Range } from 'monaco-editor'
+import { editor, IMarkdownString, IPosition, IRange, languages } from 'monaco-editor'
 import CompletionItemKind = languages.CompletionItemKind
 import CompletionItemInsertTextRule = languages.CompletionItemInsertTextRule
 import CompletionItemLabel = languages.CompletionItemLabel
@@ -106,6 +106,7 @@ export interface IXsd {
     path: string
     value: string
     namespace?: string
+    nonStrictPath?: boolean
 }
 
 export enum CompletionType {
@@ -153,15 +154,14 @@ export class XmlDomError {
         return this.message.split(/[\t\n]/g)[1] ?? this.message
     }
 
-    get range(): Range {
-        const lineMatch = this.message.match(/(?<=line:)[0-9]+/g)
-        const colMatch = this.message.match(/(?<=col:)[0-9]+/g)
+    get position(): IPosition {
+        const columnMatch = this.message.match(/(?<=col:)[0-9]+/g)
+        const lineNumberMatch = this.message.match(/(?<=line:)[0-9]+/g)
 
-        const line = parseInt((lineMatch ?? 0)[0])
-        const col = parseInt((colMatch ?? 0)[0])
+        const column = parseInt((columnMatch ?? 0)[0]) + 1
+        const lineNumber = parseInt((lineNumberMatch ?? 0)[0])
 
-        // TODO: GetWordAt.
-        return new Range(line, col, line, col + 3)
+        return { column: column, lineNumber: lineNumber }
     }
 }
 

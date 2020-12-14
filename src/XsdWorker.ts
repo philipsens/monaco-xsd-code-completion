@@ -31,6 +31,4 @@ export class XsdWorker {
         }
         return []
     }
-    // TODO: doValidation
-    // TODO: doGenerateTamplate
 }

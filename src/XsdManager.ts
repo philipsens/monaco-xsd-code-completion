@@ -33,4 +33,10 @@ export default class XsdManager {
     public get = (path: string): XsdWorker | undefined => this.xsdWorkers.get(path)
 
     public has = (path: string): boolean => this.xsdWorkers.has(path)
+
+    public getNonStrict = (path: string): XsdWorker | void => {
+        for (const xsdWorker of this.xsdWorkers.values()) {
+            if (xsdWorker.xsd.nonStrictPath && path.includes(xsdWorker.xsd.path)) return xsdWorker
+        }
+    }
 }

@@ -367,6 +367,9 @@ export default class XsdCompletion {
             ) {
                 const xsdWorker = this.xsdManager.get(namespaceInfo.path)
                 if (xsdWorker) xsdWorkers.push(xsdWorker.withNamespace(namespaceInfo.prefix))
+            } else {
+                const xsdWorker = this.xsdManager.getNonStrict(namespaceInfo.path)
+                if (xsdWorker) xsdWorkers.push(xsdWorker.withNamespace(namespaceInfo.prefix))
             }
         }
         return xsdWorkers

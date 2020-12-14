@@ -1,13 +1,15 @@
-import { editor } from 'monaco-editor'
+import { editor, IPosition, Range } from 'monaco-editor'
 import XsdManager from './XsdManager'
 import xmldom from 'xmldom'
 import { ErrorType, XmlDomError } from './types'
 import IModelDeltaDecoration = editor.IModelDeltaDecoration
+import ITextModel = editor.ITextModel
 
 export default class XsdValidation {
     private xsdManager: XsdManager
     private dom: xmldom.DOMParser
     private errors: XmlDomError[] = []
+    private model: editor.ITextModel | null = null
 
     constructor(xsdManager: XsdManager) {
         this.xsdManager = xsdManager
@@ -24,8 +26,10 @@ export default class XsdValidation {
         })
     }
 
-    decorations = (xml: string | undefined): IModelDeltaDecoration[] => {
+    decorations = (model: ITextModel | null): IModelDeltaDecoration[] => {
         this.errors = []
+        this.model = model
+        const xml = model?.getValueInRange(model?.getFullModelRange())
 
         if (xml) {
             this.dom.parseFromString(xml)
@@ -39,7 +43,7 @@ export default class XsdValidation {
         this.errors.map(this.getDecorationsFromError)
 
     getDecorationsFromError = (error: XmlDomError): IModelDeltaDecoration => ({
-        range: error.range,
+        range: this.getWordRangeFromErrorPosition(error.position),
         options: {
             className: error.classNames,
             hoverMessage: [
@@ -55,4 +59,22 @@ export default class XsdValidation {
             ],
         },
     })
+
+    getWordRangeFromErrorPosition = (position: IPosition): Range => {
+        const length = this.model?.getWordAtPosition(position)?.word.length
+        if (length)
+            return new Range(
+                position.lineNumber,
+                position.column,
+                position.lineNumber,
+                position.column + length,
+            )
+        else
+            return new Range(
+                position.lineNumber,
+                position.column - 1,
+                position.lineNumber,
+                position.column + 2,
+            )
+    }
 }
