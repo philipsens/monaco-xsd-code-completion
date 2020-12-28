@@ -1,7 +1,7 @@
 import * as xpath from 'xpath'
 import { SelectedValue } from 'xpath'
 import { DOMParser } from 'xmldom'
-import DocumentNode from './DocumentNode'
+import { DocumentNode } from './types'
 
 export default class XsdParser {
     public readonly namespace: string

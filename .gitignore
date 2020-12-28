@@ -1,6 +1,9 @@
-lib
+dist
 esm
 umd
+amd
+var
+lib
 
 # Logs
 logs

@@ -1,4 +1,4 @@
-import { editor, IMarkdownString, IRange, languages } from 'monaco-editor'
+import { editor, IMarkdownString, IPosition, IRange, languages } from 'monaco-editor'
 import CompletionItemKind = languages.CompletionItemKind
 import CompletionItemInsertTextRule = languages.CompletionItemInsertTextRule
 import CompletionItemLabel = languages.CompletionItemLabel
@@ -9,7 +9,7 @@ import Command = languages.Command
  * A completion item represents a text snippet that is
  * proposed to complete text that is being typed.
  */
-export default interface CompletionItem {
+export interface ICompletion {
     /**
      * The label of this completion item. By default
      * this is also the text that is inserted when selecting
@@ -95,4 +95,93 @@ export default interface CompletionItem {
      * A command that should be run upon acceptance of this item.
      */
     command?: Command
+}
+
+export interface INamespaceInfo {
+    prefix: string
+    path: string
+}
+
+export interface IXsd {
+    path: string
+    value: string
+    namespace?: string
+    nonStrictPath?: boolean
+}
+
+export enum CompletionType {
+    none,
+    element,
+    attribute,
+    incompleteElement,
+    closingElement,
+    snippet,
+    incompleteAttribute,
+}
+
+export class XmlDomError {
+    public message!: string
+    public type!: ErrorType
+
+    constructor(message: string, type: ErrorType) {
+        this.message = message
+        this.type = type
+    }
+
+    get errorTypeString(): string {
+        switch (this.type) {
+            case ErrorType.warning:
+                return '**Warning**'
+            case ErrorType.error:
+                return '**Error**'
+            case ErrorType.fetalError:
+                return '**Fatal error**'
+        }
+    }
+
+    get classNames(): string {
+        switch (this.type) {
+            case ErrorType.warning:
+                return 'xml-lint xml-lint--warning'
+            case ErrorType.error:
+                return 'xml-lint xml-lint--error'
+            case ErrorType.fetalError:
+                return 'xml-lint xml-lint--fetal'
+        }
+    }
+
+    get errorMessage(): string {
+        return this.message.split(/[\t\n]/g)[1] ?? this.message
+    }
+
+    get position(): IPosition {
+        const columnMatch = this.message.match(/(?<=col:)[0-9]+/g)
+        const lineNumberMatch = this.message.match(/(?<=line:)[0-9]+/g)
+
+        const column = parseInt((columnMatch ?? 0)[0]) + 1
+        const lineNumber = parseInt((lineNumberMatch ?? 0)[0])
+
+        return { column: column, lineNumber: lineNumber }
+    }
+}
+
+export enum ErrorType {
+    warning,
+    error,
+    fetalError,
+}
+
+export class DocumentNode {
+    public name!: string
+    public documentation?: string
+    private readonly type?: string
+    private readonly use?: string
+
+    get isRequired(): boolean {
+        return this.use === 'required'
+    }
+
+    get getType(): string {
+        return this.type ? this.type.split(':')[1] : ''
+    }
 }

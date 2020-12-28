@@ -1,15 +1,16 @@
 {
     "name": "monaco-xsd-code-completion",
-    "version": "0.6.2",
+    "version": "0.7.3",
     "description": "",
-    "main": "lib/index.js",
-    "module": "esm/index.js",
-    "types": "lib/index.d.js",
+    "main": "dist/MonacoXsdCodeCompletion.umd.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "build:cjs": "tsc -p tsconfig.cjs.json",
         "build:esm": "tsc -p tsconfig.esm.json",
         "build:umd": "webpack",
+        "watch:cjs": "tsc -p tsconfig.cjs.json --watch",
+        "watch:esm": "tsc -p tsconfig.esm.json --watch",
+        "watch:umd": "webpack --watch",
         "clean": "rimraf ./lib && rimraf ./esm && rimraf ./umd",
         "build": "npm-run-all clean build:cjs build:esm build:umd"
     },
@@ -18,16 +19,18 @@
         "url": "git+https://github.com/philipsens/monaco-xsd-code-completion.git"
     },
     "files": [
-        "lib",
         "esm",
-        "umd"
+        "lib",
+        "umd",
+        "src"
     ],
     "keywords": [
         "xml",
         "xsd",
         "monaco",
         "intelliSense",
-        "code completion"
+        "code completion",
+        "validation"
     ],
     "author": "Sergi Philipsen <philipsen.sergi@gmail.com> (https://philipsens.nl)",
     "license": "MIT",
@@ -49,6 +52,7 @@
         "monaco-editor": "^0.21.2",
         "monaco-editor-core": "^0.21.2",
         "npm-run-all": "^4.1.5",
+        "parallel-webpack": "^2.6.0",
         "prettier": "^2.1.2",
         "pretty-quick": "^3.0.2",
         "rimraf": "^3.0.2",
@@ -57,9 +61,11 @@
         "typescript": "^4.0.3",
         "webpack": "^5.2.0",
         "webpack-cli": "^4.1.0",
+        "webpack-node-externals": "^2.5.2",
         "worker-loader": "^3.0.5"
     },
     "dependencies": {
+        "ts-debounce": "^2.1.0",
         "turndown": "^7.0.0",
         "xmldom": "^0.3.0",
         "xpath": "0.0.29"

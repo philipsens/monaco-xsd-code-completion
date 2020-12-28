@@ -1,13 +1,13 @@
-import IXsd from './IXsd'
-import { CompletionType } from './CompletionType'
 import CodeSuggester from './CodeSuggester'
-import ICompletion from './ICompletion'
+import { CompletionType, ICompletion, IXsd } from './types'
 
 export class XsdWorker {
     private codeSuggester: CodeSuggester
     private namespace: string | undefined
+    public xsd: IXsd
 
     constructor(xsd: IXsd) {
+        this.xsd = xsd
         this.codeSuggester = new CodeSuggester(xsd)
     }
 
@@ -31,6 +31,4 @@ export class XsdWorker {
         }
         return []
     }
-    // TODO: doValidation
-    // TODO: doGenerateTamplate
 }

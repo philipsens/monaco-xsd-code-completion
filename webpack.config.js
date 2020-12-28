@@ -1,8 +1,10 @@
 const path = require('path')
+const nodeExternals = require('webpack-node-externals')
 
 module.exports = {
     mode: 'production',
     entry: './src/index.ts',
+    externals: [nodeExternals()],
     output: {
         path: path.resolve(__dirname, 'umd'),
         filename: 'main.js',
@@ -11,10 +13,10 @@ module.exports = {
     },
     module: {
         rules: [
-            {
-                test: /\.worker\.ts$/,
-                use: { loader: 'worker-loader' },
-            },
+            // {
+            //     test: /\.worker\.ts$/,
+            //     use: { loader: 'worker-loader' },
+            // },
             {
                 test: /\.tsx?$/,
                 exclude: /node_modules/,
@@ -28,10 +30,6 @@ module.exports = {
             {
                 test: /\.css$/i,
                 use: ['style-loader', 'css-loader'],
-            },
-            {
-                test: /\.ttf$/,
-                use: ['file-loader'],
             },
         ],
     },

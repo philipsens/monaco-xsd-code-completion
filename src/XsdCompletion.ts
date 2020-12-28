@@ -1,7 +1,5 @@
 import XsdManager from './XsdManager'
 import { editor, IPosition, languages, Position } from 'monaco-editor'
-import ICompletion from './ICompletion'
-import { CompletionType } from './CompletionType'
 import { XsdWorker } from './XsdWorker'
 import CompletionItemProvider = languages.CompletionItemProvider
 import ITextModel = editor.ITextModel
@@ -12,11 +10,7 @@ import CompletionItem = languages.CompletionItem
 import CompletionTriggerKind = languages.CompletionTriggerKind
 import CompletionItemKind = languages.CompletionItemKind
 import IWordAtPosition = editor.IWordAtPosition
-
-interface INamespaceInfo {
-    prefix: string
-    path: string
-}
+import { CompletionType, ICompletion, INamespaceInfo } from './types'
 
 export default class XsdCompletion {
     private xsdManager: XsdManager
@@ -205,6 +199,7 @@ export default class XsdCompletion {
 
     private isInsideTag = (text: string): boolean => this.getTextInsideCurrentTag(text).length > 0
 
+    // TODO: Add ^>
     private getTextInsideCurrentTag = (text: string): string[] =>
         this.getMatchesForRegex(text, /(?<=(<|<\/)[^?\s|/>]+)\s([\sA-Za-z0-9_\-="'])*$/g)
 
@@ -363,7 +358,7 @@ export default class XsdCompletion {
     }
 
     private getXsdWorkersForNamespace = (namespaces: Map<string, INamespaceInfo>): XsdWorker[] => {
-        const xsdWorkers = []
+        const xsdWorkers: XsdWorker[] = []
         for (const [namespace, namespaceInfo] of namespaces.entries()) {
             if (
                 this.xsdManager.has(namespaceInfo.path) ||
@@ -371,6 +366,9 @@ export default class XsdCompletion {
                 namespace === ''
             ) {
                 const xsdWorker = this.xsdManager.get(namespaceInfo.path)
+                if (xsdWorker) xsdWorkers.push(xsdWorker.withNamespace(namespaceInfo.prefix))
+            } else {
+                const xsdWorker = this.xsdManager.getNonStrict(namespaceInfo.path)
                 if (xsdWorker) xsdWorkers.push(xsdWorker.withNamespace(namespaceInfo.prefix))
             }
         }
