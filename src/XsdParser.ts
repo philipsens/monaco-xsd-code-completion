@@ -31,6 +31,73 @@ export default class XsdParser {
             ),
         )
 
+    public getFirstSubElements = (elementName: string, withAttributes: boolean): DocumentNode[] => {
+        const elements: SelectedValue[][] = []
+
+        const complexType = this.getComplexType(elementName)
+
+        if (!complexType) {
+            return []
+        }
+
+        const rootElements = this.getElementsInRootOfNode(complexType)
+        if (rootElements.length > 0) elements.push(rootElements)
+
+        const choices = this.getFirstChoiceElementInNode(complexType)
+        if (choices.length > 0) elements.push(choices.flat())
+
+        const sequences = this.getSequencesInNode(complexType)
+
+        if (sequences.length > 0) {
+            const sequenceElements = this.getElementsInSequences(sequences)
+            if (sequenceElements.length > 0) elements.push(sequenceElements.flat())
+
+            const sequenceChoices = this.getFirstChoiceElementInSequences(sequences)
+            if (sequenceChoices) elements.push(sequenceChoices.flat())
+        }
+
+        let parsedElements = this.parseElements(elements.flat())
+
+        if (withAttributes) parsedElements = this.addRequiredAttributesToElements(parsedElements)
+
+        return parsedElements
+    }
+
+    private getComplexType = (name: string): Node =>
+        this.select(
+            `//${this.namespace}:complexType[@name='${this.getElementType(name)}']`,
+            this.xsdDom,
+        )[0] as Node
+
+    private getElementsInRootOfNode = (node: Node): SelectedValue[] =>
+        this.select(`${this.namespace}:element`, node)
+
+    private getFirstChoiceElementInNode = (node: Node): SelectedValue[] =>
+        this.select(`${this.namespace}:choice/${this.namespace}:element[1]`, node)
+
+    private getSequencesInNode = (node: Node): SelectedValue[] =>
+        this.select(`${this.namespace}:sequence`, node)
+
+    private getElementsInSequences = (sequences: SelectedValue[]) =>
+        sequences.map((sequence) => this.select(`${this.namespace}:element`, sequence as Node))
+
+    private getFirstChoiceElementInSequences = (sequences: SelectedValue[]) =>
+        sequences.map((sequence) => this.getFirstChoiceElementInNode(sequence as Node)).flat()
+
+    private addRequiredAttributesToElements = (elements: DocumentNode[]): DocumentNode[] =>
+        elements.map((element) => {
+            const requiredAttribute = this.parseAttributes(
+                this.select(
+                    `//${this.namespace}:complexType[@name='${this.getElementType(
+                        element.name,
+                    )}']/${this.namespace}:attribute[@use='required']`,
+                    this.xsdDom,
+                ),
+            )
+            if (requiredAttribute) element['requiredAttribute'] = requiredAttribute
+            return element
+        })
+
     public getAttributesForElement = (elementName: string): DocumentNode[] =>
         this.parseAttributes(
             this.select(
@@ -61,6 +128,7 @@ export default class XsdParser {
         attributes.map(
             (attribute: SelectedValue): DocumentNode => ({
                 ...this.getAttributesForNode(attribute as Node),
+                // TODO: Just one?
                 ...this.getDocumentationForNode(attribute as Node)[0],
             }),
         )

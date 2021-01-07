@@ -3,7 +3,20 @@
 This is a basic and low resource way to provide client-side code completion and other features for the Monaco-editor.
 The code completion is based on the XSD that is provided to the XsdManager. It is possible to use multiple XSD's, and namespaces.
 
+## Code completion
 The completions are gathered from the XSD at the moment they are needed. This is useful for very large XSD's that would have a long loading time when initially parsed. The completions may take a second but are instant after being cached.
+
+The code completion has support for multiple XSD's as long as they are referenced in the file.
+
+Completion works for elements and attributes and starts after the user presses: '<', ' ' or '/'. The required attribute will allways be preselected. When the completion is getting invoked using Ctrl+Space, the code will be inserted as snippet.
+
+Documentation is provided for the attributes.
+
+## XML Syntax and errors
+The file will be parsed by the xmldom parser, every error will be shown in the editor. Hovering over the lines will reveal the details.
+
+## Template
+The user can generate a template based on the XSD referenced in the root tag. 
 
 ## Usage
 
@@ -46,6 +59,7 @@ const xsdFeatures = new XsdFeatures(xsdManager, monaco, editor) // Initialise th
 
 xsdFeatures.addCompletion() // Add auto completion.
 xsdFeatures.addValidation() // Add auto validation on debounce. Can be manually triggered with doValidation.
+xsdFeatures.addGenerateAction() // Add generate template to actions menu. Generate can be run with doGenerate.
 ```
 
 ## ToDo
@@ -54,7 +68,7 @@ xsdFeatures.addValidation() // Add auto validation on debounce. Can be manually 
 -   [x] Code completion based on XSD
 -   [x] Cache code suggestions
 -   [x] Autocomplete close tags
--   [x] Insert element als snippit (or tamplate)
+-   [x] Insert element als snippet (or template)
 -   [x] Auto indentation ([RP for Monaco-languages](https://github.com/microsoft/monaco-languages/pull/113))
 -   [x] Implement namespaces
     -   [x] Get suggestions from multiple XSD's
@@ -63,4 +77,5 @@ xsdFeatures.addValidation() // Add auto validation on debounce. Can be manually 
     -   [ ] Change parser (to SAX?)
     -   [ ] Make use of the Monaco workers for parallel parsing
 -   [x] Show syntax errors
--   [ ] Template based on XSD
+-   [x] Template based on XSD
+-   [ ] Reformat code

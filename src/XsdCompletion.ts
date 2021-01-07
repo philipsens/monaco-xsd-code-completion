@@ -11,6 +11,8 @@ import CompletionTriggerKind = languages.CompletionTriggerKind
 import CompletionItemKind = languages.CompletionItemKind
 import IWordAtPosition = editor.IWordAtPosition
 import { CompletionType, ICompletion, INamespaceInfo } from './types'
+import { SimpleParser } from './SimpleParser'
+import { XsdNamespaces } from './XsdNamespaces'
 
 export default class XsdCompletion {
     private xsdManager: XsdManager
@@ -90,12 +92,12 @@ export default class XsdCompletion {
         if (completionType == CompletionType.closingElement && parentTag)
             return this.getClosingElementCompletion(parentTag)
 
-        const namespaces = this.getXsdNamespaces(model)
-        const xsdWorkers = this.getXsdWorkersForNamespace(namespaces)
+        const namespaces = XsdNamespaces.getXsdNamespaces(model)
+        const xsdWorkers = XsdNamespaces.getXsdWorkersForNamespace(namespaces, this.xsdManager)
         const parentTagName = this.getTagName(parentTag)
 
         let completions: ICompletion[] = []
-        xsdWorkers.map((xsdWorker: XsdWorker) => {
+        xsdWorkers.forEach((xsdWorker: XsdWorker) => {
             completions = [
                 ...completions,
                 ...xsdWorker.doCompletion(
@@ -144,19 +146,13 @@ export default class XsdCompletion {
     }
 
     private getTextFromCurrentTag = (text: string): string =>
-        this.getMatchesForRegex(text, /(<\/*[^>]*)$/g)[0]
+        SimpleParser.getMatchesForRegex(text, /(<\/*[^>]*)$/g)[0]
 
     private textContainsAttributes = (text: string): boolean =>
         this.getAttributesFromText(text).length > 0
 
     private getAttributesFromText = (text: string): string[] =>
-        this.getMatchesForRegex(text, /(?<=\s)[A-Za-z0-9_-]+/g)
-
-    private getMatchesForRegex = (text: string, regex: RegExp): string[] => {
-        const matches = text.match(regex)
-        if (matches) return [...matches]
-        return []
-    }
+        SimpleParser.getMatchesForRegex(text, /(?<=\s)[A-Za-z0-9_-]+/g)
 
     private textContainsTags = (text: string): boolean => {
         const tags = this.getTagsFromText(text)
@@ -164,7 +160,7 @@ export default class XsdCompletion {
     }
 
     private getTagsFromText = (text: string): string[] | undefined =>
-        this.getMatchesForRegex(text, /(?<=<|<\/)[^?\s|/>]+(?!.*\/>)/g)
+        SimpleParser.getMatchesForRegex(text, /(?<=<|<\/)[^?\s|/>]+(?!.*\/>)/g)
 
     private getCompletionTypeByTriggerCharacter = (
         triggerCharacter: string | undefined,
@@ -201,12 +197,12 @@ export default class XsdCompletion {
 
     // TODO: Add ^>
     private getTextInsideCurrentTag = (text: string): string[] =>
-        this.getMatchesForRegex(text, /(?<=(<|<\/)[^?\s|/>]+)\s([\sA-Za-z0-9_\-="'])*$/g)
+        SimpleParser.getMatchesForRegex(text, /(?<=(<|<\/)[^?\s|/>]+)\s([\sA-Za-z0-9_\-="'])*$/g)
 
     private isAfterTag = (text: string): boolean => this.getTextAfterCurrentTag(text).length > 0
 
     private getTextAfterCurrentTag = (text: string) =>
-        this.getMatchesForRegex(text, /(?<=>[\s\n]+)[^<]+$/g)
+        SimpleParser.getMatchesForRegex(text, /(?<=>[\s\n]+)[^<]+$/g)
 
     private getParentTag = (model: ITextModel, position: Position): string => {
         const textUntilPosition = this.getTextUntilPosition(model, position)
@@ -294,84 +290,4 @@ export default class XsdCompletion {
             documentation: `Closes the unclosed ${element} tag in this file.`,
         },
     ]
-
-    private getXsdNamespaces = (model: ITextModel): Map<string, INamespaceInfo> => {
-        const text = this.getFullText(model)
-        const namespaces = this.getNamespaces(text)
-        const namespaceSchemaLocations = this.getNamespacesSchemaLocations(text)
-        return this.matchNamespacesAndNamespaceSchemaLocations(namespaces, namespaceSchemaLocations)
-    }
-
-    private getFullText = (model: ITextModel): string =>
-        model.getValueInRange(model.getFullModelRange())
-
-    private getNamespaces = (text: string): Map<string, string> => {
-        const namespaceMap = new Map()
-        this.getNamespacesFromText(text).forEach((match) => {
-            const part = match.split('="')
-            namespaceMap.set(part[1], part[0])
-        })
-        this.getNoNamespacesFromText(text).forEach((match) => {
-            namespaceMap.set(match, '')
-        })
-        return namespaceMap
-    }
-
-    private getNamespacesFromText = (text: string): string[] =>
-        this.getMatchesForRegex(text, /(?<=xmlns:)(?!xsi|html)[^:\s|/>]+="[^\s|>]+(?=")/g)
-
-    private getNoNamespacesFromText = (text: string): string[] =>
-        this.getMatchesForRegex(text, /(?<=xmlns=")[^\s|>]+(?=")/g)
-
-    private getNamespacesSchemaLocations = (text: string): Map<string, string> => {
-        const namespaceSchemaLocationsMap = new Map()
-        this.getNamespacesSchemaLocationsFromText(text).forEach((match) => {
-            const matches = match.split(/\s+/)
-            matches.forEach((location, index) => {
-                if (index % 2) namespaceSchemaLocationsMap.set(location, matches[index - 1])
-            })
-        })
-        this.getNoNamespacesSchemaLocationsFromText(text).forEach((match) =>
-            namespaceSchemaLocationsMap.set(match, 'file://' + match),
-        )
-        return namespaceSchemaLocationsMap
-    }
-
-    private getNamespacesSchemaLocationsFromText = (text: string): string[] =>
-        this.getMatchesForRegex(text, /(?<=(xsi:schemaLocation=\n?\s*"))[^"|>]+(?=")/g)
-
-    private getNoNamespacesSchemaLocationsFromText = (text: string): string[] =>
-        this.getMatchesForRegex(text, /(?<=(xsi:noNamespaceSchemaLocation=\n?\s*"))[^"|>]+(?=")/g)
-
-    private matchNamespacesAndNamespaceSchemaLocations = (
-        namespaces: Map<string, string>,
-        namespaceSchemaLocations: Map<string, string>,
-    ): Map<string, INamespaceInfo> => {
-        const matchedNamespacesAndNamespaceSchemaLocations = new Map()
-        for (const [path, uri] of namespaceSchemaLocations.entries()) {
-            matchedNamespacesAndNamespaceSchemaLocations.set(uri, {
-                prefix: namespaces.get(uri),
-                path: path,
-            })
-        }
-        return matchedNamespacesAndNamespaceSchemaLocations
-    }
-
-    private getXsdWorkersForNamespace = (namespaces: Map<string, INamespaceInfo>): XsdWorker[] => {
-        const xsdWorkers: XsdWorker[] = []
-        for (const [namespace, namespaceInfo] of namespaces.entries()) {
-            if (
-                this.xsdManager.has(namespaceInfo.path) ||
-                namespace === undefined ||
-                namespace === ''
-            ) {
-                const xsdWorker = this.xsdManager.get(namespaceInfo.path)
-                if (xsdWorker) xsdWorkers.push(xsdWorker.withNamespace(namespaceInfo.prefix))
-            } else {
-                const xsdWorker = this.xsdManager.getNonStrict(namespaceInfo.path)
-                if (xsdWorker) xsdWorkers.push(xsdWorker.withNamespace(namespaceInfo.prefix))
-            }
-        }
-        return xsdWorkers
-    }
 }

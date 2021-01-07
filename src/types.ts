@@ -171,17 +171,9 @@ export enum ErrorType {
     fetalError,
 }
 
-export class DocumentNode {
-    public name!: string
-    public documentation?: string
-    private readonly type?: string
-    private readonly use?: string
-
-    get isRequired(): boolean {
-        return this.use === 'required'
-    }
-
-    get getType(): string {
-        return this.type ? this.type.split(':')[1] : ''
-    }
+export interface DocumentNode {
+    name: string
+    documentation?: string
+    type?: string
+    use?: string
 }

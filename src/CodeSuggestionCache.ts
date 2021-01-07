@@ -3,7 +3,7 @@ import { DocumentNode, IXsd } from './types'
 
 export default class CodeSuggestionCache {
     private xsd: IXsd
-    private xsdParser: XsdParser
+    public xsdParser: XsdParser
     private elementCollections: Map<string, DocumentNode[]>
     private attributeCollections: Map<string, DocumentNode[]>
 
@@ -16,11 +16,6 @@ export default class CodeSuggestionCache {
 
     public elements = (parentElement: string): DocumentNode[] =>
         parentElement === undefined ? this.rootElements() : this.subElements(parentElement)
-
-    cacheElementCollection = (element: string, documentElement: DocumentNode[]): DocumentNode[] => {
-        this.elementCollections.set(element, documentElement)
-        return documentElement
-    }
 
     public attributes = (element: string): DocumentNode[] => {
         const attributes = this.attributeCollections.get(element)
@@ -36,7 +31,15 @@ export default class CodeSuggestionCache {
 
     private getRootElements = (): DocumentNode[] => {
         console.log(`Fetch root elements from ${this.xsd.path}`)
-        return this.cacheElementCollection('rootElements', this.xsdParser.getRootElements())
+        return this.setElementCollection('rootElements', this.xsdParser.getRootElements())
+    }
+
+    private setElementCollection = (
+        element: string,
+        documentElement: DocumentNode[],
+    ): DocumentNode[] => {
+        this.elementCollections.set(element, documentElement)
+        return documentElement
     }
 
     private subElements = (parentElement: string): DocumentNode[] => {
@@ -47,7 +50,7 @@ export default class CodeSuggestionCache {
 
     private getSubElements = (parentElement: string): DocumentNode[] => {
         console.log(`Fetch sub elements for ${parentElement} from ${this.xsd.path}`)
-        return this.cacheElementCollection(
+        return this.setElementCollection(
             parentElement,
             this.xsdParser.getSubElements(parentElement),
         )

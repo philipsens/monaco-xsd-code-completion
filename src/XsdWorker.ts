@@ -31,4 +31,10 @@ export class XsdWorker {
         }
         return []
     }
+
+    public getFirstSubElements = (parentTag: string, withAttributes: boolean) =>
+        this.codeSuggester.codeSuggestionCache.xsdParser.getFirstSubElements(
+            parentTag,
+            withAttributes,
+        )
 }

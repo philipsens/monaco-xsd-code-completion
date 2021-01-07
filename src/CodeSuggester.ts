@@ -4,7 +4,8 @@ import { IMarkdownString, languages } from 'monaco-editor'
 import { DocumentNode, ICompletion, IXsd } from './types'
 
 export default class CodeSuggester {
-    private codeSuggestionCache: CodeSuggestionCache
+    //TODO
+    public codeSuggestionCache: CodeSuggestionCache
     private turndownService: TurndownService
 
     constructor(xsd: IXsd) {
@@ -42,7 +43,7 @@ export default class CodeSuggester {
                     kind: withoutTag
                         ? languages.CompletionItemKind.Snippet
                         : languages.CompletionItemKind.Method,
-                    detail: this.getElementDetail(withoutTag),
+                    detail: this.parseDetail(element.type),
                     /**
                      * A human-readable string that represents a doc-comment.
                      */
@@ -57,9 +58,6 @@ export default class CodeSuggester {
 
     private parseElementName = (name: string, namespace: string | undefined) =>
         namespace ? namespace + ':' + name : name
-
-    private getElementDetail = (withoutTag: boolean): string =>
-        withoutTag ? `Insert as snippet` : ''
 
     private parseElementInputText = (
         name: string,
@@ -77,18 +75,27 @@ export default class CodeSuggester {
             (attribute: DocumentNode): ICompletion => ({
                 label: attribute.name,
                 kind: languages.CompletionItemKind.Variable,
-                detail: attribute.getType,
+                detail: this.parseDetail(attribute.type),
                 insertText: this.parseAttributeInputText(attribute.name, incomplete),
-                preselect: attribute.isRequired,
+                preselect: this.attributeIsRequired(attribute),
                 insertTextRules: languages.CompletionItemInsertTextRule.InsertAsSnippet,
                 documentation: this.parseAttributeDocumentation(attribute.documentation),
             }),
         )
 
+    private parseDetail = (detail: string | undefined) => {
+        if (detail) {
+            const [partOne, partTwo] = detail.split(':')
+            return partTwo ?? partOne
+        }
+    }
+
     private parseAttributeDocumentation = (documentation: string | undefined): IMarkdownString => ({
         value: documentation ? this.turndownService.turndown(documentation) : '',
         isTrusted: true,
     })
+
+    private attributeIsRequired = (attribute: DocumentNode) => attribute.use === 'required'
 
     private parseAttributeInputText = (name: string, incomplete: boolean): string =>
         incomplete ? name : name + '="${1}"'
