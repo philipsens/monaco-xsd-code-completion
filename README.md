@@ -4,6 +4,7 @@ This is a basic and low resource way to provide client-side code completion and 
 The code completion is based on the XSD that is provided to the XsdManager. It is possible to use multiple XSD's, and namespaces.
 
 ## Code completion
+
 The completions are gathered from the XSD at the moment they are needed. This is useful for very large XSD's that would have a long loading time when initially parsed. The completions may take a second but are instant after being cached.
 
 The code completion has support for multiple XSD's as long as they are referenced in the file.
@@ -13,10 +14,12 @@ Completion works for elements and attributes and starts after the user presses: 
 Documentation is provided for the attributes.
 
 ## XML Syntax and errors
+
 The file will be parsed by the xmldom parser, every error will be shown in the editor. Hovering over the lines will reveal the details.
 
 ## Template
-The user can generate a template based on the XSD referenced in the root tag. 
+
+The user can generate a template based on the XSD referenced in the root tag.
 
 ## Usage
 
