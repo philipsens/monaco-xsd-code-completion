@@ -46,6 +46,11 @@ export default class XsdFeatures {
         this.doValidation()
     }
 
+    public doReformatCode = () => {
+        const model = this.editor.getModel()
+        if (model) model.setValue(this.prettier(model.getValue()))
+    }
+
     public prettier = (xml: string): string =>
         prettier.format(xml, {
             parser: 'html',
@@ -70,7 +75,7 @@ export default class XsdFeatures {
                 this.monaco.KeyMod.CtrlCmd | this.monaco.KeyMod.Shift | this.monaco.KeyCode.KEY_G,
             ],
             contextMenuGroupId: '1_modification',
-            contextMenuOrder: 1.5,
+            contextMenuOrder: 2,
             run: () => this.doGenerate(parseInt(window.prompt('levels', '1') ?? ''), false),
         })
         this.editor.addAction({
@@ -83,8 +88,21 @@ export default class XsdFeatures {
                     this.monaco.KeyCode.KEY_G,
             ],
             contextMenuGroupId: '1_modification',
-            contextMenuOrder: 1.5,
+            contextMenuOrder: 3,
             run: () => this.doGenerate(parseInt(window.prompt('levels', '1') ?? ''), true),
+        })
+    }
+
+    public addReformatAction = (): void => {
+        this.editor.addAction({
+            id: 'xsd-reformat-code',
+            label: 'Reformat code',
+            keybindings: [
+                this.monaco.KeyMod.CtrlCmd | this.monaco.KeyMod.Shift | this.monaco.KeyCode.KEY_R,
+            ],
+            contextMenuGroupId: '1_modification',
+            contextMenuOrder: 1.5,
+            run: this.doReformatCode,
         })
     }
 }
