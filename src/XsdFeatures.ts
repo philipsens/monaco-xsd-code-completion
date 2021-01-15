@@ -3,8 +3,10 @@ import XsdCompletion from './XsdCompletion'
 import XsdValidation from './XsdValidation'
 import { editor } from 'monaco-editor'
 import { debounce } from 'ts-debounce'
-import IStandaloneCodeEditor = editor.IStandaloneCodeEditor
 import xsdGenerateTemplate from './XsdGenerateTemplate'
+import prettier from 'prettier'
+import parserHTML from 'prettier/parser-html'
+import IStandaloneCodeEditor = editor.IStandaloneCodeEditor
 
 export default class XsdFeatures {
     private readonly xsdCollection: XsdManager
@@ -44,12 +46,19 @@ export default class XsdFeatures {
         this.doValidation()
     }
 
+    public prettier = (xml: string): string =>
+        prettier.format(xml, {
+            parser: 'html',
+            plugins: [parserHTML],
+            tabWidth: 4,
+        })
+
     public doGenerate = (levels: number, withAttributes: boolean): void => {
         this.xsdGenerateTemplate =
             this.xsdGenerateTemplate ?? new xsdGenerateTemplate(this.xsdCollection)
         const model = this.editor.getModel()
         const template = this.xsdGenerateTemplate.getTemplate(model, levels, withAttributes)
-        if (template) model?.setValue(template)
+        if (template) model?.setValue(this.prettier(template))
     }
 
     public addGenerateAction = (): void => {
