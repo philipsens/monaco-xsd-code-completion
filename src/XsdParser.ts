@@ -1,18 +1,20 @@
 import * as xpath from 'xpath'
 import { SelectedValue } from 'xpath'
 import { DOMParser } from 'xmldom'
-import { DocumentNode } from './types'
+import { DocumentNode, IXsd } from './types'
 
 export default class XsdParser {
-    public readonly namespace: string
+    private readonly xsd: IXsd
+    private readonly namespace: string
     private readonly xsdDom: Document
     private readonly select: xpath.XPathSelect
 
-    constructor(xsdString: string, namespace = 'xsd') {
-        this.xsdDom = new DOMParser().parseFromString(xsdString)
-        this.namespace = namespace
+    constructor(xsd: IXsd) {
+        this.xsd = xsd
+        this.xsdDom = new DOMParser().parseFromString(this.xsd.value)
+        this.namespace = this.xsd.namespace ?? 'xsd'
         this.select = xpath.useNamespaces({
-            [namespace]: 'http://www.w3.org/2001/XMLSchema',
+            [this.namespace]: 'http://www.w3.org/2001/XMLSchema',
         })
     }
 
@@ -121,25 +123,26 @@ export default class XsdParser {
 
     private getElementType = (elementName: string): string =>
         this.select(`//${this.namespace}:element[@name='${elementName}']/@type`, this.xsdDom).map(
-            (type: any): any => type.value,
+            (type: any): string => type.value,
         )[0]
 
     private parseAttributes = (attributes: SelectedValue[]): DocumentNode[] =>
         attributes.map(
             (attribute: SelectedValue): DocumentNode => ({
                 ...this.getAttributesForNode(attribute as Node),
-                // TODO: Just one?
-                ...this.getDocumentationForNode(attribute as Node)[0],
+                ...this.getDocumentationForNode(attribute as Node),
             }),
         )
 
-    private getDocumentationForNode = (attribute: Node): any =>
-        this.select(
+    private getDocumentationForNode = (attribute: Node): any => {
+        const documentationString = this.select(
             `${this.namespace}:annotation/${this.namespace}:documentation`,
             attribute,
-        ).map((documentation: any): any =>
-            documentation.firstChild !== null
-                ? { documentation: documentation.firstChild.data }
-                : null,
         )
+            .map((documentation: any): string => documentation.firstChild.data)
+            .join('<br/><hr/><br/>')
+        return {
+            documentation: `${documentationString}<br/>Source: ${this.xsd.path}`,
+        }
+    }
 }

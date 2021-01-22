@@ -1,15 +1,15 @@
 import CodeSuggestionCache from './CodeSuggestionCache'
 import TurndownService from 'turndown'
 import { IMarkdownString, languages } from 'monaco-editor'
-import { DocumentNode, ICompletion, IXsd } from './types'
+import { DocumentNode, ICompletion } from './types'
+import XsdParser from './XsdParser'
 
 export default class CodeSuggester {
-    //TODO
-    public codeSuggestionCache: CodeSuggestionCache
+    private codeSuggestionCache: CodeSuggestionCache
     private turndownService: TurndownService
 
-    constructor(xsd: IXsd) {
-        this.codeSuggestionCache = new CodeSuggestionCache(xsd)
+    constructor(xsdParser: XsdParser) {
+        this.codeSuggestionCache = new CodeSuggestionCache(xsdParser)
         this.turndownService = new TurndownService()
     }
 
