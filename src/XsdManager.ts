@@ -39,4 +39,10 @@ export default class XsdManager {
             if (xsdWorker.xsd.nonStrictPath && path.includes(xsdWorker.xsd.path)) return xsdWorker
         }
     }
+
+    public getAlwaysInclude = (): XsdWorker | void => {
+        for (const xsdWorker of this.xsdWorkers.values()) {
+            if (xsdWorker.xsd.alwaysInclude) return xsdWorker
+        }
+    }
 }
