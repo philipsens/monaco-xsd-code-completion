@@ -43,7 +43,7 @@ const editor = monaco.editor.create(document.getElementById('container'), {
     theme: 'vs-dark',
 })
 
-const xsdManager = new XsdManager() // Initialise the xsdManager
+const xsdManager = new XsdManager() // Initialize the xsdManager
 
 xsdManager.set({
     path: 'ibisdoc.xsd', // Path that will be referenced in the xml.
@@ -55,6 +55,7 @@ xsdManager.set({
 xsdManager.set({
     path: 'CommonMessageHeader_2.xsd',
     value: commonMessageHeader2,
+    alwaysInclude: true, // Include the XSD even if there's no reference. This could be useful if the XSD is server-side only. *optional
 })
 
 xsdManager.set({
