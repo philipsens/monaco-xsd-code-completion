@@ -21,6 +21,10 @@ The file will be parsed by the xmldom parser, every error will be shown in the e
 
 The user can generate a template based on the XSD referenced in the root tag.
 
+## Reformat code
+
+The user can reformat the code with the action provided in the menu, or bu using the key combination 'Ctrl+Shift+L'
+
 ## Usage
 
 ```javascript
@@ -62,7 +66,8 @@ const xsdFeatures = new XsdFeatures(xsdManager, monaco, editor) // Initialise th
 
 xsdFeatures.addCompletion() // Add auto completion.
 xsdFeatures.addValidation() // Add auto validation on debounce. Can be manually triggered with doValidation.
-xsdFeatures.addGenerateAction() // Add generate template to actions menu. Generate can be run with doGenerate.
+xsdFeatures.addGenerateAction() // Add geneate template to actions menu. Generate can be run with doGenerate.
+xsdFeatures.addReformatAction() // Add reformat code to actions menu. Can be run manually with doReformatCode.
 ```
 
 ## ToDo
@@ -81,4 +86,4 @@ xsdFeatures.addGenerateAction() // Add generate template to actions menu. Genera
     -   [ ] Make use of the Monaco workers for parallel parsing
 -   [x] Show syntax errors
 -   [x] Template based on XSD
--   [ ] Reformat code
+-   [x] Reformat code

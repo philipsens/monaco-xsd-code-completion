@@ -3,8 +3,10 @@ import XsdCompletion from './XsdCompletion'
 import XsdValidation from './XsdValidation'
 import { editor } from 'monaco-editor'
 import { debounce } from 'ts-debounce'
-import IStandaloneCodeEditor = editor.IStandaloneCodeEditor
 import xsdGenerateTemplate from './XsdGenerateTemplate'
+import prettier from 'prettier'
+import parserHTML from 'prettier/parser-html'
+import IStandaloneCodeEditor = editor.IStandaloneCodeEditor
 
 export default class XsdFeatures {
     private readonly xsdCollection: XsdManager
@@ -44,12 +46,24 @@ export default class XsdFeatures {
         this.doValidation()
     }
 
+    public doReformatCode = () => {
+        const model = this.editor.getModel()
+        if (model) model.setValue(this.prettier(model.getValue()))
+    }
+
+    public prettier = (xml: string): string =>
+        prettier.format(xml, {
+            parser: 'html',
+            plugins: [parserHTML],
+            tabWidth: 4,
+        })
+
     public doGenerate = (levels: number, withAttributes: boolean): void => {
         this.xsdGenerateTemplate =
             this.xsdGenerateTemplate ?? new xsdGenerateTemplate(this.xsdCollection)
         const model = this.editor.getModel()
         const template = this.xsdGenerateTemplate.getTemplate(model, levels, withAttributes)
-        if (template) model?.setValue(template)
+        if (template) model?.setValue(this.prettier(template))
     }
 
     public addGenerateAction = (): void => {
@@ -61,7 +75,7 @@ export default class XsdFeatures {
                 this.monaco.KeyMod.CtrlCmd | this.monaco.KeyMod.Shift | this.monaco.KeyCode.KEY_G,
             ],
             contextMenuGroupId: '1_modification',
-            contextMenuOrder: 1.5,
+            contextMenuOrder: 2,
             run: () => this.doGenerate(parseInt(window.prompt('levels', '1') ?? ''), false),
         })
         this.editor.addAction({
@@ -74,8 +88,21 @@ export default class XsdFeatures {
                     this.monaco.KeyCode.KEY_G,
             ],
             contextMenuGroupId: '1_modification',
-            contextMenuOrder: 1.5,
+            contextMenuOrder: 3,
             run: () => this.doGenerate(parseInt(window.prompt('levels', '1') ?? ''), true),
+        })
+    }
+
+    public addReformatAction = (): void => {
+        this.editor.addAction({
+            id: 'xsd-reformat-code',
+            label: 'Reformat code',
+            keybindings: [
+                this.monaco.KeyMod.CtrlCmd | this.monaco.KeyMod.Shift | this.monaco.KeyCode.KEY_R,
+            ],
+            contextMenuGroupId: '1_modification',
+            contextMenuOrder: 1.5,
+            run: this.doReformatCode,
         })
     }
 }
