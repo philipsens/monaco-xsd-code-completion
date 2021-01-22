@@ -1,14 +1,17 @@
 import CodeSuggester from './CodeSuggester'
 import { CompletionType, ICompletion, IXsd } from './types'
+import XsdParser from './XsdParser'
 
 export class XsdWorker {
     private codeSuggester: CodeSuggester
     private namespace: string | undefined
+    private readonly xsdParser: XsdParser
     public xsd: IXsd
 
     constructor(xsd: IXsd) {
         this.xsd = xsd
-        this.codeSuggester = new CodeSuggester(xsd)
+        this.xsdParser = new XsdParser(this.xsd)
+        this.codeSuggester = new CodeSuggester(this.xsdParser)
     }
 
     public withNamespace = (namespace: string): XsdWorker => {
@@ -33,8 +36,5 @@ export class XsdWorker {
     }
 
     public getFirstSubElements = (parentTag: string, withAttributes: boolean) =>
-        this.codeSuggester.codeSuggestionCache.xsdParser.getFirstSubElements(
-            parentTag,
-            withAttributes,
-        )
+        this.xsdParser.getFirstSubElements(parentTag, withAttributes)
 }

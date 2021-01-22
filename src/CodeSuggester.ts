@@ -1,15 +1,15 @@
 import CodeSuggestionCache from './CodeSuggestionCache'
 import TurndownService from 'turndown'
 import { IMarkdownString, languages } from 'monaco-editor'
-import { DocumentNode, ICompletion, IXsd } from './types'
+import { DocumentNode, ICompletion } from './types'
+import XsdParser from './XsdParser'
 
 export default class CodeSuggester {
-    //TODO
-    public codeSuggestionCache: CodeSuggestionCache
+    private codeSuggestionCache: CodeSuggestionCache
     private turndownService: TurndownService
 
-    constructor(xsd: IXsd) {
-        this.codeSuggestionCache = new CodeSuggestionCache(xsd)
+    constructor(xsdParser: XsdParser) {
+        this.codeSuggestionCache = new CodeSuggestionCache(xsdParser)
         this.turndownService = new TurndownService()
     }
 
@@ -44,14 +44,10 @@ export default class CodeSuggester {
                         ? languages.CompletionItemKind.Snippet
                         : languages.CompletionItemKind.Method,
                     detail: this.parseDetail(element.type),
-                    /**
-                     * A human-readable string that represents a doc-comment.
-                     */
-                    // TODO: documentation (with namespace source)
-                    // TODO: SimpleType
                     sortText: index.toString(),
                     insertText: this.parseElementInputText(elementName, withoutTag, incomplete),
                     insertTextRules: languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                    documentation: this.parseDocumentation(element.documentation),
                 }
             },
         )
@@ -79,7 +75,7 @@ export default class CodeSuggester {
                 insertText: this.parseAttributeInputText(attribute.name, incomplete),
                 preselect: this.attributeIsRequired(attribute),
                 insertTextRules: languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                documentation: this.parseAttributeDocumentation(attribute.documentation),
+                documentation: this.parseDocumentation(attribute.documentation),
             }),
         )
 
@@ -90,7 +86,7 @@ export default class CodeSuggester {
         }
     }
 
-    private parseAttributeDocumentation = (documentation: string | undefined): IMarkdownString => ({
+    private parseDocumentation = (documentation: string | undefined): IMarkdownString => ({
         value: documentation ? this.turndownService.turndown(documentation) : '',
         isTrusted: true,
     })

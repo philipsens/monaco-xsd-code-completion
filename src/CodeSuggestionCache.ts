@@ -1,17 +1,15 @@
 import XsdParser from './XsdParser'
-import { DocumentNode, IXsd } from './types'
+import { DocumentNode } from './types'
 
 export default class CodeSuggestionCache {
-    private xsd: IXsd
-    public xsdParser: XsdParser
+    private xsdParser: XsdParser
     private elementCollections: Map<string, DocumentNode[]>
     private attributeCollections: Map<string, DocumentNode[]>
 
-    constructor(xsd: IXsd) {
-        this.xsd = xsd
+    constructor(xsdParser: XsdParser) {
+        this.xsdParser = xsdParser
         this.elementCollections = new Map()
         this.attributeCollections = new Map()
-        this.xsdParser = new XsdParser(xsd.value)
     }
 
     public elements = (parentElement: string): DocumentNode[] =>
@@ -30,7 +28,6 @@ export default class CodeSuggestionCache {
     }
 
     private getRootElements = (): DocumentNode[] => {
-        console.log(`Fetch root elements from ${this.xsd.path}`)
         return this.setElementCollection('rootElements', this.xsdParser.getRootElements())
     }
 
@@ -49,7 +46,6 @@ export default class CodeSuggestionCache {
     }
 
     private getSubElements = (parentElement: string): DocumentNode[] => {
-        console.log(`Fetch sub elements for ${parentElement} from ${this.xsd.path}`)
         return this.setElementCollection(
             parentElement,
             this.xsdParser.getSubElements(parentElement),
@@ -57,7 +53,6 @@ export default class CodeSuggestionCache {
     }
 
     private getAttributes = (element: string): DocumentNode[] => {
-        console.log(`Fetch attributes for ${element} from ${this.xsd.path}`)
         return this.setAttributeCollection(element, this.xsdParser.getAttributesForElement(element))
     }
 

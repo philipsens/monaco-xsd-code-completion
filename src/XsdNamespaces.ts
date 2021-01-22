@@ -85,6 +85,9 @@ export abstract class XsdNamespaces {
                 if (xsdWorker) xsdWorkers.push(xsdWorker.withNamespace(namespaceInfo.prefix))
             }
         }
+        const xsdWorker = xsdManager.getAlwaysInclude()
+        if (xsdWorker && !xsdWorkers.includes(xsdWorker)) xsdWorkers.push(xsdWorker)
+
         return xsdWorkers
     }
 }
