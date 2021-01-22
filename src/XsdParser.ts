@@ -112,7 +112,10 @@ export default class XsdParser {
 
     private parseElements = (elements: SelectedValue[]): DocumentNode[] =>
         elements.map(
-            (element: SelectedValue): DocumentNode => this.getAttributesForNode(element as Node),
+            (element: SelectedValue): DocumentNode => ({
+                ...this.getAttributesForNode(element as Node),
+                ...this.getDocumentationForNode(element as Node),
+            }),
         )
 
     private getAttributesForNode = (node: Node): any =>
