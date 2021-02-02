@@ -43,19 +43,26 @@ const editor = monaco.editor.create(document.getElementById('container'), {
     theme: 'vs-dark',
 })
 
-const xsdManager = new XsdManager() // Initialize the xsdManager
+const xsdManager = new XsdManager(editor) // Initialise the xsdManager
 
 xsdManager.set({
     path: 'ibisdoc.xsd', // Path that will be referenced in the xml.
     value: ibisdoc, // String containing XSD.
     namespace: 'xs', // The namespace used inside the XSD (xsd or xs). *optional
-    nonStrictPath: true, // The path reference only has to include the path partially ({some path}/ibisdoc.xsd). *optional
+    includeIfRootTag: ['Configuration', 'Adapter', 'Module'], // Include XSD based on the root tag of the file. *optional
 })
 
 xsdManager.set({
     path: 'CommonMessageHeader_2.xsd',
     value: commonMessageHeader2,
-    alwaysInclude: true, // Include the XSD even if there's no reference. This could be useful if the XSD is server-side only. *optional
+    alwaysInclude: true, // Include the XSD even if there's no reference. This could be useful if the XSD is server-side only.
+})
+
+xsdManager.set({
+    path: 'booking.xsd',
+    value: booking,
+    namespace: 'xs',
+    nonStrictPath: true, // The path reference only has to include the path partially ({some path}/ibisdoc.xsd). *optional
 })
 
 xsdManager.set({
