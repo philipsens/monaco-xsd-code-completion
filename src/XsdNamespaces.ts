@@ -1,9 +1,9 @@
 import { INamespaceInfo } from './types'
 import { XsdWorker } from './XsdWorker'
 import { editor } from 'monaco-editor'
-import ITextModel = editor.ITextModel
 import { XsdManager } from './index'
 import { SimpleParser } from './SimpleParser'
+import ITextModel = editor.ITextModel
 
 export abstract class XsdNamespaces {
     public static getXsdNamespaces = (model: ITextModel | string): Map<string, INamespaceInfo> => {
@@ -85,9 +85,10 @@ export abstract class XsdNamespaces {
                 if (xsdWorker) xsdWorkers.push(xsdWorker.withNamespace(namespaceInfo.prefix))
             }
         }
-        const xsdWorker = xsdManager.getAlwaysInclude()
-        if (xsdWorker && !xsdWorkers.includes(xsdWorker)) xsdWorkers.push(xsdWorker)
-
+        const xsdWorkersWithoutReference = xsdManager.getIncludedXsdWorkersWithoutReference()
+        xsdWorkersWithoutReference.forEach((xsdWorker) => {
+            if (!xsdWorkers.includes(xsdWorker)) xsdWorkers.push(xsdWorker)
+        })
         return xsdWorkers
     }
 }

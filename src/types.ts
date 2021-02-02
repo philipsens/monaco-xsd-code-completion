@@ -108,6 +108,7 @@ export interface IXsd {
     namespace?: string
     nonStrictPath?: boolean
     alwaysInclude?: boolean
+    includeIfRootTag?: string[]
 }
 
 export enum CompletionType {

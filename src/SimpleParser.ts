@@ -15,4 +15,10 @@ export abstract class SimpleParser {
         const [partOne, partTwo] = tag.split(':')
         return partTwo ? [partOne, partTwo] : [undefined, partOne]
     }
+
+    public static getFirstTag = (model: ITextModel | null): string | undefined => {
+        const document = model?.getValue()
+        if (document)
+            return SimpleParser.getMatchesForRegex(document, /(?<=<|<\/)[^?\s|/>]+(?!.*\/>)/)[0]
+    }
 }

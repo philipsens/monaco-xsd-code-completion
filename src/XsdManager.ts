@@ -1,13 +1,16 @@
 import { XsdWorker } from './XsdWorker'
 import { IXsd } from './types'
+import { SimpleParser } from './SimpleParser'
+import { editor } from 'monaco-editor'
+import IStandaloneCodeEditor = editor.IStandaloneCodeEditor
 
 export default class XsdManager {
     private xsdWorkers: Map<string, XsdWorker>
-    private monaco: any
+    private editor: IStandaloneCodeEditor
 
-    constructor(monaco: any) {
+    constructor(editor: IStandaloneCodeEditor) {
         this.xsdWorkers = new Map()
-        this.monaco = monaco
+        this.editor = editor
 
         // const worker = new XsdWorker()
         // worker.ctx.postMessage({ num: 4 })
@@ -40,9 +43,14 @@ export default class XsdManager {
         }
     }
 
-    public getAlwaysInclude = (): XsdWorker | void => {
-        for (const xsdWorker of this.xsdWorkers.values()) {
-            if (xsdWorker.xsd.alwaysInclude) return xsdWorker
-        }
+    public getIncludedXsdWorkersWithoutReference = (): XsdWorker[] => {
+        const firstTag = SimpleParser.getFirstTag(this.editor.getModel())
+        return Array.from(this.xsdWorkers.values()).filter((xsdWorker) =>
+            this.filterIncludedXsdWorkersWithNoReference(xsdWorker, firstTag),
+        )
     }
+
+    private filterIncludedXsdWorkersWithNoReference = (xsdWorker, firstTag) =>
+        xsdWorker.xsd.alwaysInclude ||
+        (firstTag && xsdWorker.xsd.includeIfRootTag?.includes(firstTag))
 }
