@@ -142,7 +142,7 @@ export default class XsdParser {
             `${this.namespace}:annotation/${this.namespace}:documentation`,
             attribute,
         )
-            .map((documentation: any): string => documentation.firstChild.data)
+            .map((documentation: any): string => documentation.firstChild ? documentation.firstChild.data : '')
             .join('<br/><hr/><br/>')
         return {
             documentation: `${documentationString}<br/>Source: ${this.xsd.path}`,

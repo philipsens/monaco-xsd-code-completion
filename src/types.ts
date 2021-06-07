@@ -178,4 +178,5 @@ export interface DocumentNode {
     documentation?: string
     type?: string
     use?: string
+    ref?: string
 }
