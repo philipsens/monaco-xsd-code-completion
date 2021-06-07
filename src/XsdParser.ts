@@ -100,8 +100,8 @@ export default class XsdParser {
             return element
         })
 
-    public getAttributesForElement = (elementName: string): DocumentNode[] =>
-        this.parseAttributes(
+    public getAttributesForElement = (elementName: string): DocumentNode[] => {
+        let attributes = this.parseAttributes(
             this.select(
                 `//${this.namespace}:complexType[@name='${this.getElementType(elementName)}']/${
                     this.namespace
@@ -109,6 +109,42 @@ export default class XsdParser {
                 this.xsdDom,
             ),
         )
+        let attributeGroups = this.parseAttributes(
+            this.select(
+                `//${this.namespace}:complexType[@name='${this.getElementType(elementName)}']/${
+                    this.namespace
+                }:attributeGroup`,
+                this.xsdDom,
+            ),
+        )
+        attributeGroups.forEach((attributeGroup: DocumentNode) => {
+            attributes = attributes.concat(this.getAttributesFromAttributeGroup(attributeGroup))
+        })
+        return attributes
+    }
+
+    public getAttributesFromAttributeGroup = (attributeGroup: DocumentNode): DocumentNode[] => {
+        let attributes = this.parseAttributes(
+            this.select(
+                `//${this.namespace}:attributeGroup[@name='${attributeGroup.ref}']/${
+                    this.namespace
+                }:attribute`,
+                this.xsdDom,
+            ),
+        )
+        let attributeGroups = this.parseAttributes(
+            this.select(
+                `//${this.namespace}:attributeGroup[@name='${attributeGroup.ref}']/${
+                    this.namespace
+                }:attributeGroup`,
+                this.xsdDom,
+            ),
+        )
+        attributeGroups.forEach((attributeGroup: DocumentNode) => {
+            attributes = attributes.concat(this.getAttributesFromAttributeGroup(attributeGroup))
+        })
+        return attributes   
+    }
 
     private parseElements = (elements: SelectedValue[]): DocumentNode[] =>
         elements.map(
