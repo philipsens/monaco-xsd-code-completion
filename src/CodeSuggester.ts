@@ -37,7 +37,7 @@ export default class CodeSuggester {
     ): ICompletion[] =>
         elements.map(
             (element: DocumentNode, index: number): ICompletion => {
-                const elementName = this.parseElementName(element.name, namespace)
+                const elementName = element.name ? this.parseElementName(this.parseDetail(element.name), namespace) : this.parseElementName(this.parseDetail(element.ref), namespace)
                 return {
                     label: elementName,
                     kind: withoutTag
