@@ -89,7 +89,9 @@ xsdFeatures.addReformatAction() // Add reformat code to actions menu. Can be run
 -   [x] Implement namespaces
     -   [x] Get suggestions from multiple XSD's
     -   [x] Append namespace to suggestions
--   [ ] Performance optimalisation
+    -   [x] Get element ref attributes (thanks @Rafeethu)
+        -   [ ] Replace element ref namespace with namespace used in the XML.
+-   [ ] Performance optimisation
     -   [ ] Change parser (to SAX?)
     -   [ ] Make use of the Monaco workers for parallel parsing
 -   [x] Show syntax errors
