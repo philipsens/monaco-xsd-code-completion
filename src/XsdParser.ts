@@ -143,7 +143,7 @@ export default class XsdParser {
         attributeGroups.forEach((attributeGroup: DocumentNode) => {
             attributes = attributes.concat(this.getAttributesFromAttributeGroup(attributeGroup))
         })
-        return attributes   
+        return attributes
     }
 
     private parseElements = (elements: SelectedValue[]): DocumentNode[] =>
