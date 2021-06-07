@@ -37,7 +37,10 @@ export default class CodeSuggester {
     ): ICompletion[] =>
         elements.map(
             (element: DocumentNode, index: number): ICompletion => {
-                const elementName = this.parseElementName(element.name, namespace)
+                let elementName = element.ref ? element.ref : element.name
+                if(elementName){
+                    elementName = this.parseElementName(elementName, namespace)
+                }
                 return {
                     label: elementName,
                     kind: withoutTag
@@ -68,15 +71,18 @@ export default class CodeSuggester {
 
     private parseAttributes = (attributes: DocumentNode[], incomplete: boolean): ICompletion[] =>
         attributes.map(
-            (attribute: DocumentNode): ICompletion => ({
-                label: attribute.name,
-                kind: languages.CompletionItemKind.Variable,
-                detail: this.parseDetail(attribute.type),
-                insertText: this.parseAttributeInputText(attribute.name, incomplete),
-                preselect: this.attributeIsRequired(attribute),
-                insertTextRules: languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                documentation: this.parseDocumentation(attribute.documentation),
-            }),
+            (attribute: DocumentNode): ICompletion => {
+                let attributeName = attribute.ref ? attribute.ref : attribute.name;
+                return ({
+                    label: attributeName,
+                    kind: languages.CompletionItemKind.Variable,
+                    detail: this.parseDetail(attribute.type),
+                    insertText: this.parseAttributeInputText(attributeName, incomplete),
+                    preselect: this.attributeIsRequired(attribute),
+                    insertTextRules: languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                    documentation: this.parseDocumentation(attribute.documentation),
+                })
+            }
         )
 
     private parseDetail = (detail: string | undefined) => {
