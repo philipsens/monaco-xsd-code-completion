@@ -1,0 +1,3393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="https://u.com" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="https://u.com">
+  <xs:element name="tpl" type="tplType"/>
+  <xs:complexType name="tplType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="header" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="footer" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="HtmlElement" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="HtmlDocument" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="BreadCrumb" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="ComponentGroup" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="EntityComponentBase" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="LinkUmin" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="DecimalInputField" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="TextInputField" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="FormHeader" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="FormFooter" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="LinkDialog" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="MenuItem" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="Button" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="DevelopperToolbar" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="ComponentProxy" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="FileField" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="MessagesDisplay" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="GlobalMessagesDisplay" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="AutocompleteTextInputField" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="CheckboxField" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="CheckboxFieldGroup" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="ComponentGroupField" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="DateField" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="DateTimeField" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="EmailField" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="HtmlAreaField" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="IntInputField" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="PasswordField" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="SelectField" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="RadioGroupField" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="header" type="headerType"/>
+  <xs:complexType name="headerType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="footer" type="footerType"/>
+  <xs:complexType name="footerType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:group name="basic">
+    <xs:sequence>
+      <xs:element name="className" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The dom class</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="equals" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>A reference to another component</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="id" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="visible" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Is this field visible</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="layoutOnSmartPhone" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Should we display this component on a smart phone device</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="layoutOnTablet" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Should we display this component on a tablet device</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="layoutOnComputer" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Should we display this component on a computer device</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="layoutOnAnyDevice" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Should we display this component</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="htmlWrapperTag" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The wrapper tag of the component</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="basicAttr">
+    <xs:attribute name="u-if" use="optional" type="xs:string"/>
+    <xs:attribute name="className" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The dom class</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="equals" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>A reference to another component</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="id" use="optional" type="xs:string"/>
+    <xs:attribute name="visible" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Is this field visible</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="layoutOnSmartPhone" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Should we display this component on a smart phone device</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="layoutOnTablet" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Should we display this component on a tablet device</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="layoutOnComputer" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Should we display this component on a computer device</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="layoutOnAnyDevice" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Should we display this component</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="htmlWrapperTag" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The wrapper tag of the component</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:group name="group">
+    <xs:sequence>
+      <xs:element name="requirePosition" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Include DOM class name First Last and Odd in html</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="layoutIfNoComponent" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Must we layout the component group if no component are in it</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="label" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The label</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="labelWrapperTag" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The html wrapper tag of the label</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="description" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The description</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="header" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="footer" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="descriptionWrapperTag" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The html wrapper tag of the description</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="renderersWrapperTag" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The html wrapper tag of the list of component (ie: ul if the items of your list use li)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="renderersWrapperClassName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="groupAttr">
+    <xs:attribute name="requirePosition" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Include DOM class name First Last and Odd in html</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="layoutIfNoComponent" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Must we layout the component group if no component are in it</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="label" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The label</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="labelWrapperTag" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The html wrapper tag of the label</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="description" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The description</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="header" use="optional" type="xs:string"/>
+    <xs:attribute name="footer" use="optional" type="xs:string"/>
+    <xs:attribute name="descriptionWrapperTag" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The html wrapper tag of the description</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="renderersWrapperTag" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The html wrapper tag of the list of component (ie: ul if the items of your list use li)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="renderersWrapperClassName" use="optional" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="field">
+    <xs:sequence>
+      <xs:element name="header" maxOccurs="1" minOccurs="0" type="headerForAttributeType"/>
+      <xs:element name="footer" maxOccurs="1" minOccurs="0" type="footerForAttributeType"/>
+      <xs:element name="entityProperties" maxOccurs="1" minOccurs="0" type="entityPropertiesForAttributeType"/>
+      <xs:element name="label" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The label usually show on top of the field to present what the user is supposed to do</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="updateServiceName" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The name of the service to call to save the update of the field (ServiceSaveNewData)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="updateServiceArgs" maxOccurs="1" minOccurs="0" type="updateServiceArgsForAttributeType">
+        <xs:annotation>
+          <xs:documentation>The additional arguments to pass to the update service</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="createServiceName" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The name of the service to call to add (ServiceAdd)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="createServiceArgs" maxOccurs="1" minOccurs="0" type="createServiceArgsForAttributeType">
+        <xs:annotation>
+          <xs:documentation>The additional arguments to pass to the create service</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="deleteServiceName" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The name of the service to call to delete (ServiceDelete)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="deleteServiceArgs" maxOccurs="1" minOccurs="0" type="deleteServiceArgsForAttributeType">
+        <xs:annotation>
+          <xs:documentation>The additional arguments to pass to the delete service</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="readServiceName" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The name of the service to call to read (ServiceRead)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="readServiceArgs" maxOccurs="1" minOccurs="0" type="readServiceArgsForAttributeType">
+        <xs:annotation>
+          <xs:documentation>The additional arguments to pass to the read service</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="description" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The description is usually below the label to describe more what is this field about</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="descriptionPosition" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The position of the description (either before or after)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="descriptionHtmlWrapperTag" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The tag wrapping the description</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="required" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Is this field required</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="displayRequired" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Should we display the star (*) next to the label</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="readonly" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Is this field a readonly one</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="disabled" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Is this field disabled</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="autoComplete" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Does this field have autocomplete on</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="showButton" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Show we show the submit button</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="buttonLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The label displayed in the button (usually submit)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="useUIButton" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Should we use a jquery ui button</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="requiredErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label show if the user did not complete the field</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="isUpdate" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isDelete" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="afterSaveSucceedSavable" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="inputAddOn" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="addInputWrapperHtml" maxOccurs="1" minOccurs="0" type="xs:string"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="fieldAttr">
+    <xs:attribute name="header" use="optional" type="xs:string"/>
+    <xs:attribute name="footer" use="optional" type="xs:string"/>
+    <xs:attribute name="entityProperties" use="optional" type="xs:string"/>
+    <xs:attribute name="label" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The label usually show on top of the field to present what the user is supposed to do</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="updateServiceName" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The name of the service to call to save the update of the field (ServiceSaveNewData)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="updateServiceArgs" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The additional arguments to pass to the update service</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="createServiceName" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The name of the service to call to add (ServiceAdd)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="createServiceArgs" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The additional arguments to pass to the create service</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="deleteServiceName" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The name of the service to call to delete (ServiceDelete)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="deleteServiceArgs" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The additional arguments to pass to the delete service</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="readServiceName" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The name of the service to call to read (ServiceRead)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="readServiceArgs" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The additional arguments to pass to the read service</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="description" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The description is usually below the label to describe more what is this field about</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="descriptionPosition" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The position of the description (either before or after)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="descriptionHtmlWrapperTag" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The tag wrapping the description</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="required" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Is this field required</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="displayRequired" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Should we display the star (*) next to the label</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="readonly" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Is this field a readonly one</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="disabled" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Is this field disabled</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="autoComplete" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Does this field have autocomplete on</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="showButton" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Show we show the submit button</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="buttonLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The label displayed in the button (usually submit)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="useUIButton" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Should we use a jquery ui button</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="requiredErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label show if the user did not complete the field</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="isUpdate" use="optional" type="xs:string"/>
+    <xs:attribute name="isDelete" use="optional" type="xs:string"/>
+    <xs:attribute name="afterSaveSucceedSavable" use="optional" type="xs:string"/>
+    <xs:attribute name="inputAddOn" use="optional" type="xs:string"/>
+    <xs:attribute name="addInputWrapperHtml" use="optional" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:complexType name="headerForAttributeType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="footerForAttributeType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="entityPropertiesForAttributeType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="updateServiceArgsForAttributeType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="createServiceArgsForAttributeType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteServiceArgsForAttributeType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="readServiceArgsForAttributeType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:group name="entity">
+    <xs:sequence>
+      <xs:element name="entity" maxOccurs="1" minOccurs="0" type="entityForAttributeType">
+        <xs:annotation>
+          <xs:documentation>The business entity</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="entityAttr">
+    <xs:attribute name="entity" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The business entity</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:complexType name="entityForAttributeType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:group name="menu">
+    <xs:sequence>
+      <xs:element name="url" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The url of the item</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="linkTarget" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>If the url needs target _blank or other, specify it</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="menuAttr">
+    <xs:attribute name="url" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The url of the item</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="linkTarget" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>If the url needs target _blank or other, specify it</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:complexType name="HtmlElementType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:element name="content" maxOccurs="1" minOccurs="0" type="xs:string"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attribute name="content" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="HtmlElement" type="HtmlElementType"/>
+  <xs:complexType name="HtmlDocumentType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:element name="header" maxOccurs="1" minOccurs="0" type="headerForAttributeType"/>
+      <xs:element name="content" maxOccurs="1" minOccurs="0" type="contentForAttributeType"/>
+      <xs:element name="footer" maxOccurs="1" minOccurs="0" type="footerForAttributeType"/>
+      <xs:element name="htmlHead" maxOccurs="1" minOccurs="0" type="htmlHeadForAttributeType"/>
+      <xs:element name="htmlFoot" maxOccurs="1" minOccurs="0" type="htmlFootForAttributeType"/>
+      <xs:element name="page" maxOccurs="1" minOccurs="0" type="pageForAttributeType"/>
+      <xs:element name="useAjaxLoading" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="ajaxReplacerClassSelector" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="transition" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="loadingString" maxOccurs="1" minOccurs="0" type="xs:string"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attribute name="header" use="optional" type="xs:string"/>
+    <xs:attribute name="content" use="optional" type="xs:string"/>
+    <xs:attribute name="footer" use="optional" type="xs:string"/>
+    <xs:attribute name="htmlHead" use="optional" type="xs:string"/>
+    <xs:attribute name="htmlFoot" use="optional" type="xs:string"/>
+    <xs:attribute name="page" use="optional" type="xs:string"/>
+    <xs:attribute name="useAjaxLoading" use="optional" type="xs:string"/>
+    <xs:attribute name="ajaxReplacerClassSelector" use="optional" type="xs:string"/>
+    <xs:attribute name="transition" use="optional" type="xs:string"/>
+    <xs:attribute name="loadingString" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="contentForAttributeType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="htmlHeadForAttributeType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="htmlFootForAttributeType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="pageForAttributeType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="HtmlDocument" type="HtmlDocumentType"/>
+  <xs:complexType name="BreadCrumbType" mixed="true">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:group ref="group"/>
+      <xs:element name="separator" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The separator between each item of the breadcrumb</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="includeHome" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Should the breadcrumb include the home item</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="homeLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The label of the Home breadcrumb item</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="entity" maxOccurs="1" minOccurs="0" type="entityForAttributeType"/>
+      <xs:any minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attributeGroup ref="groupAttr"/>
+    <xs:attribute name="separator" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The separator between each item of the breadcrumb</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="includeHome" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Should the breadcrumb include the home item</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="homeLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The label of the Home breadcrumb item</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="entity" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="BreadCrumb" type="BreadCrumbType"/>
+  <xs:complexType name="ComponentGroupType" mixed="true">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:group ref="group"/>
+      <xs:element name="entity" maxOccurs="1" minOccurs="0" type="entityForAttributeType"/>
+      <xs:any minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attributeGroup ref="groupAttr"/>
+    <xs:attribute name="entity" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="ComponentGroup" type="ComponentGroupType"/>
+  <xs:complexType name="EntityComponentBaseType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:group ref="entity"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attributeGroup ref="entityAttr"/>
+  </xs:complexType>
+  <xs:element name="EntityComponentBase" type="EntityComponentBaseType"/>
+  <xs:complexType name="LinkUminType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:element name="entity" maxOccurs="1" minOccurs="0" type="entityForAttributeType"/>
+      <xs:element name="propertyName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attribute name="entity" use="optional" type="xs:string"/>
+    <xs:attribute name="propertyName" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="LinkUmin" type="LinkUminType"/>
+  <xs:complexType name="DecimalInputFieldType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:group ref="field"/>
+      <xs:element name="maxDecimals" maxOccurs="1" minOccurs="0" type="maxDecimalsForAttributeType"/>
+      <xs:element name="centDelimiter" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="controllerParameterType" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="placeholderLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Content of the html placeholder attribute (does not work in IE7)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="showCounter" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Add a counter below the text input to show the number of characters/words typed by the user</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterMaxCharacterSize" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum number of characters allowed by the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterOriginaleStyle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="counterWarningStyle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="counterWarningNumber" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum number of characters typed by the user before showing the warning sign (not used by default)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterDisplayFormat" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isEmail" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isDigits" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isUrl" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isNumber" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isSimplePhone" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isDecimal" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="autoReplace" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="minValue" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The minimum value that can be contained in the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxValue" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum value that can be contained in the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="minLength" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The minumum length of the string before showing $minLengthErrorLabel</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="minLengthErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is less than $minLength (Please, at least {0} characters are necessary)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxLength" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum length of the string before showing $maxLengthErrorLabel</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="useHtmlMaxLength" maxOccurs="1" minOccurs="0" type="useHtmlMaxLengthForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Apply HTML attribute maxlength</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxLengthErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is more than $maxLength (Please, no more than {0} characters are necessary)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="allowNegativValue" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="domType" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="emailErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not an email (aaa@aaa.com)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="digitsErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not a series of digits (2343)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="urlErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not an url (http://...)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="validRegexp" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="notValidRegexpLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="useHtmlAutoFocus" maxOccurs="1" minOccurs="0" type="useHtmlAutoFocusForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Apply HTML attribute autofocus</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="domInputName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="updateServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="createServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="readServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="value" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="saveOnFocusOut" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="entity" maxOccurs="1" minOccurs="0" type="entityForAttributeType"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attributeGroup ref="fieldAttr"/>
+    <xs:attribute name="maxDecimals" use="optional" type="xs:string"/>
+    <xs:attribute name="centDelimiter" use="optional" type="xs:string"/>
+    <xs:attribute name="controllerParameterType" use="optional" type="xs:string"/>
+    <xs:attribute name="placeholderLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Content of the html placeholder attribute (does not work in IE7)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="showCounter" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Add a counter below the text input to show the number of characters/words typed by the user</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterMaxCharacterSize" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum number of characters allowed by the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterOriginaleStyle" use="optional" type="xs:string"/>
+    <xs:attribute name="counterWarningStyle" use="optional" type="xs:string"/>
+    <xs:attribute name="counterWarningNumber" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum number of characters typed by the user before showing the warning sign (not used by default)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterDisplayFormat" use="optional" type="xs:string"/>
+    <xs:attribute name="isEmail" use="optional" type="xs:string"/>
+    <xs:attribute name="isDigits" use="optional" type="xs:string"/>
+    <xs:attribute name="isUrl" use="optional" type="xs:string"/>
+    <xs:attribute name="isNumber" use="optional" type="xs:string"/>
+    <xs:attribute name="isSimplePhone" use="optional" type="xs:string"/>
+    <xs:attribute name="isDecimal" use="optional" type="xs:string"/>
+    <xs:attribute name="autoReplace" use="optional" type="xs:string"/>
+    <xs:attribute name="minValue" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The minimum value that can be contained in the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxValue" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum value that can be contained in the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="minLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The minumum length of the string before showing $minLengthErrorLabel</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="minLengthErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is less than $minLength (Please, at least {0} characters are necessary)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum length of the string before showing $maxLengthErrorLabel</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="useHtmlMaxLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Apply HTML attribute maxlength</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxLengthErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is more than $maxLength (Please, no more than {0} characters are necessary)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="allowNegativValue" use="optional" type="xs:string"/>
+    <xs:attribute name="domType" use="optional" type="xs:string"/>
+    <xs:attribute name="emailErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not an email (aaa@aaa.com)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="digitsErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not a series of digits (2343)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="urlErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not an url (http://...)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="validRegexp" use="optional" type="xs:string"/>
+    <xs:attribute name="notValidRegexpLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="useHtmlAutoFocus" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Apply HTML attribute autofocus</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="domInputName" use="optional" type="xs:string"/>
+    <xs:attribute name="updateServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="createServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="readServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="value" use="optional" type="xs:string"/>
+    <xs:attribute name="saveOnFocusOut" use="optional" type="xs:string"/>
+    <xs:attribute name="entity" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="maxDecimalsForAttributeType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="useHtmlMaxLengthForAttributeType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="useHtmlAutoFocusForAttributeType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DecimalInputField" type="DecimalInputFieldType"/>
+  <xs:complexType name="TextInputFieldType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:group ref="field"/>
+      <xs:element name="placeholderLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Content of the html placeholder attribute (does not work in IE7)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="showCounter" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Add a counter below the text input to show the number of characters/words typed by the user</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterMaxCharacterSize" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum number of characters allowed by the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterOriginaleStyle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="counterWarningStyle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="counterWarningNumber" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum number of characters typed by the user before showing the warning sign (not used by default)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterDisplayFormat" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isEmail" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isDigits" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isUrl" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isNumber" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isSimplePhone" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isDecimal" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="autoReplace" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="minValue" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The minimum value that can be contained in the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxValue" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum value that can be contained in the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="minLength" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The minumum length of the string before showing $minLengthErrorLabel</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="minLengthErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is less than $minLength (Please, at least {0} characters are necessary)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxLength" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum length of the string before showing $maxLengthErrorLabel</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="useHtmlMaxLength" maxOccurs="1" minOccurs="0" type="useHtmlMaxLengthForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Apply HTML attribute maxlength</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxLengthErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is more than $maxLength (Please, no more than {0} characters are necessary)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="allowNegativValue" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="domType" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="emailErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not an email (aaa@aaa.com)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="digitsErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not a series of digits (2343)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="urlErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not an url (http://...)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="validRegexp" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="notValidRegexpLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="useHtmlAutoFocus" maxOccurs="1" minOccurs="0" type="useHtmlAutoFocusForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Apply HTML attribute autofocus</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="domInputName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="updateServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="createServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="readServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="value" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="saveOnFocusOut" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="entity" maxOccurs="1" minOccurs="0" type="entityForAttributeType"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attributeGroup ref="fieldAttr"/>
+    <xs:attribute name="placeholderLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Content of the html placeholder attribute (does not work in IE7)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="showCounter" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Add a counter below the text input to show the number of characters/words typed by the user</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterMaxCharacterSize" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum number of characters allowed by the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterOriginaleStyle" use="optional" type="xs:string"/>
+    <xs:attribute name="counterWarningStyle" use="optional" type="xs:string"/>
+    <xs:attribute name="counterWarningNumber" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum number of characters typed by the user before showing the warning sign (not used by default)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterDisplayFormat" use="optional" type="xs:string"/>
+    <xs:attribute name="isEmail" use="optional" type="xs:string"/>
+    <xs:attribute name="isDigits" use="optional" type="xs:string"/>
+    <xs:attribute name="isUrl" use="optional" type="xs:string"/>
+    <xs:attribute name="isNumber" use="optional" type="xs:string"/>
+    <xs:attribute name="isSimplePhone" use="optional" type="xs:string"/>
+    <xs:attribute name="isDecimal" use="optional" type="xs:string"/>
+    <xs:attribute name="autoReplace" use="optional" type="xs:string"/>
+    <xs:attribute name="minValue" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The minimum value that can be contained in the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxValue" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum value that can be contained in the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="minLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The minumum length of the string before showing $minLengthErrorLabel</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="minLengthErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is less than $minLength (Please, at least {0} characters are necessary)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum length of the string before showing $maxLengthErrorLabel</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="useHtmlMaxLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Apply HTML attribute maxlength</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxLengthErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is more than $maxLength (Please, no more than {0} characters are necessary)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="allowNegativValue" use="optional" type="xs:string"/>
+    <xs:attribute name="domType" use="optional" type="xs:string"/>
+    <xs:attribute name="emailErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not an email (aaa@aaa.com)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="digitsErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not a series of digits (2343)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="urlErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not an url (http://...)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="validRegexp" use="optional" type="xs:string"/>
+    <xs:attribute name="notValidRegexpLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="useHtmlAutoFocus" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Apply HTML attribute autofocus</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="domInputName" use="optional" type="xs:string"/>
+    <xs:attribute name="updateServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="createServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="readServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="value" use="optional" type="xs:string"/>
+    <xs:attribute name="saveOnFocusOut" use="optional" type="xs:string"/>
+    <xs:attribute name="entity" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="TextInputField" type="TextInputFieldType"/>
+  <xs:complexType name="FormHeaderType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:element name="form" maxOccurs="1" minOccurs="0" type="FormType"/>
+      <xs:element name="xml" maxOccurs="1" minOccurs="0" type="xs:string"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attribute name="form" use="optional" type="xs:string"/>
+    <xs:attribute name="xml" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="FormHeader" type="FormHeaderType"/>
+  <xs:complexType name="FormFooterType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:element name="form" maxOccurs="1" minOccurs="0" type="FormType"/>
+      <xs:element name="xml" maxOccurs="1" minOccurs="0" type="xs:string"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attribute name="form" use="optional" type="xs:string"/>
+    <xs:attribute name="xml" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="FormFooter" type="FormFooterType"/>
+  <xs:complexType name="LinkDialogType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:element name="linkLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="dialogTitle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="dialogWidth" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="dialogHeight" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="dialogModal" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="dialogDraggable" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="dialogResizable" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="readServiceName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="componentId" maxOccurs="1" minOccurs="0" type="xs:string"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attribute name="linkLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="dialogTitle" use="optional" type="xs:string"/>
+    <xs:attribute name="dialogWidth" use="optional" type="xs:string"/>
+    <xs:attribute name="dialogHeight" use="optional" type="xs:string"/>
+    <xs:attribute name="dialogModal" use="optional" type="xs:string"/>
+    <xs:attribute name="dialogDraggable" use="optional" type="xs:string"/>
+    <xs:attribute name="dialogResizable" use="optional" type="xs:string"/>
+    <xs:attribute name="readServiceName" use="optional" type="xs:string"/>
+    <xs:attribute name="componentId" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="LinkDialog" type="LinkDialogType"/>
+  <xs:complexType name="MenuItemType" mixed="true">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:group ref="group"/>
+      <xs:group ref="menu"/>
+      <xs:element name="entity" maxOccurs="1" minOccurs="0" type="entityForAttributeType"/>
+      <xs:any minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attributeGroup ref="groupAttr"/>
+    <xs:attributeGroup ref="menuAttr"/>
+    <xs:attribute name="entity" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="MenuItem" type="MenuItemType"/>
+  <xs:complexType name="ButtonType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:element name="label" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The label of the button</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="disabled" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Is the button disabled</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attribute name="label" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The label of the button</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="disabled" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Is the button disabled</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:element name="Button" type="ButtonType"/>
+  <xs:complexType name="DevelopperToolbarType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:element name="disabled" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Is the ui disabled</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="header" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="selected" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Which tab is selected on page load (set it to -1 with collapsible true)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="title" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The title displayed before the tabs</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="titleWrapperTag" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The wrapper tag of the label</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="description" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The description of the tabs</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="descriptionWrapperTag" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The wrapper tag of the description</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="collapsible" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>When set to true, the active panel can be closed.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ulClassName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="liClassName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="aClassName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="tabContentClassName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attribute name="disabled" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Is the ui disabled</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="header" use="optional" type="xs:string"/>
+    <xs:attribute name="selected" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Which tab is selected on page load (set it to -1 with collapsible true)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="title" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The title displayed before the tabs</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="titleWrapperTag" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The wrapper tag of the label</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="description" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The description of the tabs</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="descriptionWrapperTag" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The wrapper tag of the description</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="collapsible" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>When set to true, the active panel can be closed.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ulClassName" use="optional" type="xs:string"/>
+    <xs:attribute name="liClassName" use="optional" type="xs:string"/>
+    <xs:attribute name="aClassName" use="optional" type="xs:string"/>
+    <xs:attribute name="tabContentClassName" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="DevelopperToolbar" type="DevelopperToolbarType"/>
+  <xs:complexType name="ComponentProxyType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:group ref="entity"/>
+      <xs:element name="componentId" maxOccurs="1" minOccurs="0" type="xs:string"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attributeGroup ref="entityAttr"/>
+    <xs:attribute name="componentId" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="ComponentProxy" type="ComponentProxyType"/>
+  <xs:complexType name="FileFieldType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:group ref="field"/>
+      <xs:element name="acceptTypes" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="chooseFileLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="placeholderLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Content of the html placeholder attribute (does not work in IE7)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="showCounter" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Add a counter below the text input to show the number of characters/words typed by the user</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterMaxCharacterSize" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum number of characters allowed by the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterOriginaleStyle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="counterWarningStyle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="counterWarningNumber" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum number of characters typed by the user before showing the warning sign (not used by default)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterDisplayFormat" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isEmail" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isDigits" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isUrl" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isNumber" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isSimplePhone" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isDecimal" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="autoReplace" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="minValue" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The minimum value that can be contained in the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxValue" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum value that can be contained in the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="minLength" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The minumum length of the string before showing $minLengthErrorLabel</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="minLengthErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is less than $minLength (Please, at least {0} characters are necessary)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxLength" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum length of the string before showing $maxLengthErrorLabel</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="useHtmlMaxLength" maxOccurs="1" minOccurs="0" type="useHtmlMaxLengthForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Apply HTML attribute maxlength</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxLengthErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is more than $maxLength (Please, no more than {0} characters are necessary)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="allowNegativValue" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="domType" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="emailErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not an email (aaa@aaa.com)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="digitsErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not a series of digits (2343)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="urlErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not an url (http://...)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="validRegexp" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="notValidRegexpLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="useHtmlAutoFocus" maxOccurs="1" minOccurs="0" type="useHtmlAutoFocusForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Apply HTML attribute autofocus</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="domInputName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="updateServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="createServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="readServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="value" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="saveOnFocusOut" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="entity" maxOccurs="1" minOccurs="0" type="entityForAttributeType"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attributeGroup ref="fieldAttr"/>
+    <xs:attribute name="acceptTypes" use="optional" type="xs:string"/>
+    <xs:attribute name="chooseFileLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="placeholderLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Content of the html placeholder attribute (does not work in IE7)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="showCounter" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Add a counter below the text input to show the number of characters/words typed by the user</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterMaxCharacterSize" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum number of characters allowed by the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterOriginaleStyle" use="optional" type="xs:string"/>
+    <xs:attribute name="counterWarningStyle" use="optional" type="xs:string"/>
+    <xs:attribute name="counterWarningNumber" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum number of characters typed by the user before showing the warning sign (not used by default)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterDisplayFormat" use="optional" type="xs:string"/>
+    <xs:attribute name="isEmail" use="optional" type="xs:string"/>
+    <xs:attribute name="isDigits" use="optional" type="xs:string"/>
+    <xs:attribute name="isUrl" use="optional" type="xs:string"/>
+    <xs:attribute name="isNumber" use="optional" type="xs:string"/>
+    <xs:attribute name="isSimplePhone" use="optional" type="xs:string"/>
+    <xs:attribute name="isDecimal" use="optional" type="xs:string"/>
+    <xs:attribute name="autoReplace" use="optional" type="xs:string"/>
+    <xs:attribute name="minValue" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The minimum value that can be contained in the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxValue" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum value that can be contained in the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="minLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The minumum length of the string before showing $minLengthErrorLabel</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="minLengthErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is less than $minLength (Please, at least {0} characters are necessary)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum length of the string before showing $maxLengthErrorLabel</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="useHtmlMaxLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Apply HTML attribute maxlength</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxLengthErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is more than $maxLength (Please, no more than {0} characters are necessary)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="allowNegativValue" use="optional" type="xs:string"/>
+    <xs:attribute name="domType" use="optional" type="xs:string"/>
+    <xs:attribute name="emailErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not an email (aaa@aaa.com)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="digitsErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not a series of digits (2343)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="urlErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not an url (http://...)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="validRegexp" use="optional" type="xs:string"/>
+    <xs:attribute name="notValidRegexpLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="useHtmlAutoFocus" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Apply HTML attribute autofocus</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="domInputName" use="optional" type="xs:string"/>
+    <xs:attribute name="updateServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="createServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="readServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="value" use="optional" type="xs:string"/>
+    <xs:attribute name="saveOnFocusOut" use="optional" type="xs:string"/>
+    <xs:attribute name="entity" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="FileField" type="FileFieldType"/>
+  <xs:complexType name="MessagesDisplayType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:element name="loadingLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="moreInfoLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="unexpectedErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="infoLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="errorLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="ajaxShowInfo" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="ajaxStartCounter" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="scrollToAtInit" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="fadeAfterInit" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="contentInfoClassName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="contentErrorClassName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="iconInfoClassName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="iconErrorClassName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attribute name="loadingLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="moreInfoLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="unexpectedErrorLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="infoLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="errorLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="ajaxShowInfo" use="optional" type="xs:string"/>
+    <xs:attribute name="ajaxStartCounter" use="optional" type="xs:string"/>
+    <xs:attribute name="scrollToAtInit" use="optional" type="xs:string"/>
+    <xs:attribute name="fadeAfterInit" use="optional" type="xs:string"/>
+    <xs:attribute name="contentInfoClassName" use="optional" type="xs:string"/>
+    <xs:attribute name="contentErrorClassName" use="optional" type="xs:string"/>
+    <xs:attribute name="iconInfoClassName" use="optional" type="xs:string"/>
+    <xs:attribute name="iconErrorClassName" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="MessagesDisplay" type="MessagesDisplayType"/>
+  <xs:complexType name="GlobalMessagesDisplayType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:element name="loadingLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="moreInfoLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="unexpectedErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="infoLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="errorLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="ajaxShowInfo" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="ajaxStartCounter" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="scrollToAtInit" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="fadeAfterInit" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="contentInfoClassName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="contentErrorClassName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="iconInfoClassName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="iconErrorClassName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attribute name="loadingLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="moreInfoLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="unexpectedErrorLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="infoLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="errorLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="ajaxShowInfo" use="optional" type="xs:string"/>
+    <xs:attribute name="ajaxStartCounter" use="optional" type="xs:string"/>
+    <xs:attribute name="scrollToAtInit" use="optional" type="xs:string"/>
+    <xs:attribute name="fadeAfterInit" use="optional" type="xs:string"/>
+    <xs:attribute name="contentInfoClassName" use="optional" type="xs:string"/>
+    <xs:attribute name="contentErrorClassName" use="optional" type="xs:string"/>
+    <xs:attribute name="iconInfoClassName" use="optional" type="xs:string"/>
+    <xs:attribute name="iconErrorClassName" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="GlobalMessagesDisplay" type="GlobalMessagesDisplayType"/>
+  <xs:complexType name="AutocompleteTextInputFieldType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:group ref="field"/>
+      <xs:element name="autocompleteValue" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="autocompleteServiceName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="autocompleteServiceArgs" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="autocompleteUrl" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="autocompleteMinLength" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="showResultDescription" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="mustMatch" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="addHiddenInput" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="autocompleteToStringMethodName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="autocompleteEntityInstance" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="showAutocompleteLink" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="autocompleteParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="chooseRedirect" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="urlName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="showChooseInList" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="chooseInListComponentProxyServiceName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="chooseInListComponentProxyServiceArgs" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="chooseInListComponentClassName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="chooseInListLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="serviceBaseUrl" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="appendTo" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="noResultText" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="placeholderLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Content of the html placeholder attribute (does not work in IE7)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="showCounter" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Add a counter below the text input to show the number of characters/words typed by the user</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterMaxCharacterSize" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum number of characters allowed by the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterOriginaleStyle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="counterWarningStyle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="counterWarningNumber" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum number of characters typed by the user before showing the warning sign (not used by default)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterDisplayFormat" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isEmail" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isDigits" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isUrl" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isNumber" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isSimplePhone" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isDecimal" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="autoReplace" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="minValue" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The minimum value that can be contained in the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxValue" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum value that can be contained in the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="minLength" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The minumum length of the string before showing $minLengthErrorLabel</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="minLengthErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is less than $minLength (Please, at least {0} characters are necessary)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxLength" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum length of the string before showing $maxLengthErrorLabel</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="useHtmlMaxLength" maxOccurs="1" minOccurs="0" type="useHtmlMaxLengthForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Apply HTML attribute maxlength</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxLengthErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is more than $maxLength (Please, no more than {0} characters are necessary)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="allowNegativValue" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="domType" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="emailErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not an email (aaa@aaa.com)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="digitsErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not a series of digits (2343)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="urlErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not an url (http://...)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="validRegexp" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="notValidRegexpLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="useHtmlAutoFocus" maxOccurs="1" minOccurs="0" type="useHtmlAutoFocusForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Apply HTML attribute autofocus</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="domInputName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="updateServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="createServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="readServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="value" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="saveOnFocusOut" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="entity" maxOccurs="1" minOccurs="0" type="entityForAttributeType"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attributeGroup ref="fieldAttr"/>
+    <xs:attribute name="autocompleteValue" use="optional" type="xs:string"/>
+    <xs:attribute name="autocompleteServiceName" use="optional" type="xs:string"/>
+    <xs:attribute name="autocompleteServiceArgs" use="optional" type="xs:string"/>
+    <xs:attribute name="autocompleteUrl" use="optional" type="xs:string"/>
+    <xs:attribute name="autocompleteMinLength" use="optional" type="xs:string"/>
+    <xs:attribute name="showResultDescription" use="optional" type="xs:string"/>
+    <xs:attribute name="mustMatch" use="optional" type="xs:string"/>
+    <xs:attribute name="addHiddenInput" use="optional" type="xs:string"/>
+    <xs:attribute name="autocompleteToStringMethodName" use="optional" type="xs:string"/>
+    <xs:attribute name="autocompleteEntityInstance" use="optional" type="xs:string"/>
+    <xs:attribute name="showAutocompleteLink" use="optional" type="xs:string"/>
+    <xs:attribute name="autocompleteParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="chooseRedirect" use="optional" type="xs:string"/>
+    <xs:attribute name="urlName" use="optional" type="xs:string"/>
+    <xs:attribute name="showChooseInList" use="optional" type="xs:string"/>
+    <xs:attribute name="chooseInListComponentProxyServiceName" use="optional" type="xs:string"/>
+    <xs:attribute name="chooseInListComponentProxyServiceArgs" use="optional" type="xs:string"/>
+    <xs:attribute name="chooseInListComponentClassName" use="optional" type="xs:string"/>
+    <xs:attribute name="chooseInListLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="serviceBaseUrl" use="optional" type="xs:string"/>
+    <xs:attribute name="appendTo" use="optional" type="xs:string"/>
+    <xs:attribute name="noResultText" use="optional" type="xs:string"/>
+    <xs:attribute name="placeholderLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Content of the html placeholder attribute (does not work in IE7)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="showCounter" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Add a counter below the text input to show the number of characters/words typed by the user</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterMaxCharacterSize" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum number of characters allowed by the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterOriginaleStyle" use="optional" type="xs:string"/>
+    <xs:attribute name="counterWarningStyle" use="optional" type="xs:string"/>
+    <xs:attribute name="counterWarningNumber" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum number of characters typed by the user before showing the warning sign (not used by default)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterDisplayFormat" use="optional" type="xs:string"/>
+    <xs:attribute name="isEmail" use="optional" type="xs:string"/>
+    <xs:attribute name="isDigits" use="optional" type="xs:string"/>
+    <xs:attribute name="isUrl" use="optional" type="xs:string"/>
+    <xs:attribute name="isNumber" use="optional" type="xs:string"/>
+    <xs:attribute name="isSimplePhone" use="optional" type="xs:string"/>
+    <xs:attribute name="isDecimal" use="optional" type="xs:string"/>
+    <xs:attribute name="autoReplace" use="optional" type="xs:string"/>
+    <xs:attribute name="minValue" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The minimum value that can be contained in the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxValue" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum value that can be contained in the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="minLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The minumum length of the string before showing $minLengthErrorLabel</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="minLengthErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is less than $minLength (Please, at least {0} characters are necessary)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum length of the string before showing $maxLengthErrorLabel</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="useHtmlMaxLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Apply HTML attribute maxlength</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxLengthErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is more than $maxLength (Please, no more than {0} characters are necessary)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="allowNegativValue" use="optional" type="xs:string"/>
+    <xs:attribute name="domType" use="optional" type="xs:string"/>
+    <xs:attribute name="emailErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not an email (aaa@aaa.com)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="digitsErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not a series of digits (2343)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="urlErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not an url (http://...)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="validRegexp" use="optional" type="xs:string"/>
+    <xs:attribute name="notValidRegexpLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="useHtmlAutoFocus" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Apply HTML attribute autofocus</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="domInputName" use="optional" type="xs:string"/>
+    <xs:attribute name="updateServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="createServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="readServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="value" use="optional" type="xs:string"/>
+    <xs:attribute name="saveOnFocusOut" use="optional" type="xs:string"/>
+    <xs:attribute name="entity" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="AutocompleteTextInputField" type="AutocompleteTextInputFieldType"/>
+  <xs:complexType name="CheckboxFieldType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:group ref="field"/>
+      <xs:element name="checked" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Is the checkbox checked</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="checkboxLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The label of the checkbox</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="checkboxLabelClassName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="toggleVisibilityOfDomUid" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The uid of the element that will be toggled (show/hide) when the user check or uncheck the input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="styleCheckbox" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Should we style the checkbox with ui</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="useBooleanAsValue" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="domInputName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="updateServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="createServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="readServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="value" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="saveOnFocusOut" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="entity" maxOccurs="1" minOccurs="0" type="entityForAttributeType"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attributeGroup ref="fieldAttr"/>
+    <xs:attribute name="checked" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Is the checkbox checked</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="checkboxLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The label of the checkbox</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="checkboxLabelClassName" use="optional" type="xs:string"/>
+    <xs:attribute name="toggleVisibilityOfDomUid" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The uid of the element that will be toggled (show/hide) when the user check or uncheck the input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="styleCheckbox" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Should we style the checkbox with ui</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="useBooleanAsValue" use="optional" type="xs:string"/>
+    <xs:attribute name="domInputName" use="optional" type="xs:string"/>
+    <xs:attribute name="updateServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="createServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="readServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="value" use="optional" type="xs:string"/>
+    <xs:attribute name="saveOnFocusOut" use="optional" type="xs:string"/>
+    <xs:attribute name="entity" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="CheckboxField" type="CheckboxFieldType"/>
+  <xs:complexType name="CheckboxFieldGroupType" mixed="true">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:group ref="group"/>
+      <xs:element name="groupPropertyName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="mustSelectOne" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="splitAfter" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="counter" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="styleCheckboxes" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="entity" maxOccurs="1" minOccurs="0" type="entityForAttributeType"/>
+      <xs:any minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attributeGroup ref="groupAttr"/>
+    <xs:attribute name="groupPropertyName" use="optional" type="xs:string"/>
+    <xs:attribute name="mustSelectOne" use="optional" type="xs:string"/>
+    <xs:attribute name="splitAfter" use="optional" type="xs:string"/>
+    <xs:attribute name="counter" use="optional" type="xs:string"/>
+    <xs:attribute name="styleCheckboxes" use="optional" type="xs:string"/>
+    <xs:attribute name="entity" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="CheckboxFieldGroup" type="CheckboxFieldGroupType"/>
+  <xs:complexType name="ComponentGroupFieldType" mixed="true">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:group ref="field"/>
+      <xs:element name="layoutIfNoComponent" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Must we layout the component group if no component are in it</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="requirePosition" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Include DOM class name First Last and Odd in html</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="descriptionWrapperTag" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The html wrapper tag of the description</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="renderersWrapperTag" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The html wrapper tag of the list of component (ie: ul if the items of your list use li)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="entity" maxOccurs="1" minOccurs="0" type="entityForAttributeType"/>
+      <xs:any minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attributeGroup ref="fieldAttr"/>
+    <xs:attribute name="layoutIfNoComponent" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Must we layout the component group if no component are in it</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="requirePosition" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Include DOM class name First Last and Odd in html</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="descriptionWrapperTag" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The html wrapper tag of the description</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="renderersWrapperTag" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The html wrapper tag of the list of component (ie: ul if the items of your list use li)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="entity" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="ComponentGroupField" type="ComponentGroupFieldType"/>
+  <xs:complexType name="DateFieldType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:group ref="field"/>
+      <xs:element name="dateFormat" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="maxDate" maxOccurs="1" minOccurs="0" type="maxDateForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Date string like 'Y-m-d' OR number of days</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="minDate" maxOccurs="1" minOccurs="0" type="minDateForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Date string like 'Y-m-d' OR number of days</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="phpDateFormat" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="numberOfMonths" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="displayDate" maxOccurs="1" minOccurs="0" type="displayDateForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Date string like 'Y-m-d' or array of said string if mode multiple or range</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="mode" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>'single', 'multiple'</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="monthSelectorType" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>'dropdown', 'static'</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="changeYear" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="yearRange" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="executeValidator" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="placeholderLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Content of the html placeholder attribute (does not work in IE7)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="showCounter" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Add a counter below the text input to show the number of characters/words typed by the user</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterMaxCharacterSize" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum number of characters allowed by the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterOriginaleStyle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="counterWarningStyle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="counterWarningNumber" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum number of characters typed by the user before showing the warning sign (not used by default)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterDisplayFormat" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isEmail" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isDigits" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isUrl" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isNumber" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isSimplePhone" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isDecimal" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="autoReplace" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="minValue" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The minimum value that can be contained in the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxValue" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum value that can be contained in the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="minLength" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The minumum length of the string before showing $minLengthErrorLabel</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="minLengthErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is less than $minLength (Please, at least {0} characters are necessary)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxLength" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum length of the string before showing $maxLengthErrorLabel</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="useHtmlMaxLength" maxOccurs="1" minOccurs="0" type="useHtmlMaxLengthForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Apply HTML attribute maxlength</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxLengthErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is more than $maxLength (Please, no more than {0} characters are necessary)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="allowNegativValue" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="domType" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="emailErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not an email (aaa@aaa.com)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="digitsErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not a series of digits (2343)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="urlErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not an url (http://...)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="validRegexp" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="notValidRegexpLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="useHtmlAutoFocus" maxOccurs="1" minOccurs="0" type="useHtmlAutoFocusForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Apply HTML attribute autofocus</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="domInputName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="updateServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="createServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="readServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="value" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="saveOnFocusOut" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="entity" maxOccurs="1" minOccurs="0" type="entityForAttributeType"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attributeGroup ref="fieldAttr"/>
+    <xs:attribute name="dateFormat" use="optional" type="xs:string"/>
+    <xs:attribute name="maxDate" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Date string like 'Y-m-d' OR number of days</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="minDate" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Date string like 'Y-m-d' OR number of days</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="phpDateFormat" use="optional" type="xs:string"/>
+    <xs:attribute name="numberOfMonths" use="optional" type="xs:string"/>
+    <xs:attribute name="displayDate" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Date string like 'Y-m-d' or array of said string if mode multiple or range</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="mode" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>'single', 'multiple'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="monthSelectorType" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>'dropdown', 'static'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="changeYear" use="optional" type="xs:string"/>
+    <xs:attribute name="yearRange" use="optional" type="xs:string"/>
+    <xs:attribute name="executeValidator" use="optional" type="xs:string"/>
+    <xs:attribute name="placeholderLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Content of the html placeholder attribute (does not work in IE7)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="showCounter" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Add a counter below the text input to show the number of characters/words typed by the user</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterMaxCharacterSize" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum number of characters allowed by the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterOriginaleStyle" use="optional" type="xs:string"/>
+    <xs:attribute name="counterWarningStyle" use="optional" type="xs:string"/>
+    <xs:attribute name="counterWarningNumber" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum number of characters typed by the user before showing the warning sign (not used by default)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterDisplayFormat" use="optional" type="xs:string"/>
+    <xs:attribute name="isEmail" use="optional" type="xs:string"/>
+    <xs:attribute name="isDigits" use="optional" type="xs:string"/>
+    <xs:attribute name="isUrl" use="optional" type="xs:string"/>
+    <xs:attribute name="isNumber" use="optional" type="xs:string"/>
+    <xs:attribute name="isSimplePhone" use="optional" type="xs:string"/>
+    <xs:attribute name="isDecimal" use="optional" type="xs:string"/>
+    <xs:attribute name="autoReplace" use="optional" type="xs:string"/>
+    <xs:attribute name="minValue" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The minimum value that can be contained in the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxValue" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum value that can be contained in the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="minLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The minumum length of the string before showing $minLengthErrorLabel</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="minLengthErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is less than $minLength (Please, at least {0} characters are necessary)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum length of the string before showing $maxLengthErrorLabel</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="useHtmlMaxLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Apply HTML attribute maxlength</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxLengthErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is more than $maxLength (Please, no more than {0} characters are necessary)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="allowNegativValue" use="optional" type="xs:string"/>
+    <xs:attribute name="domType" use="optional" type="xs:string"/>
+    <xs:attribute name="emailErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not an email (aaa@aaa.com)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="digitsErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not a series of digits (2343)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="urlErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not an url (http://...)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="validRegexp" use="optional" type="xs:string"/>
+    <xs:attribute name="notValidRegexpLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="useHtmlAutoFocus" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Apply HTML attribute autofocus</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="domInputName" use="optional" type="xs:string"/>
+    <xs:attribute name="updateServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="createServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="readServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="value" use="optional" type="xs:string"/>
+    <xs:attribute name="saveOnFocusOut" use="optional" type="xs:string"/>
+    <xs:attribute name="entity" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="maxDateForAttributeType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="minDateForAttributeType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="displayDateForAttributeType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DateField" type="DateFieldType"/>
+  <xs:complexType name="DateTimeFieldType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:group ref="field"/>
+      <xs:element name="dateFormat" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="timeFormat" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="enableTime" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="time_24hr" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="enableSeconds" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="defaultHour" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="defaultMinute" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="phpDateFormat" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="maxDate" maxOccurs="1" minOccurs="0" type="maxDateForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Date string like 'Y-m-d' OR number of days</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="minDate" maxOccurs="1" minOccurs="0" type="minDateForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Date string like 'Y-m-d' OR number of days</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="numberOfMonths" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="displayDate" maxOccurs="1" minOccurs="0" type="displayDateForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Date string like 'Y-m-d' or array of said string if mode multiple or range</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="mode" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>'single', 'multiple'</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="monthSelectorType" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>'dropdown', 'static'</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="changeYear" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="yearRange" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="executeValidator" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="placeholderLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Content of the html placeholder attribute (does not work in IE7)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="showCounter" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Add a counter below the text input to show the number of characters/words typed by the user</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterMaxCharacterSize" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum number of characters allowed by the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterOriginaleStyle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="counterWarningStyle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="counterWarningNumber" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum number of characters typed by the user before showing the warning sign (not used by default)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterDisplayFormat" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isEmail" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isDigits" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isUrl" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isNumber" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isSimplePhone" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isDecimal" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="autoReplace" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="minValue" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The minimum value that can be contained in the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxValue" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum value that can be contained in the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="minLength" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The minumum length of the string before showing $minLengthErrorLabel</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="minLengthErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is less than $minLength (Please, at least {0} characters are necessary)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxLength" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum length of the string before showing $maxLengthErrorLabel</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="useHtmlMaxLength" maxOccurs="1" minOccurs="0" type="useHtmlMaxLengthForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Apply HTML attribute maxlength</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxLengthErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is more than $maxLength (Please, no more than {0} characters are necessary)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="allowNegativValue" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="domType" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="emailErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not an email (aaa@aaa.com)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="digitsErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not a series of digits (2343)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="urlErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not an url (http://...)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="validRegexp" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="notValidRegexpLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="useHtmlAutoFocus" maxOccurs="1" minOccurs="0" type="useHtmlAutoFocusForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Apply HTML attribute autofocus</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="domInputName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="updateServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="createServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="readServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="value" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="saveOnFocusOut" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="entity" maxOccurs="1" minOccurs="0" type="entityForAttributeType"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attributeGroup ref="fieldAttr"/>
+    <xs:attribute name="dateFormat" use="optional" type="xs:string"/>
+    <xs:attribute name="timeFormat" use="optional" type="xs:string"/>
+    <xs:attribute name="enableTime" use="optional" type="xs:string"/>
+    <xs:attribute name="time_24hr" use="optional" type="xs:string"/>
+    <xs:attribute name="enableSeconds" use="optional" type="xs:string"/>
+    <xs:attribute name="defaultHour" use="optional" type="xs:string"/>
+    <xs:attribute name="defaultMinute" use="optional" type="xs:string"/>
+    <xs:attribute name="phpDateFormat" use="optional" type="xs:string"/>
+    <xs:attribute name="maxDate" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Date string like 'Y-m-d' OR number of days</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="minDate" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Date string like 'Y-m-d' OR number of days</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="numberOfMonths" use="optional" type="xs:string"/>
+    <xs:attribute name="displayDate" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Date string like 'Y-m-d' or array of said string if mode multiple or range</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="mode" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>'single', 'multiple'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="monthSelectorType" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>'dropdown', 'static'</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="changeYear" use="optional" type="xs:string"/>
+    <xs:attribute name="yearRange" use="optional" type="xs:string"/>
+    <xs:attribute name="executeValidator" use="optional" type="xs:string"/>
+    <xs:attribute name="placeholderLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Content of the html placeholder attribute (does not work in IE7)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="showCounter" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Add a counter below the text input to show the number of characters/words typed by the user</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterMaxCharacterSize" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum number of characters allowed by the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterOriginaleStyle" use="optional" type="xs:string"/>
+    <xs:attribute name="counterWarningStyle" use="optional" type="xs:string"/>
+    <xs:attribute name="counterWarningNumber" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum number of characters typed by the user before showing the warning sign (not used by default)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterDisplayFormat" use="optional" type="xs:string"/>
+    <xs:attribute name="isEmail" use="optional" type="xs:string"/>
+    <xs:attribute name="isDigits" use="optional" type="xs:string"/>
+    <xs:attribute name="isUrl" use="optional" type="xs:string"/>
+    <xs:attribute name="isNumber" use="optional" type="xs:string"/>
+    <xs:attribute name="isSimplePhone" use="optional" type="xs:string"/>
+    <xs:attribute name="isDecimal" use="optional" type="xs:string"/>
+    <xs:attribute name="autoReplace" use="optional" type="xs:string"/>
+    <xs:attribute name="minValue" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The minimum value that can be contained in the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxValue" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum value that can be contained in the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="minLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The minumum length of the string before showing $minLengthErrorLabel</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="minLengthErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is less than $minLength (Please, at least {0} characters are necessary)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum length of the string before showing $maxLengthErrorLabel</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="useHtmlMaxLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Apply HTML attribute maxlength</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxLengthErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is more than $maxLength (Please, no more than {0} characters are necessary)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="allowNegativValue" use="optional" type="xs:string"/>
+    <xs:attribute name="domType" use="optional" type="xs:string"/>
+    <xs:attribute name="emailErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not an email (aaa@aaa.com)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="digitsErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not a series of digits (2343)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="urlErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not an url (http://...)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="validRegexp" use="optional" type="xs:string"/>
+    <xs:attribute name="notValidRegexpLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="useHtmlAutoFocus" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Apply HTML attribute autofocus</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="domInputName" use="optional" type="xs:string"/>
+    <xs:attribute name="updateServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="createServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="readServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="value" use="optional" type="xs:string"/>
+    <xs:attribute name="saveOnFocusOut" use="optional" type="xs:string"/>
+    <xs:attribute name="entity" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="DateTimeField" type="DateTimeFieldType"/>
+  <xs:complexType name="EmailFieldType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:group ref="field"/>
+      <xs:element name="placeholderLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Content of the html placeholder attribute (does not work in IE7)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="showCounter" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Add a counter below the text input to show the number of characters/words typed by the user</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterMaxCharacterSize" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum number of characters allowed by the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterOriginaleStyle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="counterWarningStyle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="counterWarningNumber" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum number of characters typed by the user before showing the warning sign (not used by default)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterDisplayFormat" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isEmail" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isDigits" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isUrl" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isNumber" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isSimplePhone" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isDecimal" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="autoReplace" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="minValue" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The minimum value that can be contained in the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxValue" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum value that can be contained in the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="minLength" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The minumum length of the string before showing $minLengthErrorLabel</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="minLengthErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is less than $minLength (Please, at least {0} characters are necessary)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxLength" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum length of the string before showing $maxLengthErrorLabel</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="useHtmlMaxLength" maxOccurs="1" minOccurs="0" type="useHtmlMaxLengthForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Apply HTML attribute maxlength</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxLengthErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is more than $maxLength (Please, no more than {0} characters are necessary)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="allowNegativValue" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="domType" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="emailErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not an email (aaa@aaa.com)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="digitsErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not a series of digits (2343)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="urlErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not an url (http://...)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="validRegexp" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="notValidRegexpLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="useHtmlAutoFocus" maxOccurs="1" minOccurs="0" type="useHtmlAutoFocusForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Apply HTML attribute autofocus</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="domInputName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="updateServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="createServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="readServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="value" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="saveOnFocusOut" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="entity" maxOccurs="1" minOccurs="0" type="entityForAttributeType"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attributeGroup ref="fieldAttr"/>
+    <xs:attribute name="placeholderLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Content of the html placeholder attribute (does not work in IE7)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="showCounter" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Add a counter below the text input to show the number of characters/words typed by the user</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterMaxCharacterSize" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum number of characters allowed by the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterOriginaleStyle" use="optional" type="xs:string"/>
+    <xs:attribute name="counterWarningStyle" use="optional" type="xs:string"/>
+    <xs:attribute name="counterWarningNumber" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum number of characters typed by the user before showing the warning sign (not used by default)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterDisplayFormat" use="optional" type="xs:string"/>
+    <xs:attribute name="isEmail" use="optional" type="xs:string"/>
+    <xs:attribute name="isDigits" use="optional" type="xs:string"/>
+    <xs:attribute name="isUrl" use="optional" type="xs:string"/>
+    <xs:attribute name="isNumber" use="optional" type="xs:string"/>
+    <xs:attribute name="isSimplePhone" use="optional" type="xs:string"/>
+    <xs:attribute name="isDecimal" use="optional" type="xs:string"/>
+    <xs:attribute name="autoReplace" use="optional" type="xs:string"/>
+    <xs:attribute name="minValue" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The minimum value that can be contained in the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxValue" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum value that can be contained in the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="minLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The minumum length of the string before showing $minLengthErrorLabel</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="minLengthErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is less than $minLength (Please, at least {0} characters are necessary)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum length of the string before showing $maxLengthErrorLabel</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="useHtmlMaxLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Apply HTML attribute maxlength</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxLengthErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is more than $maxLength (Please, no more than {0} characters are necessary)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="allowNegativValue" use="optional" type="xs:string"/>
+    <xs:attribute name="domType" use="optional" type="xs:string"/>
+    <xs:attribute name="emailErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not an email (aaa@aaa.com)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="digitsErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not a series of digits (2343)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="urlErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not an url (http://...)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="validRegexp" use="optional" type="xs:string"/>
+    <xs:attribute name="notValidRegexpLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="useHtmlAutoFocus" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Apply HTML attribute autofocus</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="domInputName" use="optional" type="xs:string"/>
+    <xs:attribute name="updateServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="createServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="readServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="value" use="optional" type="xs:string"/>
+    <xs:attribute name="saveOnFocusOut" use="optional" type="xs:string"/>
+    <xs:attribute name="entity" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="EmailField" type="EmailFieldType"/>
+  <xs:complexType name="HtmlAreaFieldType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:group ref="field"/>
+      <xs:element name="ckEditorConfig" maxOccurs="1" minOccurs="0" type="ckEditorConfigForAttributeType"/>
+      <xs:element name="ckEditorStyles" maxOccurs="1" minOccurs="0" type="ckEditorStylesForAttributeType"/>
+      <xs:element name="autogrow" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="placeholderLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Content of the html placeholder attribute (does not work in IE7)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="showCounter" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Add a counter below the text input to show the number of characters/words typed by the user</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterMaxCharacterSize" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum number of characters allowed by the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterOriginaleStyle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="counterWarningStyle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="counterWarningNumber" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum number of characters typed by the user before showing the warning sign (not used by default)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterDisplayFormat" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isEmail" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isDigits" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isUrl" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isNumber" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isSimplePhone" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isDecimal" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="autoReplace" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="minValue" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The minimum value that can be contained in the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxValue" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum value that can be contained in the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="minLength" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The minumum length of the string before showing $minLengthErrorLabel</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="minLengthErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is less than $minLength (Please, at least {0} characters are necessary)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxLength" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum length of the string before showing $maxLengthErrorLabel</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="useHtmlMaxLength" maxOccurs="1" minOccurs="0" type="useHtmlMaxLengthForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Apply HTML attribute maxlength</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxLengthErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is more than $maxLength (Please, no more than {0} characters are necessary)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="allowNegativValue" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="domType" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="emailErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not an email (aaa@aaa.com)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="digitsErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not a series of digits (2343)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="urlErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not an url (http://...)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="validRegexp" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="notValidRegexpLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="useHtmlAutoFocus" maxOccurs="1" minOccurs="0" type="useHtmlAutoFocusForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Apply HTML attribute autofocus</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="domInputName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="updateServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="createServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="readServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="value" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="saveOnFocusOut" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="entity" maxOccurs="1" minOccurs="0" type="entityForAttributeType"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attributeGroup ref="fieldAttr"/>
+    <xs:attribute name="ckEditorConfig" use="optional" type="xs:string"/>
+    <xs:attribute name="ckEditorStyles" use="optional" type="xs:string"/>
+    <xs:attribute name="autogrow" use="optional" type="xs:string"/>
+    <xs:attribute name="placeholderLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Content of the html placeholder attribute (does not work in IE7)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="showCounter" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Add a counter below the text input to show the number of characters/words typed by the user</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterMaxCharacterSize" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum number of characters allowed by the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterOriginaleStyle" use="optional" type="xs:string"/>
+    <xs:attribute name="counterWarningStyle" use="optional" type="xs:string"/>
+    <xs:attribute name="counterWarningNumber" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum number of characters typed by the user before showing the warning sign (not used by default)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterDisplayFormat" use="optional" type="xs:string"/>
+    <xs:attribute name="isEmail" use="optional" type="xs:string"/>
+    <xs:attribute name="isDigits" use="optional" type="xs:string"/>
+    <xs:attribute name="isUrl" use="optional" type="xs:string"/>
+    <xs:attribute name="isNumber" use="optional" type="xs:string"/>
+    <xs:attribute name="isSimplePhone" use="optional" type="xs:string"/>
+    <xs:attribute name="isDecimal" use="optional" type="xs:string"/>
+    <xs:attribute name="autoReplace" use="optional" type="xs:string"/>
+    <xs:attribute name="minValue" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The minimum value that can be contained in the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxValue" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum value that can be contained in the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="minLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The minumum length of the string before showing $minLengthErrorLabel</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="minLengthErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is less than $minLength (Please, at least {0} characters are necessary)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum length of the string before showing $maxLengthErrorLabel</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="useHtmlMaxLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Apply HTML attribute maxlength</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxLengthErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is more than $maxLength (Please, no more than {0} characters are necessary)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="allowNegativValue" use="optional" type="xs:string"/>
+    <xs:attribute name="domType" use="optional" type="xs:string"/>
+    <xs:attribute name="emailErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not an email (aaa@aaa.com)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="digitsErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not a series of digits (2343)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="urlErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not an url (http://...)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="validRegexp" use="optional" type="xs:string"/>
+    <xs:attribute name="notValidRegexpLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="useHtmlAutoFocus" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Apply HTML attribute autofocus</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="domInputName" use="optional" type="xs:string"/>
+    <xs:attribute name="updateServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="createServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="readServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="value" use="optional" type="xs:string"/>
+    <xs:attribute name="saveOnFocusOut" use="optional" type="xs:string"/>
+    <xs:attribute name="entity" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="ckEditorConfigForAttributeType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ckEditorStylesForAttributeType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="HtmlAreaField" type="HtmlAreaFieldType"/>
+  <xs:complexType name="IntInputFieldType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:group ref="field"/>
+      <xs:element name="controllerParameterType" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="placeholderLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Content of the html placeholder attribute (does not work in IE7)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="showCounter" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Add a counter below the text input to show the number of characters/words typed by the user</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterMaxCharacterSize" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum number of characters allowed by the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterOriginaleStyle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="counterWarningStyle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="counterWarningNumber" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum number of characters typed by the user before showing the warning sign (not used by default)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterDisplayFormat" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isEmail" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isDigits" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isUrl" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isNumber" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isSimplePhone" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isDecimal" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="autoReplace" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="minValue" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The minimum value that can be contained in the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxValue" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum value that can be contained in the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="minLength" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The minumum length of the string before showing $minLengthErrorLabel</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="minLengthErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is less than $minLength (Please, at least {0} characters are necessary)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxLength" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum length of the string before showing $maxLengthErrorLabel</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="useHtmlMaxLength" maxOccurs="1" minOccurs="0" type="useHtmlMaxLengthForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Apply HTML attribute maxlength</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxLengthErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is more than $maxLength (Please, no more than {0} characters are necessary)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="allowNegativValue" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="domType" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="emailErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not an email (aaa@aaa.com)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="digitsErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not a series of digits (2343)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="urlErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not an url (http://...)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="validRegexp" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="notValidRegexpLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="useHtmlAutoFocus" maxOccurs="1" minOccurs="0" type="useHtmlAutoFocusForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Apply HTML attribute autofocus</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="domInputName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="updateServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="createServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="readServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="value" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="saveOnFocusOut" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="entity" maxOccurs="1" minOccurs="0" type="entityForAttributeType"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attributeGroup ref="fieldAttr"/>
+    <xs:attribute name="controllerParameterType" use="optional" type="xs:string"/>
+    <xs:attribute name="placeholderLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Content of the html placeholder attribute (does not work in IE7)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="showCounter" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Add a counter below the text input to show the number of characters/words typed by the user</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterMaxCharacterSize" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum number of characters allowed by the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterOriginaleStyle" use="optional" type="xs:string"/>
+    <xs:attribute name="counterWarningStyle" use="optional" type="xs:string"/>
+    <xs:attribute name="counterWarningNumber" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum number of characters typed by the user before showing the warning sign (not used by default)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterDisplayFormat" use="optional" type="xs:string"/>
+    <xs:attribute name="isEmail" use="optional" type="xs:string"/>
+    <xs:attribute name="isDigits" use="optional" type="xs:string"/>
+    <xs:attribute name="isUrl" use="optional" type="xs:string"/>
+    <xs:attribute name="isNumber" use="optional" type="xs:string"/>
+    <xs:attribute name="isSimplePhone" use="optional" type="xs:string"/>
+    <xs:attribute name="isDecimal" use="optional" type="xs:string"/>
+    <xs:attribute name="autoReplace" use="optional" type="xs:string"/>
+    <xs:attribute name="minValue" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The minimum value that can be contained in the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxValue" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum value that can be contained in the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="minLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The minumum length of the string before showing $minLengthErrorLabel</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="minLengthErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is less than $minLength (Please, at least {0} characters are necessary)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum length of the string before showing $maxLengthErrorLabel</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="useHtmlMaxLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Apply HTML attribute maxlength</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxLengthErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is more than $maxLength (Please, no more than {0} characters are necessary)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="allowNegativValue" use="optional" type="xs:string"/>
+    <xs:attribute name="domType" use="optional" type="xs:string"/>
+    <xs:attribute name="emailErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not an email (aaa@aaa.com)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="digitsErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not a series of digits (2343)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="urlErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not an url (http://...)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="validRegexp" use="optional" type="xs:string"/>
+    <xs:attribute name="notValidRegexpLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="useHtmlAutoFocus" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Apply HTML attribute autofocus</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="domInputName" use="optional" type="xs:string"/>
+    <xs:attribute name="updateServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="createServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="readServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="value" use="optional" type="xs:string"/>
+    <xs:attribute name="saveOnFocusOut" use="optional" type="xs:string"/>
+    <xs:attribute name="entity" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="IntInputField" type="IntInputFieldType"/>
+  <xs:complexType name="PasswordFieldType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:group ref="field"/>
+      <xs:element name="placeholderLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Content of the html placeholder attribute (does not work in IE7)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="showCounter" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Add a counter below the text input to show the number of characters/words typed by the user</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterMaxCharacterSize" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum number of characters allowed by the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterOriginaleStyle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="counterWarningStyle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="counterWarningNumber" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum number of characters typed by the user before showing the warning sign (not used by default)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="counterDisplayFormat" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isEmail" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isDigits" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isUrl" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isNumber" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isSimplePhone" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="isDecimal" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="autoReplace" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="minValue" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The minimum value that can be contained in the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxValue" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum value that can be contained in the text input</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="minLength" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The minumum length of the string before showing $minLengthErrorLabel</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="minLengthErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is less than $minLength (Please, at least {0} characters are necessary)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxLength" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The maximum length of the string before showing $maxLengthErrorLabel</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="useHtmlMaxLength" maxOccurs="1" minOccurs="0" type="useHtmlMaxLengthForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Apply HTML attribute maxlength</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maxLengthErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is more than $maxLength (Please, no more than {0} characters are necessary)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="allowNegativValue" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="domType" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="emailErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not an email (aaa@aaa.com)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="digitsErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not a series of digits (2343)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="urlErrorLabel" maxOccurs="1" minOccurs="0" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The error label shown to the user if his input is not an url (http://...)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="validRegexp" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="notValidRegexpLabel" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="useHtmlAutoFocus" maxOccurs="1" minOccurs="0" type="useHtmlAutoFocusForAttributeType">
+        <xs:annotation>
+          <xs:documentation>Apply HTML attribute autofocus</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="domInputName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="updateServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="createServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="readServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="value" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="saveOnFocusOut" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="entity" maxOccurs="1" minOccurs="0" type="entityForAttributeType"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attributeGroup ref="fieldAttr"/>
+    <xs:attribute name="placeholderLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Content of the html placeholder attribute (does not work in IE7)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="showCounter" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Add a counter below the text input to show the number of characters/words typed by the user</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterMaxCharacterSize" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum number of characters allowed by the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterOriginaleStyle" use="optional" type="xs:string"/>
+    <xs:attribute name="counterWarningStyle" use="optional" type="xs:string"/>
+    <xs:attribute name="counterWarningNumber" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum number of characters typed by the user before showing the warning sign (not used by default)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="counterDisplayFormat" use="optional" type="xs:string"/>
+    <xs:attribute name="isEmail" use="optional" type="xs:string"/>
+    <xs:attribute name="isDigits" use="optional" type="xs:string"/>
+    <xs:attribute name="isUrl" use="optional" type="xs:string"/>
+    <xs:attribute name="isNumber" use="optional" type="xs:string"/>
+    <xs:attribute name="isSimplePhone" use="optional" type="xs:string"/>
+    <xs:attribute name="isDecimal" use="optional" type="xs:string"/>
+    <xs:attribute name="autoReplace" use="optional" type="xs:string"/>
+    <xs:attribute name="minValue" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The minimum value that can be contained in the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxValue" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum value that can be contained in the text input</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="minLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The minumum length of the string before showing $minLengthErrorLabel</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="minLengthErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is less than $minLength (Please, at least {0} characters are necessary)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The maximum length of the string before showing $maxLengthErrorLabel</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="useHtmlMaxLength" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Apply HTML attribute maxlength</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="maxLengthErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is more than $maxLength (Please, no more than {0} characters are necessary)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="allowNegativValue" use="optional" type="xs:string"/>
+    <xs:attribute name="domType" use="optional" type="xs:string"/>
+    <xs:attribute name="emailErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not an email (aaa@aaa.com)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="digitsErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not a series of digits (2343)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="urlErrorLabel" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The error label shown to the user if his input is not an url (http://...)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="validRegexp" use="optional" type="xs:string"/>
+    <xs:attribute name="notValidRegexpLabel" use="optional" type="xs:string"/>
+    <xs:attribute name="useHtmlAutoFocus" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Apply HTML attribute autofocus</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="domInputName" use="optional" type="xs:string"/>
+    <xs:attribute name="updateServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="createServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="readServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="value" use="optional" type="xs:string"/>
+    <xs:attribute name="saveOnFocusOut" use="optional" type="xs:string"/>
+    <xs:attribute name="entity" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="PasswordField" type="PasswordFieldType"/>
+  <xs:complexType name="SelectFieldType" mixed="true">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:group ref="field"/>
+      <xs:element name="autoresize" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="layoutIfNoSelectOption" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="useUISelect" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="popupStyle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="delayedInit" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="multiple" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="placeholderValue" maxOccurs="1" minOccurs="0" type="placeholderValueForAttributeType"/>
+      <xs:element name="domInputName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="updateServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="createServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="readServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="value" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="saveOnFocusOut" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="entity" maxOccurs="1" minOccurs="0" type="entityForAttributeType"/>
+      <xs:any minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attributeGroup ref="fieldAttr"/>
+    <xs:attribute name="autoresize" use="optional" type="xs:string"/>
+    <xs:attribute name="layoutIfNoSelectOption" use="optional" type="xs:string"/>
+    <xs:attribute name="useUISelect" use="optional" type="xs:string"/>
+    <xs:attribute name="popupStyle" use="optional" type="xs:string"/>
+    <xs:attribute name="delayedInit" use="optional" type="xs:string"/>
+    <xs:attribute name="multiple" use="optional" type="xs:string"/>
+    <xs:attribute name="placeholderValue" use="optional" type="xs:string"/>
+    <xs:attribute name="domInputName" use="optional" type="xs:string"/>
+    <xs:attribute name="updateServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="createServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="readServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="value" use="optional" type="xs:string"/>
+    <xs:attribute name="saveOnFocusOut" use="optional" type="xs:string"/>
+    <xs:attribute name="entity" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="placeholderValueForAttributeType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SelectField" type="SelectFieldType"/>
+  <xs:complexType name="RadioGroupFieldType" mixed="true">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="basic"/>
+      <xs:group ref="field"/>
+      <xs:element name="unselectable" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="styleRadios" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="autoresize" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="layoutIfNoSelectOption" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="useUISelect" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="popupStyle" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="delayedInit" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="multiple" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="placeholderValue" maxOccurs="1" minOccurs="0" type="placeholderValueForAttributeType"/>
+      <xs:element name="domInputName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="updateServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="createServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="readServiceParameterName" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="value" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="saveOnFocusOut" maxOccurs="1" minOccurs="0" type="xs:string"/>
+      <xs:element name="entity" maxOccurs="1" minOccurs="0" type="entityForAttributeType"/>
+      <xs:any minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="basicAttr"/>
+    <xs:attributeGroup ref="fieldAttr"/>
+    <xs:attribute name="unselectable" use="optional" type="xs:string"/>
+    <xs:attribute name="styleRadios" use="optional" type="xs:string"/>
+    <xs:attribute name="autoresize" use="optional" type="xs:string"/>
+    <xs:attribute name="layoutIfNoSelectOption" use="optional" type="xs:string"/>
+    <xs:attribute name="useUISelect" use="optional" type="xs:string"/>
+    <xs:attribute name="popupStyle" use="optional" type="xs:string"/>
+    <xs:attribute name="delayedInit" use="optional" type="xs:string"/>
+    <xs:attribute name="multiple" use="optional" type="xs:string"/>
+    <xs:attribute name="placeholderValue" use="optional" type="xs:string"/>
+    <xs:attribute name="domInputName" use="optional" type="xs:string"/>
+    <xs:attribute name="updateServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="createServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="readServiceParameterName" use="optional" type="xs:string"/>
+    <xs:attribute name="value" use="optional" type="xs:string"/>
+    <xs:attribute name="saveOnFocusOut" use="optional" type="xs:string"/>
+    <xs:attribute name="entity" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="RadioGroupField" type="RadioGroupFieldType"/>
+</xs:schema>

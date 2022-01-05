@@ -23,8 +23,8 @@ export default class XsdParser {
             this.select(`/${this.namespace}:schema/${this.namespace}:element`, this.xsdDom),
         )
 
-    public getSubElements = (elementName: string): DocumentNode[] =>
-        this.parseElements(
+    public getSubElements = (elementName: string): DocumentNode[] => {
+        let elements = this.parseElements(
             this.select(
                 `//${this.namespace}:complexType[@name='${this.getElementType(elementName)}']//${
                     this.namespace
@@ -32,6 +32,55 @@ export default class XsdParser {
                 this.xsdDom,
             ),
         )
+
+        let groupElements = this.parseElements(
+            this.select(
+                `//${this.namespace}:complexType[@name='${this.getElementType(elementName)}']//${
+                    this.namespace
+                }:group`,
+                this.xsdDom,
+            ),
+        )
+
+        groupElements.forEach((groupElement: DocumentNode) => {
+            elements = elements.concat(this.getElementsFromGroup(groupElement))
+        })
+
+        let anyElement = this.parseElements(
+            this.select(
+                `//${this.namespace}:complexType[@name='${this.getElementType(elementName)}']//${
+                    this.namespace
+                }:any`,
+                this.xsdDom,
+            ),
+        )
+        if (anyElement.length) {
+            const rootElements = this.getRootElements()
+            rootElements.forEach((rootElement: DocumentNode) => {
+                elements.push(rootElement)
+            })
+        }
+        return elements
+    }
+
+    public getElementsFromGroup = (groupElement: DocumentNode): DocumentNode[] => {
+        let elements = this.parseElements(
+            this.select(
+                `//${this.namespace}:group[@name='${groupElement.ref}']//${this.namespace}:element`,
+                this.xsdDom,
+            ),
+        )
+        let groupElements = this.parseElements(
+            this.select(
+                `//${this.namespace}:group[@name='${groupElement.ref}']//${this.namespace}:group`,
+                this.xsdDom,
+            ),
+        )
+        groupElements.forEach((groupElement: DocumentNode) => {
+            elements = elements.concat(this.getElementsFromGroup(groupElement))
+        })
+        return elements
+    }
 
     public getFirstSubElements = (elementName: string, withAttributes: boolean): DocumentNode[] => {
         const elements: SelectedValue[][] = []
