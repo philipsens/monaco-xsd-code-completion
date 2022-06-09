@@ -33,7 +33,7 @@ export default class XsdParser {
             ),
         )
 
-        let groupElements = this.parseElements(
+        const groupElements = this.parseElements(
             this.select(
                 `//${this.namespace}:complexType[@name='${this.getElementType(elementName)}']//${
                     this.namespace
@@ -46,7 +46,7 @@ export default class XsdParser {
             elements = elements.concat(this.getElementsFromGroup(groupElement))
         })
 
-        let anyElement = this.parseElements(
+        const anyElement = this.parseElements(
             this.select(
                 `//${this.namespace}:complexType[@name='${this.getElementType(elementName)}']//${
                     this.namespace
@@ -70,7 +70,7 @@ export default class XsdParser {
                 this.xsdDom,
             ),
         )
-        let groupElements = this.parseElements(
+        const groupElements = this.parseElements(
             this.select(
                 `//${this.namespace}:group[@name='${groupElement.ref}']//${this.namespace}:group`,
                 this.xsdDom,
@@ -158,7 +158,7 @@ export default class XsdParser {
                 this.xsdDom,
             ),
         )
-        let attributeGroups = this.parseAttributes(
+        const attributeGroups = this.parseAttributes(
             this.select(
                 `//${this.namespace}:complexType[@name='${this.getElementType(elementName)}']/${
                     this.namespace
@@ -175,17 +175,13 @@ export default class XsdParser {
     public getAttributesFromAttributeGroup = (attributeGroup: DocumentNode): DocumentNode[] => {
         let attributes = this.parseAttributes(
             this.select(
-                `//${this.namespace}:attributeGroup[@name='${attributeGroup.ref}']/${
-                    this.namespace
-                }:attribute`,
+                `//${this.namespace}:attributeGroup[@name='${attributeGroup.ref}']/${this.namespace}:attribute`,
                 this.xsdDom,
             ),
         )
-        let attributeGroups = this.parseAttributes(
+        const attributeGroups = this.parseAttributes(
             this.select(
-                `//${this.namespace}:attributeGroup[@name='${attributeGroup.ref}']/${
-                    this.namespace
-                }:attributeGroup`,
+                `//${this.namespace}:attributeGroup[@name='${attributeGroup.ref}']/${this.namespace}:attributeGroup`,
                 this.xsdDom,
             ),
         )
@@ -209,10 +205,19 @@ export default class XsdParser {
             {},
         )
 
-    private getElementType = (elementName: string): string =>
-        this.select(`//${this.namespace}:element[@name='${elementName}']/@type`, this.xsdDom).map(
-            (type: any): string => type.value,
-        )[0]
+    private getElementType = (elementName: string): string => {
+        const elementType = this.select(
+            `//${this.namespace}:element[@name='${elementName}']/@type`,
+            this.xsdDom,
+        )[0] as any
+        if (elementType) return elementType.value
+        return (
+            this.select(
+                `//${this.namespace}:element[@name='${elementName}']/${this.namespace}:complexType/${this.namespace}:complexContent/${this.namespace}:extension/@base`,
+                this.xsdDom,
+            )[0] as any
+        )?.value
+    }
 
     private parseAttributes = (attributes: SelectedValue[]): DocumentNode[] =>
         attributes.map(
@@ -227,7 +232,9 @@ export default class XsdParser {
             `${this.namespace}:annotation/${this.namespace}:documentation`,
             attribute,
         )
-            .map((documentation: any): string => documentation.firstChild ? documentation.firstChild.data : '')
+            .map((documentation: any): string =>
+                documentation.firstChild ? documentation.firstChild.data : '',
+            )
             .join('<br/><hr/><br/>')
         return {
             documentation: `${documentationString}<br/>Source: ${this.xsd.path}`,

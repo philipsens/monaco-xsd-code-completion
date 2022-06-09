@@ -16,8 +16,8 @@ export default class XsdFeatures {
     private xsdValidation: XsdValidation | undefined
     private xsdGenerateTemplate: xsdGenerateTemplate | undefined
 
-    constructor(xsdXollection: XsdManager, monaco: any, editor: IStandaloneCodeEditor) {
-        this.xsdCollection = xsdXollection
+    constructor(xsdCollection: XsdManager, monaco: any, editor: IStandaloneCodeEditor) {
+        this.xsdCollection = xsdCollection
         this.monaco = monaco
         this.editor = editor
 
