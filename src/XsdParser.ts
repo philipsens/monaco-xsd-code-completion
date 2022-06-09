@@ -33,7 +33,7 @@ export default class XsdParser {
             ),
         )
 
-        let groupElements = this.parseElements(
+        const groupElements = this.parseElements(
             this.select(
                 `//${this.namespace}:complexType[@name='${this.getElementType(elementName)}']//${
                     this.namespace
@@ -46,7 +46,7 @@ export default class XsdParser {
             elements = elements.concat(this.getElementsFromGroup(groupElement))
         })
 
-        let anyElement = this.parseElements(
+        const anyElement = this.parseElements(
             this.select(
                 `//${this.namespace}:complexType[@name='${this.getElementType(elementName)}']//${
                     this.namespace
@@ -70,7 +70,7 @@ export default class XsdParser {
                 this.xsdDom,
             ),
         )
-        let groupElements = this.parseElements(
+        const groupElements = this.parseElements(
             this.select(
                 `//${this.namespace}:group[@name='${groupElement.ref}']//${this.namespace}:group`,
                 this.xsdDom,
@@ -158,7 +158,7 @@ export default class XsdParser {
                 this.xsdDom,
             ),
         )
-        let attributeGroups = this.parseAttributes(
+        const attributeGroups = this.parseAttributes(
             this.select(
                 `//${this.namespace}:complexType[@name='${this.getElementType(elementName)}']/${
                     this.namespace
@@ -179,7 +179,7 @@ export default class XsdParser {
                 this.xsdDom,
             ),
         )
-        let attributeGroups = this.parseAttributes(
+        const attributeGroups = this.parseAttributes(
             this.select(
                 `//${this.namespace}:attributeGroup[@name='${attributeGroup.ref}']/${this.namespace}:attributeGroup`,
                 this.xsdDom,
@@ -206,15 +206,17 @@ export default class XsdParser {
         )
 
     private getElementType = (elementName: string): string => {
-        let elementType = this.select(
+        const elementType = this.select(
             `//${this.namespace}:element[@name='${elementName}']/@type`,
             this.xsdDom,
         )[0] as any
         if (elementType) return elementType.value
-        return (this.select(
-            `//${this.namespace}:element[@name='${elementName}']/${this.namespace}:complexType/${this.namespace}:complexContent/${this.namespace}:extension/@base`,
-            this.xsdDom,
-        )[0] as any)?.value
+        return (
+            this.select(
+                `//${this.namespace}:element[@name='${elementName}']/${this.namespace}:complexType/${this.namespace}:complexContent/${this.namespace}:extension/@base`,
+                this.xsdDom,
+            )[0] as any
+        )?.value
     }
 
     private parseAttributes = (attributes: SelectedValue[]): DocumentNode[] =>
