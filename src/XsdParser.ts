@@ -209,10 +209,12 @@ export default class XsdParser {
             {},
         )
 
-    private getElementType = (elementName: string): string =>
-        this.select(`//${this.namespace}:element[@name='${elementName}']/@type`, this.xsdDom).map(
-            (type: any): string => type.value,
-        )[0]
+    private getElementType = (elementName: string): string => {
+        let elementType = this.select(`//${this.namespace}:element[@name='${elementName}']/@type`, this.xsdDom)[0] as any
+        if (elementType) return elementType.value
+        return (this.select(`//${this.namespace}:element[@name='${elementName}']/${this.namespace}:complexType/${this.namespace}:complexContent/${this.namespace}:extension/@base`, this.xsdDom)[0] as any)?.value
+    }
+
 
     private parseAttributes = (attributes: SelectedValue[]): DocumentNode[] =>
         attributes.map(
