@@ -1,4 +1,4 @@
-# Manaco XSD Code Completion
+# Monaco XSD Code Completion
 
 This is a basic and low resource way to provide client-side code completion and other features for the Monaco-editor.
 The code completion is based on the XSD that is provided to the XsdManager. It is possible to use multiple XSD's, and namespaces.
