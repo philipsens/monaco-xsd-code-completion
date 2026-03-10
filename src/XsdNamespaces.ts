@@ -6,8 +6,32 @@ import { SimpleParser } from './SimpleParser'
 import ITextModel = editor.ITextModel
 
 export abstract class XsdNamespaces {
+    private static cacheKey: string | undefined
+    private static cachedResult: Map<string, INamespaceInfo> | undefined
+
     public static getXsdNamespaces = (model: ITextModel | string): Map<string, INamespaceInfo> => {
-        const text = typeof model == 'string' ? model : SimpleParser.getFullText(model)
+        if (typeof model !== 'string') {
+            const key = `${model.uri.toString()}:${model.getVersionId()}`
+            if (key === XsdNamespaces.cacheKey && XsdNamespaces.cachedResult) {
+                return XsdNamespaces.cachedResult
+            }
+
+            const text = model.getValueInRange({
+                startLineNumber: 1,
+                startColumn: 1,
+                endLineNumber: 50,
+                endColumn: Number.MAX_SAFE_INTEGER,
+            })
+            const result = XsdNamespaces.extractNamespaces(text)
+            XsdNamespaces.cacheKey = key
+            XsdNamespaces.cachedResult = result
+            return result
+        }
+
+        return XsdNamespaces.extractNamespaces(model)
+    }
+
+    private static extractNamespaces = (text: string): Map<string, INamespaceInfo> => {
         const namespaces = XsdNamespaces.getNamespaces(text)
         const namespaceSchemaLocations = XsdNamespaces.getNamespacesSchemaLocations(text)
         return XsdNamespaces.matchNamespacesAndNamespaceSchemaLocations(
@@ -64,7 +88,7 @@ export abstract class XsdNamespaces {
         const matchedNamespacesAndNamespaceSchemaLocations = new Map()
         for (const [path, uri] of namespaceSchemaLocations.entries()) {
             matchedNamespacesAndNamespaceSchemaLocations.set(uri, {
-                prefix: namespaces.get(uri),
+                prefix: namespaces.get(uri) ?? '',
                 path: path,
             })
         }

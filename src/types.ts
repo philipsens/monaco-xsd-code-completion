@@ -174,9 +174,11 @@ export enum ErrorType {
 }
 
 export interface DocumentNode {
-    name: string
+    name?: string
     documentation?: string
     type?: string
     use?: string
     ref?: string
+    requiredAttribute?: DocumentNode[]
+    elements?: DocumentNode[]
 }
