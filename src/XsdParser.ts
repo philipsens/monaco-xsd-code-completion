@@ -1,5 +1,6 @@
 import { DOMParser } from '@xmldom/xmldom'
 import { DocumentNode, IXsd } from './types'
+import { SimpleParser } from './SimpleParser'
 
 const XSD_NS = 'http://www.w3.org/2001/XMLSchema'
 
@@ -61,13 +62,13 @@ export default class XsdParser {
 
         const typeAttribute = element.getAttribute('type')
         if (typeAttribute) {
-            this.elementTypeMap.set(name, this.stripNsPrefix(typeAttribute))
+            this.elementTypeMap.set(name, SimpleParser.stripNsPrefix(typeAttribute))
             return
         }
 
         const extensionBase = this.readExtensionBase(element)
         if (extensionBase) {
-            this.elementTypeMap.set(name, this.stripNsPrefix(extensionBase))
+            this.elementTypeMap.set(name, SimpleParser.stripNsPrefix(extensionBase))
             return
         }
 
@@ -77,11 +78,6 @@ export default class XsdParser {
             this.complexTypeMap.set(key, inlineComplexType)
             this.elementTypeMap.set(name, key)
         }
-    }
-
-    private stripNsPrefix(value: string): string {
-        const idx = value.indexOf(':')
-        return idx !== -1 ? value.substring(idx + 1) : value
     }
 
     /**
@@ -119,10 +115,10 @@ export default class XsdParser {
      * Reads the base type from an xs:element with an inline complexType that extends another type:
      */
     private readExtensionBase(element: Element): string | null {
-        const ct = this.firstChildElement(element, 'complexType')
-        const cc = ct && this.firstChildElement(ct, 'complexContent')
-        const ext = cc && this.firstChildElement(cc, 'extension')
-        return ext ? ext.getAttribute('base') : null
+        const complexType = this.firstChildElement(element, 'complexType')
+        const complexContent = complexType && this.firstChildElement(complexType, 'complexContent')
+        const extension = complexContent && this.firstChildElement(complexContent, 'extension')
+        return extension ? extension.getAttribute('base') : null
     }
 
     /**
@@ -144,17 +140,24 @@ export default class XsdParser {
         firstOnly: boolean,
     ): void {
         for (const child of this.elementChildren(node)) {
-            const localName = child.localName
-            if (localName === 'element') {
-                result.push(child)
-            } else if (localName === 'choice') {
-                firstOnly
-                    ? this.collectFirstChoice(child, result, visited)
-                    : this.collectElements(child, result, visited, false)
-            } else if (CONTAINER_NODES.has(localName)) {
-                this.collectElements(child, result, visited, firstOnly)
-            } else if (localName === 'group') {
-                this.followGroupRef(child, result, visited, firstOnly)
+            const { localName } = child
+            switch (localName) {
+                case 'element':
+                    result.push(child)
+                    break
+                case 'choice':
+                    firstOnly
+                        ? this.collectFirstChoice(child, result, visited)
+                        : this.collectElements(child, result, visited, false)
+                    break
+                case 'group':
+                    this.followGroupRef(child, result, visited, firstOnly)
+                    break
+                default:
+                    if (CONTAINER_NODES.has(localName)) {
+                        this.collectElements(child, result, visited, firstOnly)
+                    }
+                    break
             }
         }
     }
@@ -185,7 +188,7 @@ export default class XsdParser {
         const ref = groupNode.getAttribute('ref')
         if (!ref) return
 
-        const name = this.stripNsPrefix(ref)
+        const name = SimpleParser.stripNsPrefix(ref)
         if (visited.has(name)) return
 
         visited.add(name)
@@ -200,14 +203,22 @@ export default class XsdParser {
     private collectAttributes(node: Element): Element[] {
         const result: Element[] = []
         for (const child of this.elementChildren(node)) {
-            const localName = child.localName
-            if (localName === 'attribute') {
-                result.push(child)
-            } else if (['complexContent', 'extension', 'restriction'].includes(localName)) {
-                result.push(...this.collectAttributes(child))
-            } else if (localName === 'attributeGroup') {
-                const ref = child.getAttribute('ref')
-                if (ref) result.push(...this.attributesFromGroup(this.stripNsPrefix(ref)))
+            const { localName } = child
+            switch (localName) {
+                case 'attribute':
+                    result.push(child)
+                    break
+                case 'complexContent':
+                case 'extension':
+                case 'restriction':
+                    result.push(...this.collectAttributes(child))
+                    break
+                case 'attributeGroup': {
+                    const ref = child.getAttribute('ref')
+                    if (ref)
+                        result.push(...this.attributesFromGroup(SimpleParser.stripNsPrefix(ref)))
+                    break
+                }
             }
         }
         return result
@@ -294,11 +305,13 @@ export default class XsdParser {
         const complexType = this.complexTypeForElement(elementName)
         if (!complexType) return []
 
-        const cc = this.firstChildElement(complexType, 'complexContent')
-        const ext =
-            cc &&
-            (this.firstChildElement(cc, 'extension') ?? this.firstChildElement(cc, 'restriction'))
-        const traversalRoot = ext || complexType
+        const complexContent = this.firstChildElement(complexType, 'complexContent')
+        const extensionOrRestriction =
+            complexContent &&
+            (this.firstChildElement(complexContent, 'extension') ??
+                this.firstChildElement(complexContent, 'restriction'))
+
+        const traversalRoot = extensionOrRestriction || complexType
 
         const collected: Element[] = []
         this.collectElements(traversalRoot, collected, new Set(), true)

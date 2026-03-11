@@ -16,12 +16,7 @@ export abstract class XsdNamespaces {
                 return XsdNamespaces.cachedResult
             }
 
-            const text = model.getValueInRange({
-                startLineNumber: 1,
-                startColumn: 1,
-                endLineNumber: 50,
-                endColumn: Number.MAX_SAFE_INTEGER,
-            })
+            const text = SimpleParser.getFullText(model)
             const result = XsdNamespaces.extractNamespaces(text)
             XsdNamespaces.cacheKey = key
             XsdNamespaces.cachedResult = result

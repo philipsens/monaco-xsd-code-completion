@@ -3,6 +3,7 @@ import TurndownService from 'turndown'
 import { IMarkdownString, languages } from 'monaco-editor'
 import { DocumentNode, ICompletion } from './types'
 import XsdParser from './XsdParser'
+import { SimpleParser } from './SimpleParser'
 
 export default class CodeSuggester {
     private codeSuggestionCache: CodeSuggestionCache
@@ -54,13 +55,8 @@ export default class CodeSuggester {
             ]
         })
 
-    private stripNsPrefix = (name: string): string => {
-        const idx = name.indexOf(':')
-        return idx !== -1 ? name.substring(idx + 1) : name
-    }
-
     private parseElementName = (name: string, namespace: string | undefined): string => {
-        const localName = this.stripNsPrefix(name)
+        const localName = SimpleParser.stripNsPrefix(name)
         return namespace ? namespace + ':' + localName : localName
     }
 
