@@ -10,7 +10,7 @@ export default class XsdParser {
     private readonly xsd: IXsd
     private readonly xsdDoc: Document
 
-    // these indexes are built once at construction time for fast lookups during code completions
+    // These indexes are built once at construction time for fast lookups during code completions
     private readonly complexTypeMap = new Map<string, Element>()
     private readonly attributeGroupMap = new Map<string, Element>()
     private readonly groupMap = new Map<string, Element>()
