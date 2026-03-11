@@ -97,3 +97,7 @@ xsdFeatures.addReformatAction() // Add reformat code to actions menu. Can be run
 -   [x] Show syntax errors
 -   [x] Template based on XSD
 -   [x] Reformat code
+
+## Development and testing
+
+There is a test environment available at [philipsens/monaco-xsd-code-completion-test-env](https://github.com/philipsens/monaco-xsd-code-completion-test-env). This environment is set up to easily test a development version of the package. 
