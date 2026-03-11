@@ -85,7 +85,7 @@ export default class XsdFeatures {
         })
         this.editor.addAction({
             id: 'xsd-template-generate-with-attributes',
-            label: 'Generate Template from XSD with requires attributes',
+            label: 'Generate Template from XSD with required attributes',
             keybindings: [
                 this.monaco.KeyMod.CtrlCmd |
                     this.monaco.KeyMod.Alt |

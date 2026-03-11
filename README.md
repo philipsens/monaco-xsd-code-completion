@@ -1,21 +1,23 @@
 # Monaco XSD Code Completion
+_A library to add XSD-based code completion, validation and more to the Monaco Editor._
 
-This is a basic and low resource way to provide client-side code completion and other features for the Monaco-editor.
 The code completion is based on the XSD that is provided to the XsdManager. It is possible to use multiple XSD's, and namespaces.
+
+Not all features of the XSD are supported, but the most common ones are. If you have a specific use case that is not supported, please open an issue or even better, a pull request.
+
+The library is built to be as performant as possible, with O(1) lookups and caching of the code suggestions.
 
 ## Code completion
 
-The completions are gathered from the XSD at the moment they are needed. This is useful for very large XSD's that would have a long loading time when initially parsed. The completions may take a second but are instant after being cached.
-
 The code completion has support for multiple XSD's as long as they are referenced in the file.
 
-Completion works for elements and attributes and starts after the user presses: '<', ' ' or '/'. The required attribute will allways be preselected. When the completion is getting invoked using Ctrl+Space, the code will be inserted as snippet.
+Completion works for elements and attributes and starts after the user presses: `<`, ` ` or `/`. The required attribute will allways be preselected. When the completion is getting invoked using `Ctrl`+`Space`, the code will be inserted as snippet.
 
 Documentation is provided for the attributes.
 
 ## XML Syntax and errors
 
-The file will be parsed by the xmldom parser, every error will be shown in the editor. Hovering over the lines will reveal the details.
+The file will be parsed by the XMLDom parser, every error will be shown in the editor. Hovering over the lines will reveal the details.
 
 ## Template
 
@@ -23,7 +25,7 @@ The user can generate a template based on the XSD referenced in the root tag.
 
 ## Reformat code
 
-The user can reformat the code with the action provided in the menu, or bu using the key combination 'Ctrl+Shift+L'
+The user can reformat the code with the action provided in the menu, or by using the key combination `Ctrl`+`Shift`+`L`
 
 ## Usage
 
@@ -91,7 +93,7 @@ xsdFeatures.addReformatAction() // Add reformat code to actions menu. Can be run
     - [x] Append namespace to suggestions
     - [x] Get element ref attributes (thanks @Rafeethu)
         - [x] Replace element ref namespace with namespace used in the XML.
-- [x] Performance optimisation (pre-built Map indexes, O(1) lookups, XPath removed)
+- [x] Performance optimization (pre-built Map indexes, O(1) lookups, XPath removed)
 - [x] Show syntax errors
 - [x] Template based on XSD
 - [x] Reformat code
