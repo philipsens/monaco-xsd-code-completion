@@ -80,23 +80,21 @@ xsdFeatures.addReformatAction() // Add reformat code to actions menu. Can be run
 
 ## ToDo
 
--   [x] Parse XSD
--   [x] Code completion based on XSD
--   [x] Cache code suggestions
--   [x] Autocomplete close tags
--   [x] Insert element als snippet (or template)
--   [x] Auto indentation ([RP for Monaco-languages](https://github.com/microsoft/monaco-languages/pull/113))
--   [x] Implement namespaces
-    -   [x] Get suggestions from multiple XSD's
-    -   [x] Append namespace to suggestions
-    -   [x] Get element ref attributes (thanks @Rafeethu)
-        -   [ ] Replace element ref namespace with namespace used in the XML.
--   [ ] Performance optimisation
-    -   [ ] Change parser (to SAX?)
-    -   [ ] Make use of the Monaco workers for parallel parsing
--   [x] Show syntax errors
--   [x] Template based on XSD
--   [x] Reformat code
+- [x] Parse XSD
+- [x] Code completion based on XSD
+- [x] Cache code suggestions
+- [x] Autocomplete close tags
+- [x] Insert element als snippet (or template)
+- [x] Auto indentation ([RP for Monaco-languages](https://github.com/microsoft/monaco-languages/pull/113))
+- [x] Implement namespaces
+    - [x] Get suggestions from multiple XSD's
+    - [x] Append namespace to suggestions
+    - [x] Get element ref attributes (thanks @Rafeethu)
+        - [x] Replace element ref namespace with namespace used in the XML.
+- [x] Performance optimisation (pre-built Map indexes, O(1) lookups, XPath removed)
+- [x] Show syntax errors
+- [x] Template based on XSD
+- [x] Reformat code
 
 ## Development and testing
 

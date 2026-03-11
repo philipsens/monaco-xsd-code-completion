@@ -21,4 +21,9 @@ export abstract class SimpleParser {
         if (document)
             return SimpleParser.getMatchesForRegex(document, /(?<=<|<\/)[^?\s|/>]+(?!.*\/>)/)[0]
     }
+
+    public static stripNsPrefix = (name: string): string => {
+        const colonIndex = name.indexOf(':')
+        return colonIndex !== -1 ? name.substring(colonIndex + 1) : name
+    }
 }

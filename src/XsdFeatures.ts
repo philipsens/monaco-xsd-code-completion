@@ -5,10 +5,11 @@ import { editor } from 'monaco-editor'
 import { debounce } from 'ts-debounce'
 import xsdGenerateTemplate from './XsdGenerateTemplate'
 import prettier from 'prettier'
-import parserHTML from 'prettier/parser-html'
+import parserHTML from 'prettier/plugins/html'
 import IStandaloneCodeEditor = editor.IStandaloneCodeEditor
 
 export default class XsdFeatures {
+    private static readonly completionRegistry = new WeakMap<object, { dispose(): void }>()
     private readonly xsdCollection: XsdManager
     private monaco: any
     private oldDecorations: string[] = []
@@ -27,12 +28,16 @@ export default class XsdFeatures {
     }
 
     public addCompletion = (): void => {
+        XsdFeatures.completionRegistry.get(this.monaco)?.dispose()
         const xsdCompletion = new XsdCompletion(this.xsdCollection)
-        this.monaco.languages.registerCompletionItemProvider('xml', xsdCompletion.provider())
+        const disposable = this.monaco.languages.registerCompletionItemProvider(
+            'xml',
+            xsdCompletion.provider(),
+        )
+        XsdFeatures.completionRegistry.set(this.monaco, disposable)
     }
 
     public doValidation = (): void => {
-        console.log('validate')
         this.xsdValidation = this.xsdValidation ?? new XsdValidation(this.xsdCollection)
         const model = this.editor.getModel()
         const newDecorations = this.xsdValidation.decorations(model)
@@ -42,28 +47,28 @@ export default class XsdFeatures {
     public addValidation = (): void => {
         this.xsdValidation = new XsdValidation(this.xsdCollection)
         const debouncedDoValidation = debounce(this.doValidation, 1000)
-        this.editor.onKeyDown(debouncedDoValidation)
+        this.editor.onKeyDown(() => debouncedDoValidation())
         this.doValidation()
     }
 
-    public doReformatCode = () => {
+    public doReformatCode = async (): Promise<void> => {
         const model = this.editor.getModel()
-        if (model) model.setValue(this.prettier(model.getValue()))
+        if (model) model.setValue(await this.prettier(model.getValue()))
     }
 
-    public prettier = (xml: string): string =>
+    public prettier = (xml: string): Promise<string> =>
         prettier.format(xml, {
             parser: 'html',
             plugins: [parserHTML],
             tabWidth: 4,
         })
 
-    public doGenerate = (levels: number, withAttributes: boolean): void => {
+    public doGenerate = async (levels: number, withAttributes: boolean): Promise<void> => {
         this.xsdGenerateTemplate =
             this.xsdGenerateTemplate ?? new xsdGenerateTemplate(this.xsdCollection)
         const model = this.editor.getModel()
         const template = this.xsdGenerateTemplate.getTemplate(model, levels, withAttributes)
-        if (template) model?.setValue(this.prettier(template))
+        if (template) model?.setValue(await this.prettier(template))
     }
 
     public addGenerateAction = (): void => {

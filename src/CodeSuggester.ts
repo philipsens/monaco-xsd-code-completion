@@ -3,6 +3,7 @@ import TurndownService from 'turndown'
 import { IMarkdownString, languages } from 'monaco-editor'
 import { DocumentNode, ICompletion } from './types'
 import XsdParser from './XsdParser'
+import { SimpleParser } from './SimpleParser'
 
 export default class CodeSuggester {
     private codeSuggestionCache: CodeSuggestionCache
@@ -35,13 +36,12 @@ export default class CodeSuggester {
         withoutTag: boolean,
         incomplete: boolean,
     ): ICompletion[] =>
-        elements.map(
-            (element: DocumentNode, index: number): ICompletion => {
-                let elementName = element.ref ? element.ref : element.name
-                if(elementName){
-                    elementName = this.parseElementName(elementName, namespace)
-                }
-                return {
+        elements.flatMap((element: DocumentNode, index: number): ICompletion[] => {
+            const rawName = element.ref ?? element.name
+            if (!rawName) return []
+            const elementName = this.parseElementName(rawName, namespace)
+            return [
+                {
                     label: elementName,
                     kind: withoutTag
                         ? languages.CompletionItemKind.Snippet
@@ -51,12 +51,14 @@ export default class CodeSuggester {
                     insertText: this.parseElementInputText(elementName, withoutTag, incomplete),
                     insertTextRules: languages.CompletionItemInsertTextRule.InsertAsSnippet,
                     documentation: this.parseDocumentation(element.documentation),
-                }
-            },
-        )
+                },
+            ]
+        })
 
-    private parseElementName = (name: string, namespace: string | undefined) =>
-        namespace ? namespace + ':' + name : name
+    private parseElementName = (name: string, namespace: string | undefined): string => {
+        const localName = SimpleParser.stripNsPrefix(name)
+        return namespace ? namespace + ':' + localName : localName
+    }
 
     private parseElementInputText = (
         name: string,
@@ -70,10 +72,11 @@ export default class CodeSuggester {
     }
 
     private parseAttributes = (attributes: DocumentNode[], incomplete: boolean): ICompletion[] =>
-        attributes.map(
-            (attribute: DocumentNode): ICompletion => {
-                let attributeName = attribute.ref ? attribute.ref : attribute.name;
-                return ({
+        attributes.flatMap((attribute: DocumentNode): ICompletion[] => {
+            const attributeName = attribute.ref ?? attribute.name
+            if (!attributeName) return []
+            return [
+                {
                     label: attributeName,
                     kind: languages.CompletionItemKind.Variable,
                     detail: this.parseDetail(attribute.type),
@@ -81,9 +84,9 @@ export default class CodeSuggester {
                     preselect: this.attributeIsRequired(attribute),
                     insertTextRules: languages.CompletionItemInsertTextRule.InsertAsSnippet,
                     documentation: this.parseDocumentation(attribute.documentation),
-                })
-            }
-        )
+                },
+            ]
+        })
 
     private parseDetail = (detail: string | undefined) => {
         if (detail) {

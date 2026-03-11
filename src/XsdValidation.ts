@@ -1,6 +1,6 @@
 import { editor, IPosition, Range } from 'monaco-editor'
 import XsdManager from './XsdManager'
-import xmldom from 'xmldom'
+import xmldom from '@xmldom/xmldom'
 import { ErrorType, XmlDomError } from './types'
 import { SimpleParser } from './SimpleParser'
 import IModelDeltaDecoration = editor.IModelDeltaDecoration
@@ -32,10 +32,7 @@ export default class XsdValidation {
         this.model = model
         const xml = model ? SimpleParser.getFullText(model) : undefined
 
-        if (xml) {
-            this.dom.parseFromString(xml)
-            // TODO: Implement XMLLint after XML DOM Parser
-        }
+        if (xml) this.dom.parseFromString(xml)
 
         return this.getDecorationsFromErrors()
     }
