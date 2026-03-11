@@ -9,8 +9,6 @@ import parserHTML from 'prettier/plugins/html'
 import IStandaloneCodeEditor = editor.IStandaloneCodeEditor
 
 export default class XsdFeatures {
-    // One provider per Monaco instance. Disposed and replaced whenever addCompletion() is called,
-    // so React remounts / HMR never accumulate duplicate suggestion lists.
     private static readonly completionRegistry = new WeakMap<object, { dispose(): void }>()
     private readonly xsdCollection: XsdManager
     private monaco: any
