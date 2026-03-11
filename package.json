@@ -1,6 +1,6 @@
 {
     "name": "monaco-xsd-code-completion",
-    "version": "0.13.0",
+    "version": "1.0.0",
     "description": "A library to add XSD-based code completion and validation to the Monaco Editor.",
     "main": "dist/MonacoXsdCodeCompletion.umd.js",
     "scripts": {
