@@ -22,7 +22,7 @@ export default class XsdCompletion {
     }
 
     public provider = (): CompletionItemProvider => ({
-        triggerCharacters: ['<', ' ', '/'],
+        triggerCharacters: ['<', ' ', '\n', '/'],
         provideCompletionItems: (
             model: ITextModel,
             position: Position,
@@ -53,14 +53,12 @@ export default class XsdCompletion {
             endLineNumber: position.lineNumber,
         }
 
-        return completions.map(
-            (completion: ICompletion): CompletionItem => {
-                return {
-                    ...completion,
-                    ...{ range: wordRange },
-                }
-            },
-        )
+        return completions.map((completion: ICompletion): CompletionItem => {
+            return {
+                ...completion,
+                ...{ range: wordRange },
+            }
+        })
     }
 
     private getStartColumnForTagWithNamespace = (
@@ -120,13 +118,18 @@ export default class XsdCompletion {
         if (this.isInsideAttributeValue(wordsBeforePosition)) return CompletionType.none
 
         switch (context.triggerKind) {
-            case CompletionTriggerKind.Invoke:
+            case CompletionTriggerKind.Invoke: {
                 const completionType = this.getCompletionTypeByPreviousText(textUntilPosition)
                 if (completionType) return completionType
+                return this.getCompletionTypeForIncompleteCompletion(wordsBeforePosition)
+            }
             case CompletionTriggerKind.TriggerForIncompleteCompletions:
                 return this.getCompletionTypeForIncompleteCompletion(wordsBeforePosition)
             case CompletionTriggerKind.TriggerCharacter:
-                return this.getCompletionTypeByTriggerCharacter(context.triggerCharacter)
+                return this.getCompletionTypeByTriggerCharacter(
+                    context.triggerCharacter,
+                    textUntilPosition,
+                )
         }
     }
 
@@ -164,17 +167,27 @@ export default class XsdCompletion {
 
     private getCompletionTypeByTriggerCharacter = (
         triggerCharacter: string | undefined,
+        textUntilPosition: string,
     ): CompletionType => {
         switch (triggerCharacter) {
             case '<':
                 return CompletionType.element
             case ' ':
-                return CompletionType.attribute
+            case '\n':
+                return this.getCompletionTypeOnWhitespace(textUntilPosition)
             case '/':
-                return CompletionType.closingElement
+                return this.getCompletionTypeOnSlash(textUntilPosition)
         }
         return CompletionType.none
     }
+
+    private getCompletionTypeOnWhitespace = (textUntilPosition: string): CompletionType =>
+        this.isInsideOpenTag(textUntilPosition) ? CompletionType.attribute : CompletionType.none
+
+    private getCompletionTypeOnSlash = (textUntilPosition: string): CompletionType =>
+        this.isInsideOpenTag(textUntilPosition)
+            ? CompletionType.none
+            : CompletionType.closingElement
 
     private getCompletionTypeByPreviousText = (text: string): CompletionType | undefined => {
         const lastCharacterBeforePosition = text[text.length - 1]
@@ -191,6 +204,23 @@ export default class XsdCompletion {
     private getCompletionTypeAfterWhitespace = (text: string): CompletionType | undefined => {
         if (this.isInsideTag(text)) return CompletionType.incompleteAttribute
         if (this.isAfterTag(text)) return CompletionType.snippet
+    }
+
+    private isInsideOpenTag = (text: string): boolean => {
+        const lastOpen = text.lastIndexOf('<')
+        const lastClose = text.lastIndexOf('>')
+        if (lastOpen <= lastClose) return false
+        const fromOpen = text.slice(lastOpen)
+        return this.isRegularOpenTag(fromOpen)
+    }
+
+    private isRegularOpenTag = (fromLastOpen: string): boolean => {
+        const isComment = fromLastOpen.startsWith('<!--')
+        const isDoctype = fromLastOpen.startsWith('<!')
+        const isProcessingInstruction = fromLastOpen.startsWith('<?')
+        const hasTagName = /^<[A-Za-z]/.test(fromLastOpen)
+        const isSelfClosing = /\/\s*$/.test(fromLastOpen)
+        return !isComment && !isDoctype && !isProcessingInstruction && hasTagName && !isSelfClosing
     }
 
     private isInsideTag = (text: string): boolean => this.getTextInsideCurrentTag(text).length > 0
