@@ -10,7 +10,7 @@ import CompletionItem = languages.CompletionItem
 import CompletionTriggerKind = languages.CompletionTriggerKind
 import CompletionItemKind = languages.CompletionItemKind
 import IWordAtPosition = editor.IWordAtPosition
-import { CompletionType, ICompletion, INamespaceInfo } from './types'
+import { CompletionType, ICompletion } from './types'
 import { SimpleParser } from './SimpleParser'
 import { XsdNamespaces } from './XsdNamespaces'
 
@@ -162,8 +162,10 @@ export default class XsdCompletion {
         return tags !== undefined && tags.length > 0
     }
 
-    private getTagsFromText = (text: string): string[] | undefined =>
-        SimpleParser.getMatchesForRegex(text, /(?<=<|<\/)[^?\s|/>]+(?!.*\/>)/g)
+    private getTagsFromText = (text: string): string[] | undefined => {
+        const textWithoutSelfClosing = text.replace(/<[^>]*\/>/g, '')
+        return SimpleParser.getMatchesForRegex(textWithoutSelfClosing, /(?<=<|<\/)[^?\s|/>]+/g)
+    }
 
     private getCompletionTypeByTriggerCharacter = (
         triggerCharacter: string | undefined,
@@ -181,8 +183,11 @@ export default class XsdCompletion {
         return CompletionType.none
     }
 
-    private getCompletionTypeOnWhitespace = (textUntilPosition: string): CompletionType =>
-        this.isInsideOpenTag(textUntilPosition) ? CompletionType.attribute : CompletionType.none
+    private getCompletionTypeOnWhitespace = (textUntilPosition: string): CompletionType => {
+        if (this.isInsideOpenTag(textUntilPosition)) return CompletionType.attribute
+        if (/>\s*$/.test(textUntilPosition)) return CompletionType.snippet
+        return CompletionType.none
+    }
 
     private getCompletionTypeOnSlash = (textUntilPosition: string): CompletionType =>
         this.isInsideOpenTag(textUntilPosition)
